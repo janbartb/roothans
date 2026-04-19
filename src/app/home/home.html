@@ -1,0 +1,29 @@
+<div>
+    <div style="height: 2em;"></div>
+    <div class="flexbox flexcenter">
+        <div style="text-align: center;">
+            <img src="images/roothans.png" alt="" style="width: 50%;">
+        </div>
+    </div>
+    <div>
+        <div class="home-tekst">
+            <span style="font-style: italic;">Driebanden</span>
+            <span style="font-weight: bold; padding: 0 .4em;">koppel</span>
+            <span style="font-style: italic;">tournooi</span>
+        </div>
+    </div>
+    <div style="height: 2em;"></div>
+    <div style="font-size: .75em; text-align: center;">
+        <span>&nbsp;</span>
+        @if (!countdownStopped) {
+            <span>Automatisch naar hoofdmenu in <b>{{counter}}</b> seconden, of</span>
+        }
+        <span>&nbsp;</span>
+    </div>
+    <div class="flexbox flexcenter" style="padding-top: 1em;">
+        @if (!countdownStopped) {
+            <app-button style="font-size: .75em;" [button]="btnStop" (btnClicked)="buttonStopClicked()"></app-button>
+        }
+        <app-button style="font-size: .75em;" [button]="btnProcede" (btnClicked)="buttonProcedeClicked()"></app-button>
+    </div>
+</div>

@@ -1,0 +1,38 @@
+.spl-spl {
+    cursor: pointer;
+}
+.spl-spl.selected {
+    background-color: lightgreen;
+}
+.spl-spl:not(.selected):hover {
+    background-color: lightgray;
+}
+.spl-naam {
+    width: 10em;
+    overflow-x: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.spl-moy {
+    width: 3em;
+    text-align: right;
+}
+.spl-data {
+    color: red;
+    font-weight: bold;
+}
+.spl-data .spl-moy, .hdr-data .spl-moy {
+    width: 4.5em;
+}
+.spl-car {
+    width: 4em;
+    text-align: right;
+}
+.spl-ser {
+    width: 2.75em;
+    text-align: right;
+}
+.spl-pnt {
+    width: 4em;
+    text-align: right;
+}

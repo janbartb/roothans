@@ -1,0 +1,18 @@
+.alert-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2.5em;
+    z-index: 100;
+    translate: 0 2.5em;
+    transition: translate .5s;
+}
+.alert-container.visible {
+    translate: 0 0;
+}
+
+.alert-message {
+    font-size: .75em;
+    font-weight: bold;
+}

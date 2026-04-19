@@ -1,1 +1,185 @@
-/* You can add global styles to this file, and also import other style files */
+html {
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+    overflow-x: hidden;
+}
+
+body {
+    margin: 0;
+    font-family: Verdana,sans-serif;
+    line-height: 1.25;
+}
+
+* { 
+    box-sizing: border-box;
+    letter-spacing: -.075em;
+}
+
+label {
+    color: green;
+}
+label .req {
+    color: red;
+    font-size: .75em;
+}
+
+.ellipsis {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+input,select,textarea{ font: inherit; margin: 0; }
+
+.fullviewheight { height: 100vh; }
+.fullheight { height: 100%; max-height: 100%; }
+
+.arial { font-family: Arial, Helvetica, sans-serif; }
+.arial-nw { font-family: "Arial Narrow"; }
+
+input[type="text"], input[type="number"], input[type="password"], select {
+    padding: 0 .25em;
+    border-radius: .25em;
+    border-color: lightgray;
+}
+input[type="text"]:not(:disabled).valid, input[type="number"]:not(:disabled).valid {
+    background-color: #beffbe;
+}
+input[type="text"]:not(:disabled).invalid, input[type="number"]:not(:disabled).invalid, input[type="password"]:not(:disabled).invalid {
+    background-color: #ffacac;
+}
+input[type="text"]:not(:disabled):hover, input[type="text"]:not(:disabled):focus,
+input[type="number"]:not(:disabled):hover, input[type="number"]:not(:disabled):focus,
+input[type="password"]:not(:disabled):hover, input[type="number"]:not(:disabled):focus,
+select:not(:disabled):hover, select:not(:disabled):focus {
+    border-color: grey;
+}
+input[type="text"]:not(:disabled):not(.filter):not(.valid):not(.invalid):focus,
+input[type="number"]:not(:disabled):not(.filter):not(.valid):not(.invalid):focus,
+input[type="password"]:not(:disabled):not(.filter):not(.valid):not(.invalid):focus
+{
+    background-color: #e0e0e0;
+}
+input[type="text"]:disabled, input[type="number"]:disabled, select:disabled {
+    cursor: not-allowed;
+    color: gray;
+}
+input[type="text"].filter {
+    line-height: 1.25em;
+    background-color: lightblue;
+}
+select {
+    /* padding-top: .125em;
+    padding-bottom: .125em; */
+    border-width: 2px;
+}
+select.filter {
+    padding-top: 0;
+    padding-bottom: 0;
+    background-color: lightblue;
+}
+select>option {
+    font-weight: normal;
+    font-size: .75em;
+}
+select:disabled, select.disabled {
+    color: #606060;
+}
+
+.tbl-normal {
+    table-layout: fixed;
+    border: 0;
+	padding: 0;
+	border-spacing: 0;
+    border-collapse: collapse;
+}
+.tbl-normal td {
+    padding-right: 1em;
+}
+
+.list-header {
+    color: green;
+}
+.list-header .sortable {
+    cursor: pointer;
+    font-weight: bold;
+}
+.list-header .sortable:hover {
+    color: darkgreen;
+}
+.list-row {
+    cursor: pointer;
+    padding: 0 1em;
+}
+.list-row:hover {
+    background-color: lightgray;
+}
+.list-row.selected {
+    color: white;
+    background-color: green;
+}
+.list-row .btn-delete {
+    color: gray;
+}
+.list-row .btn-delete:hover {
+    color: black;
+}
+
+.btn-speak {
+    cursor: pointer;
+    color: gray;
+}
+.btn-speak:hover {
+    color: black;
+}
+
+.koppel-row {
+    border-radius: .5em;
+    overflow: hidden;
+}
+
+.alert { color: white; }
+.info { background-color: blue; }
+.success { background-color: green; }
+.warning { background-color: chocolate; }
+.error { background-color: red; }
+
+/* DIALOGS */
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    overflow: auto;
+    /* background-color:rgb(0,0,0); */
+    background-color:rgba(0,0,0,0.6);
+    /* opacity: .5; */
+    z-index: 25;
+}
+
+.dialog {
+    position: relative;
+    background-color: white;
+    border-radius: .25em;
+    padding: .125em;
+    overflow: hidden;
+    box-shadow:0 8px 20px 0 rgba(0,0,0,0.8), 0 8px 40px 0 rgba(0,0,0,0.77);
+}
+.dialog-header {
+    color: white;
+    background-color: black;
+    font-weight: bold;
+    padding: .25em 1em;
+    overflow: hidden;
+}
+.dialog-content {
+    padding: .5em;
+}
+.dialog-footer {
+    font-size: .75em;
+    border-top: 2px solid black;
+    padding: .5em 0 .25em 0;
+}

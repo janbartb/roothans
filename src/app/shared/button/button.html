@@ -1,0 +1,8 @@
+<div style="padding: 0 .25em;">
+    <div class="button-back" [ngClass]="{'disabled': disabled}">
+        <span>{{button.text}}</span>
+        <div class="button-front" [ngClass]="{'clicked': button.clicked, 'disabled': disabled}" (click)="buttonClicked()">
+            <span>{{button.text}}</span>
+        </div>
+    </div>
+</div>

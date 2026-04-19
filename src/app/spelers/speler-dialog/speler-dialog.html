@@ -1,0 +1,86 @@
+<div style="overflow: hidden; border-radius: .25em;">
+    <div class="dialog-header">
+        <span>{{title}}</span>
+    </div>
+    <div class="dialog-content">
+        @if (spelerForm) {
+            <form [formGroup]="spelerForm">
+                <table class="tbl-normal">
+                    <tbody>
+                        @if (action == 'edit') {
+                            <tr>
+                                <td><label>ID<span class="req"> *</span></label></td>
+                                <td>{{speler.id}}</td>
+                            </tr>
+                        }
+                        <tr>
+                            <td><label>Voornaam<span class="req"> *</span></label></td>
+                            <td>
+                                <input type="text" id="vnaam" style="width: 8em;" formControlName="vnaam" autocomplete="off"
+                                    [ngClass]="{'invalid': vnaam?.invalid && (vnaam?.dirty), 'valid': vnaam?.valid && (vnaam?.dirty)}"
+                                    (blur)="voornaamBlurred()">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label>Tussenvoegsel</label></td>
+                            <td>
+                                <input type="text" id="tvoeg" style="width: 5em;" formControlName="tvoeg" autocomplete="off"
+                                    [ngClass]="{'invalid': tvoeg?.invalid && (tvoeg?.dirty), 'valid': tvoeg?.valid && (tvoeg?.dirty)}"
+                                    (blur)="tvoeg?.setValue(tvoeg?.value.trim())">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label>Achternaam<span class="req"> *</span></label></td>
+                            <td>
+                                <input type="text" id="anaam" style="width: 8em;" formControlName="anaam" autocomplete="off"
+                                    [ngClass]="{'invalid': anaam?.invalid && (anaam?.dirty), 'valid': anaam?.valid && (anaam?.dirty)}"
+                                    (blur)="anaam?.setValue(anaam?.value.trim())">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label>Extra info</label></td>
+                            <td>
+                                <input type="text" id="extra" style="width: 8em;" formControlName="extra" autocomplete="off"
+                                    [ngClass]="{'invalid': extra?.invalid && (extra?.dirty), 'valid': extra?.valid && (extra?.dirty)}"
+                                    (blur)="extra?.setValue(extra?.value.trim())">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label>Gesproken naam<span class="req"> *</span></label></td>
+                            <td>
+                                <input type="text" id="snaam" style="width: 8em;" formControlName="snaam" autocomplete="off"
+                                    [ngClass]="{'invalid': snaam?.invalid && (snaam?.dirty), 'valid': snaam?.valid && (snaam?.dirty)}"
+                                    (blur)="snaam?.setValue(snaam?.value.trim())">
+                                @if (snaam?.valid) {
+                                    <span style="padding-left: .5em;">
+                                        <i class="fas fa-volume-up btn-speak" (click)="naamUitspreken()"></i>
+                                    </span>
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label>Moyenne<span class="req"> *</span></label></td>
+                            <td>
+                                <input type="number" id="moyenne" style="width: 4.5em;" formControlName="moyenne" autocomplete="off"
+                                    [ngClass]="{'invalid': moyenne?.invalid && (moyenne?.dirty), 
+                                                'valid': moyenne?.valid && (moyenne?.dirty)}">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label>E-mail</label></td>
+                            <td>
+                                <input type="text" id="email" style="width: 14em;" formControlName="email" autocomplete="off"
+                                    [ngClass]="{'invalid': email?.invalid && (email?.dirty), 'valid': email?.valid && (email?.dirty)}"
+                                    (blur)="email?.setValue(email?.value.trim())">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
+        }
+    </div>
+    <div class="dialog-footer flexbox flexright">
+        <app-button [button]="btnCancel" (btnClicked)="canceled()"></app-button>
+        <app-button [button]="btnConfirm" [disabled]="!spelerForm || spelerForm.invalid" (btnClicked)="confirmed()"></app-button>
+    </div>
+</div>

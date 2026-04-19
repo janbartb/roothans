@@ -1,0 +1,47 @@
+<div class="fullheight flexbox flexcolumn">
+    <div class="flexgrow1" style="font-size: 2em; padding: 0 .5em;">
+        <div class="flexbox" style="padding: .25em 0; color: green;">
+            <div class="spl-naam"><b>{{ronde.rndBeurten}}</b> beurten</div>
+            <div class="spl-moy">Moy</div>
+            <div class="flexgrow1 flexbox hdr-data">
+                <div class="spl-car">Car</div>
+                <div class="spl-moy">Moy</div>
+                <div class="spl-ser">Ser</div>
+                <div class="spl-pnt">Punt</div>
+            </div>
+        </div>
+        @for (koppel of koppels; let idxK = $index; track $index) {
+            <div style="padding: .25em 0; border-top: .125em solid gray;">
+                <div class="flexbox">
+                    <div class="spl-naam" style="color: green; font-weight: bold;">Koppel {{koppel.id}}</div>
+                    <div class="spl-moy">{{koppel.koppel.kopMoyenne | number:'1.3-3':'nl-NL'}}</div>
+                    <div class="flexgrow1 flexbox spl-data">
+                        <div class="spl-car"></div>
+                        <div class="spl-moy"></div>
+                        <div class="spl-ser"></div>
+                        <div class="spl-pnt">
+                            <span>{{kopUitslagen[idxK].splUitslagen[0].pnt + kopUitslagen[idxK].splUitslagen[1].pnt}}</span>
+                        </div>
+                    </div>
+                </div>
+                @for (spl of koppel.spelers;; let idxS = $index; track $index) {
+                    <div class="flexbox spl-spl" [ngClass]="{'selected': idxS == idxWed }" (click)="wedstrijdClicked(idxS)">
+                        <div class="spl-naam">{{spl.speler.splNaam}}</div>
+                        <div class="spl-moy">{{spl.speler.splMoy | number:'1.3-3':'nl-NL'}}</div>
+                        <div class="flexgrow1 flexbox spl-data">
+                            <div class="spl-car">{{kopUitslagen[idxK].splUitslagen[idxS].car}}</div>
+                            <div class="spl-moy">{{kopUitslagen[idxK].splUitslagen[idxS].moy | number:'1.3-3':'nl-NL'}}</div>
+                            <div class="spl-ser">{{kopUitslagen[idxK].splUitslagen[idxS].ser}}</div>
+                            <div class="spl-pnt">{{kopUitslagen[idxK].splUitslagen[idxS].pnt}}</div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+    <div class="flexbox flexcenter flexmiddle" style="min-height: 4.5em; border-top: .125em solid black;">
+        <div style="font-size: 1.5em;">
+            <app-button [button]="btnWed" [disabled]="idxWed < 0" (btnClicked)="naarWedstrijdClicked()"></app-button>
+        </div>
+    </div>
+</div>

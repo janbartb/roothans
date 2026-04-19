@@ -1,0 +1,27 @@
+<div class="fullheight" style="overflow-y: scroll;">
+    <div class="flexbox flexcenter">
+        <div style="font-size: .75em;">
+            <table>
+                <tbody>
+                    @for (spl of spelers; track $index) {
+                        <tr>
+                            <td style="color: green;">{{spelersAsTxt[$index]}}</td>
+                            <td style="width: 3em;"></td>
+                            <td>{{spl.id}}</td>
+                            <td style="width: 3em;"></td>
+                            <td>{{spl.vnaam}}</td>
+                            <td style="width: 3em;"></td>
+                            <td>{{spl.tvoeg}}</td>
+                            <td style="width: 3em;"></td>
+                            <td>{{spl.anaam}}</td>
+                            <td style="width: 3em;"></td>
+                            <td>{{spl.extra}}</td>
+                            <td style="width: 3em;"></td>
+                            <td>{{spl.moyenne}}</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,44 @@
+.ppd-kolom {
+    border-left: .125em solid black;
+    border-right: .125em solid black;
+}
+
+.ppd-title {
+    min-height: 1.25em;
+    line-height: 1.25em;
+    text-align: center;
+    background-color: #606060;
+    color: white;
+}
+.ppd-title span {
+    font-size: .75em;
+}
+
+.poule-view {
+    border: 4px solid white;
+    border-radius: .75em;
+}
+.poule-view.selected {
+    border-color: red;
+}
+
+.poule-button {
+    margin: 0 .25em;
+    width: 1.5em;
+    height: 1.5em;
+    font-weight: bold;
+    background-color: lightgray;
+    color: gray;
+    border: 2px solid gray;
+    border-radius: .25em;
+    cursor: pointer;
+}
+.poule-button:not(.selected):hover {
+    transform: scale(1.25);
+}
+.poule-button.selected {
+    transform: scale(1.25);
+    background-color: lightgreen;
+    color: darkgreen;
+    border-color: darkgreen;
+}

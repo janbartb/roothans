@@ -1,0 +1,19 @@
+<div style="overflow: hidden; border-radius: .25em;">
+    <div class="dialog-header">
+        <span>{{title}}</span>
+    </div>
+    <div class="dialog-content">
+        @for (txt of texts; track $index) {
+            <div>
+                <span>{{txt}}</span>
+            </div>
+            <div style="padding-top: .25em;">
+                <span>Weet je het zeker?</span>
+            </div>
+        }
+    </div>
+    <div class="dialog-footer flexbox flexright">
+        <app-button [button]="btnCancel" (btnClicked)="canceled()"></app-button>
+        <app-button [button]="btnConfirm" (btnClicked)="confirmed()"></app-button>
+    </div>
+</div>

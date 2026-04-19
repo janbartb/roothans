@@ -1,0 +1,55 @@
+<div class="fullheight flexbox flexcenter flexmiddle">
+    <div style="font-size: .75em;">
+        <div class="flexbox">
+            <div style="width: 10em;">
+                <app-button [button]="btnSettings" (btnClicked)="settingsClicked()"></app-button>
+            </div>
+        </div>
+        <div style="min-height: .5em;"></div>
+        <hr>
+        <div style="min-height: .5em;"></div>
+        <div class="flexbox">
+            <div style="width: 10em;">
+                <app-button [button]="btnKoppels" (btnClicked)="koppelsClicked()"></app-button>
+            </div>
+            <div style="padding-left: .5em;">
+                <span>Dit seizoen heeft </span>
+                <span style="padding: 0 .25em;"><b> {{koppels.length}} </b></span>
+                <span> koppel(s)</span>
+            </div>
+        </div>
+        <div class="flexbox" style="padding-top: 1em;">
+            <div style="width: 10em;">
+                <app-button [button]="btnPoules" (btnClicked)="poulesClicked()"></app-button>
+            </div>
+            <div style="padding-left: .5em;">
+                <span>Dit seizoen heeft </span>
+                <span style="padding: 0 .25em;"><b> {{poules.length}} </b></span>
+                <span> poule(s)</span>
+            </div>
+        </div>
+        <div class="flexbox" style="padding-top: 1em;">
+            <div style="width: 10em;">
+                <app-button [button]="btnRondes" (btnClicked)="rondesClicked()"></app-button>
+            </div>
+            <div style="padding-left: .5em;">
+                <span>Dit seizoen heeft </span>
+                <span style="padding: 0 .25em;"><b> {{rondes.length}} </b></span>
+                <span> ronde(s)</span>
+            </div>
+        </div>
+        <div style="min-height: .5em;"></div>
+        <hr>
+        <div style="min-height: .5em;"></div>
+        <div class="flexbox">
+            <div style="width: 10em;">
+                <app-button [button]="btnSpelers" (btnClicked)="spelersClicked()"></app-button>
+            </div>
+            <div style="padding-left: .5em;">
+                <span>De app heeft  </span>
+                <span style="padding: 0 .25em;"><b> {{aantSpelers}} </b></span>
+                <span> speler(s)</span>
+            </div>
+        </div>
+    </div>
+</div>

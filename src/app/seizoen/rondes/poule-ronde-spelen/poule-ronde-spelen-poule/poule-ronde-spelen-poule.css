@@ -1,0 +1,99 @@
+.poule-schema {
+
+}
+
+.poule-col {
+    width: 10em;
+    min-height: 100%;
+    border-right: .25em solid black;
+}
+
+.row-names {
+    min-height: 2.5em;
+    border-bottom: .3125em solid black;
+    background-color: lightgray;
+}
+.col-names {
+    background-color: lightgray;
+}
+.row-names .col-names {
+    padding-left: .5em;
+    background-color: white;
+}
+.row-names .col-koppel {
+    line-height: .875em;
+    font-weight: bold;
+    padding-left: .5em;
+}
+.row-names .col-total {
+    background-color: white;
+}
+
+.row-koppel {
+    min-height: 6.5em;
+    border-bottom: .25em solid black;
+}
+.row-koppel .col-names {
+    font-weight: bold;
+}
+.row-koppel .col-koppel {
+    position: relative;
+}
+.row-koppel .col-names .row-speler {
+    line-height: .875em;
+}
+.row-speler {
+    min-height: 3.125em;
+    padding-left: .5em;
+}
+.row-speler.border-btm {
+    border-bottom: .0625em solid grey;
+}
+.row-speler.border-top {
+    border-top: .0625em solid grey;
+}
+.row-koppel .col-total {
+    color: red;
+    font-weight: bold;
+}
+.row-koppel .col-total .spl-punten {
+    padding-right: .375em;
+}
+.row-koppel .col-total .kop-punten {
+    padding-right: 1.25em;
+}
+
+.cell-filler {
+    background-color: #505050;
+}
+
+.match-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: white;
+    cursor: pointer;
+    z-index: 10;
+}
+.match-overlay:hover {
+    background-color: #b7dfb8;
+}
+.match-overlay.selected {
+    background-color: lightgreen;
+}
+.match-indicator {
+    width: 4em;
+    height: 4em;
+    color: white;
+    background-color: green;
+    border-radius: 50%;
+    line-height: 4em;
+    text-align: center;
+    font-weight: bold;
+    overflow: hidden;
+}
+.match-indicator span {
+    font-size: 3em;
+}

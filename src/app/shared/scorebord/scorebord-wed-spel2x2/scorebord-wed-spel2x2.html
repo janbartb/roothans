@@ -1,0 +1,22 @@
+<div style="font-size: .5em;">
+    <div class="flexbox">
+        <div>
+            <app-scorebord-team [team]="wedstrijd.teams[0]"
+                            [maxBrt]="wedstrijd.regels.maxBeurten"
+                            [isVijfde]="wedstrijd.regels.idxOptie == 4"
+                            [position]="'left'"></app-scorebord-team>
+            <app-scorebord-wed-spel2 [wedstrijd]="wedstrijd"
+                                    [speler]="wedstrijd.teams[0].spelers[0]"
+                                    [tegenstander]="wedstrijd.teams[0].spelers[1]"></app-scorebord-wed-spel2>
+        </div>
+        <div>
+            <app-scorebord-team [team]="wedstrijd.teams[1]"
+                            [maxBrt]="wedstrijd.regels.maxBeurten"
+                            [isVijfde]="wedstrijd.regels.idxOptie == 4"
+                            [position]="'right'"></app-scorebord-team>
+            <app-scorebord-wed-spel2 [wedstrijd]="wedstrijd"
+                                    [speler]="wedstrijd.teams[1].spelers[0]"
+                                    [tegenstander]="wedstrijd.teams[1].spelers[1]"></app-scorebord-wed-spel2>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,12 @@
+.poule-container {
+    width: 50%;
+    padding: 1em 2em 0 2em;
+}
+
+.poule-view {
+    border: 4px solid white;
+    border-radius: .75em;
+}
+.poule-view.selected {
+    border-color: red;
+}

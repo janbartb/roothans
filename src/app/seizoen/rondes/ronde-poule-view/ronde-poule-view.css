@@ -1,0 +1,38 @@
+.poule {
+    border: .125em solid black;
+    border-radius: .5em;
+    overflow: hidden;
+}
+.poule.selectable {
+    cursor: pointer;
+}
+.poule.selectable:hover .poule-body {
+    background-color: lightgray;
+}
+.poule-header {
+    background-color: black;
+    color: white;
+    padding: .125em .5em;
+}
+.poule-header span {
+    font-size: 1.25em;
+}
+.poule-header .btn-delete {
+    cursor: pointer;
+    color: lightgray;
+}
+.poule-header .btn-delete:hover {
+    color: red;
+}
+.poule-body {
+    padding: .5em;
+}
+.poule-koppel {
+    /* border: .125em solid white; */
+    border-radius: .5em;
+    padding: 0 .5em;
+    overflow: hidden;
+}
+/* .poule-koppel.selected {
+    border-color: red;
+} */

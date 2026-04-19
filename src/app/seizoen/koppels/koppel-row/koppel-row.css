@@ -1,0 +1,17 @@
+.voorkeurdag {
+    color: green;
+    cursor: pointer;
+}
+.voorkeurdag:hover {
+    color: darkgreen;
+}
+
+.poule-uitslag {
+    color: red;
+    font-weight: bold;
+    padding-left: 2em;
+}
+.poule-uitslag div {
+    width: 2em;
+    text-align: right;
+}

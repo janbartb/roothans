@@ -1,0 +1,72 @@
+<div class="scorebord-spl wide flexbox flexstretch" [ngClass]="{'actief': team.actief, 'geel': !team.metWit}">
+    @if (position == 'left') {
+        <div style="width: 15em;">
+            <app-scorebord-wide-bal [aantCar]="team.teamTsCar"
+                                [aantBrt]="team.teamTsBrt"></app-scorebord-wide-bal>
+            <app-scorebord-wide-extra [serie]="team.stand.serie"
+                                [hoogSer]="team.stand.hoogSer"
+                                [punten]="team.stand.punten"
+                                [perc]="100 * team.stand.gemiddelde / team.teamTsMoy"
+                                [percView]="team.stand.percView"
+                                [formatSer]="formatSer"></app-scorebord-wide-extra>
+        </div>
+        <div style="width: 44em;">
+            <app-scorebord-wide-info [naam]="team.teamNaam"
+                                [moyenne]="team.teamTsMoy"
+                                [position]="position"></app-scorebord-wide-info>
+            <app-scorebord-wide-stand [aantCar]="meteenToev ? (team.stand.aantCar + team.stand.serie) : team.stand.aantCar"
+                                [aantBrt]="team.stand.aantBrt"
+                                [serie]="team.stand.serie"
+                                [moyView]="team.stand.moyView"
+                                [enNog]="team.stand.enNog"
+                                [numFormats]="[formatCar, formatBrt, formatSer]"
+                                [position]="position"></app-scorebord-wide-stand>
+            <app-scorebord-wide-status [aantCar]="team.stand.aantCar"
+                                [serie]="team.stand.serie"
+                                [voortgang]="team.stand.voortgang"></app-scorebord-wide-status>
+            <app-scorebord-wide-laatste5 [actief]="team.actief"
+                                [serView]="team.stand.serView"
+                                [formatSer]="formatSer"
+                                [laatste5]="team.stand.laatste5brt"
+                                [isVijfde]="isVijfde"
+                                [aantCar]="team.stand.aantCar + team.stand.serie"
+                                [metWit]="team.metWit"
+                                [position]="position"></app-scorebord-wide-laatste5>
+        </div>
+    }
+    @else {
+        <div style="width: 44em;">
+            <app-scorebord-wide-info [naam]="team.teamNaam"
+                                [moyenne]="team.teamTsMoy"
+                                [position]="position"></app-scorebord-wide-info>
+            <app-scorebord-wide-stand [aantCar]="meteenToev ? (team.stand.aantCar + team.stand.serie) : team.stand.aantCar"
+                                [aantBrt]="team.stand.aantBrt"
+                                [serie]="team.stand.serie"
+                                [moyView]="team.stand.moyView"
+                                [enNog]="team.stand.enNog"
+                                [numFormats]="[formatCar, formatBrt, formatSer]"
+                                [position]="position"></app-scorebord-wide-stand>
+            <app-scorebord-wide-status [aantCar]="team.stand.aantCar"
+                                [serie]="team.stand.serie"
+                                [voortgang]="team.stand.voortgang"></app-scorebord-wide-status>
+            <app-scorebord-wide-laatste5 [actief]="team.actief"
+                                [serView]="team.stand.serView"
+                                [formatSer]="formatSer"
+                                [laatste5]="team.stand.laatste5brt"
+                                [isVijfde]="isVijfde"
+                                [aantCar]="team.stand.aantCar + team.stand.serie"
+                                [metWit]="team.metWit"
+                                [position]="position"></app-scorebord-wide-laatste5>
+        </div>
+        <div style="width: 15em;">
+            <app-scorebord-wide-bal [aantCar]="team.teamTsCar"
+                                [aantBrt]="team.teamTsBrt"></app-scorebord-wide-bal>
+            <app-scorebord-wide-extra [serie]="team.stand.serie"
+                                [hoogSer]="team.stand.hoogSer"
+                                [punten]="team.stand.punten"
+                                [perc]="100 * team.stand.gemiddelde / team.teamTsMoy"
+                                [percView]="team.stand.percView"
+                                [formatSer]="formatSer"></app-scorebord-wide-extra>
+        </div>
+    }
+</div>

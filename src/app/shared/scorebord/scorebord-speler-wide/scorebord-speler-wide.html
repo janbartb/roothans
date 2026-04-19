@@ -1,0 +1,72 @@
+<div class="scorebord-spl wide flexbox flexstretch" [ngClass]="{'actief': speler.actief, 'geel': !speler.metWit}">
+    @if (position == 'left') {
+        <div style="width: 15em;">
+            <app-scorebord-wide-bal [aantCar]="speler.splTsCar"
+                                [aantBrt]="speler.splTsBrt"></app-scorebord-wide-bal>
+            <app-scorebord-wide-extra [serie]="speler.stand.serie"
+                                [hoogSer]="speler.stand.hoogSer"
+                                [punten]="speler.stand.punten"
+                                [perc]="100 * speler.stand.gemiddelde / speler.splTsMoy"
+                                [percView]="speler.stand.percView"
+                                [formatSer]="formatSer"></app-scorebord-wide-extra>
+        </div>
+        <div style="width: 44em;">
+            <app-scorebord-wide-info [naam]="speler.splBordNaam"
+                                [moyenne]="speler.splTsMoy"
+                                [position]="position"></app-scorebord-wide-info>
+            <app-scorebord-wide-stand [aantCar]="meteenToev ? (speler.stand.aantCar + speler.stand.serie) : speler.stand.aantCar"
+                                [aantBrt]="speler.stand.aantBrt"
+                                [serie]="speler.stand.serie"
+                                [moyView]="speler.stand.moyView"
+                                [enNog]="speler.stand.enNog"
+                                [numFormats]="[formatCar, formatBrt, formatSer]"
+                                [position]="position"></app-scorebord-wide-stand>
+            <app-scorebord-wide-status [aantCar]="speler.stand.aantCar"
+                                [serie]="speler.stand.serie"
+                                [voortgang]="speler.stand.voortgang"></app-scorebord-wide-status>
+            <app-scorebord-wide-laatste5 [actief]="speler.actief"
+                                [serView]="speler.stand.serView"
+                                [formatSer]="formatSer"
+                                [laatste5]="speler.stand.laatste5brt"
+                                [isVijfde]="isVijfde"
+                                [aantCar]="speler.stand.aantCar + speler.stand.serie"
+                                [metWit]="speler.metWit"
+                                [position]="position"></app-scorebord-wide-laatste5>
+        </div>
+    }
+    @else {
+        <div style="width: 44em;">
+            <app-scorebord-wide-info [naam]="speler.splBordNaam"
+                                [moyenne]="speler.splTsMoy"
+                                [position]="position"></app-scorebord-wide-info>
+            <app-scorebord-wide-stand [aantCar]="meteenToev ? (speler.stand.aantCar + speler.stand.serie) : speler.stand.aantCar"
+                                [aantBrt]="speler.stand.aantBrt"
+                                [serie]="speler.stand.serie"
+                                [moyView]="speler.stand.moyView"
+                                [enNog]="speler.stand.enNog"
+                                [numFormats]="[formatCar, formatBrt, formatSer]"
+                                [position]="position"></app-scorebord-wide-stand>
+            <app-scorebord-wide-status [aantCar]="speler.stand.aantCar"
+                                [serie]="speler.stand.serie"
+                                [voortgang]="speler.stand.voortgang"></app-scorebord-wide-status>
+            <app-scorebord-wide-laatste5 [actief]="speler.actief"
+                                [serView]="speler.stand.serView"
+                                [formatSer]="formatSer"
+                                [laatste5]="speler.stand.laatste5brt"
+                                [isVijfde]="isVijfde"
+                                [aantCar]="speler.stand.aantCar + speler.stand.serie"
+                                [metWit]="speler.metWit"
+                                [position]="position"></app-scorebord-wide-laatste5>
+        </div>
+        <div style="width: 15em;">
+            <app-scorebord-wide-bal [aantCar]="speler.splTsCar"
+                                [aantBrt]="speler.splTsBrt"></app-scorebord-wide-bal>
+            <app-scorebord-wide-extra [serie]="speler.stand.serie"
+                                [hoogSer]="speler.stand.hoogSer"
+                                [punten]="speler.stand.punten"
+                                [perc]="100 * speler.stand.gemiddelde / speler.splTsMoy"
+                                [percView]="speler.stand.percView"
+                                [formatSer]="formatSer"></app-scorebord-wide-extra>
+        </div>
+    }
+</div>

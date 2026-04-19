@@ -1,0 +1,18 @@
+<div class="fullheight flexbox flexcolumn" style="font-size: .75em;">
+    <div class="flexgrow1 flexbox flexcenter flexmiddle">
+        <div>
+            @for (ronde of rondes; track $index) {
+                <div>
+                    @if ($index == 0) {
+                        <app-ronde-view [ronde]="ronde" [prevRonde]="dummy"
+                                    (planningClicked)="planningClicked($event)" (spelenClicked)="spelenClicked($event)"></app-ronde-view>
+                    }
+                    @else {
+                        <app-ronde-view [ronde]="ronde" [prevRonde]="rondes[$index - 1]"
+                                    (planningClicked)="planningClicked($event)" (spelenClicked)="spelenClicked($event)"></app-ronde-view>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>

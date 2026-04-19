@@ -1,0 +1,62 @@
+<div class="fullheight">
+    <div class="fullheight flexbox flexcenter flexmiddle">
+        <div style="font-size: .75em;">
+            <div style="padding: .5em 0;">
+                @if (seizoenen.length && selectForm) {
+                    <form [formGroup]="selectForm">
+                        <div class="flexbox" style="padding-top: .75rem;">
+                            <div class="flexgrow1">
+                                <app-button [button]="btnSelect" (btnClicked)="buttonSelectClicked()"></app-button>
+                            </div>
+                            <div style="padding-left: .5em; width: 4.5em;">
+                                <select id="selSeiz" style="width: 4em;" formControlName="selSeiz">
+                                    @for (seizoen of seizoenen; track $index) {
+                                        <option [value]="seizoen">{{seizoen}}&nbsp;</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                }
+            </div>
+            <div style="padding: .5em 0;">
+                @if (nieuwForm) {
+                    <form [formGroup]="nieuwForm">
+                        <div class="flexbox">
+                            <div class="flexgrow1">
+                                <app-button [button]="btnNieuw" [disabled]="!newSeiz || newSeiz.invalid" 
+                                        (btnClicked)="buttonNieuwClicked()"></app-button>
+                            </div>
+                            <div style="padding-left: .5em; width: 4.5em;">
+                                <input type="number" id="newSeiz" style="width: 4em;" formControlName="newSeiz" autocomplete="off"
+                                    [ngClass]="{'invalid': newSeiz?.invalid && (newSeiz?.dirty), 'valid': newSeiz?.valid && (newSeiz?.dirty)}">
+                            </div>
+                        </div>
+                    </form>
+                }
+            </div>
+            <div style="min-height: .5em;"></div>
+            <hr>
+            <div style="min-height: .5em;"></div>
+            <div style="padding: .5em 0;">
+                <div class="flexbox">
+                    <div class="flexgrow1">
+                        <app-button [button]="btnSpelers" (btnClicked)="buttonSpelersClicked()"></app-button>
+                    </div>
+                    <div style="width: 4.5em;"></div>
+                </div>
+            </div>
+            <div style="min-height: .5em;"></div>
+            <hr>
+            <div style="min-height: .5em;"></div>
+            <div style="padding: .5em 0;">
+                <div class="flexbox">
+                    <div class="flexgrow1">
+                        <app-button [button]="btnProbeer" (btnClicked)="buttonProbeerClicked()"></app-button>
+                    </div>
+                    <div style="width: 4.5em;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

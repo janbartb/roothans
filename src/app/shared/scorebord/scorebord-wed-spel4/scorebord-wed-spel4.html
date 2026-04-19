@@ -1,0 +1,22 @@
+<div style="font-size: .5em;">
+    <div class="flexbox">
+        <app-scorebord-speler-wide  [speler]="wedstrijd.spelers[0]"
+                                [maxBrt]="wedstrijd.regels.maxBeurten"
+                                [isVijfde]="wedstrijd.regels.idxOptie == 4"
+                                [position]="'left'"></app-scorebord-speler-wide>
+        <app-scorebord-speler-wide  [speler]="wedstrijd.spelers[1]"
+                                [maxBrt]="wedstrijd.regels.maxBeurten"
+                                [isVijfde]="wedstrijd.regels.idxOptie == 4"
+                                [position]="'right'"></app-scorebord-speler-wide>
+    </div>
+    <div class="flexbox">
+        <app-scorebord-speler-wide  [speler]="wedstrijd.spelers[2]"
+                                [maxBrt]="wedstrijd.regels.maxBeurten"
+                                [isVijfde]="wedstrijd.regels.idxOptie == 4"
+                                [position]="'left'"></app-scorebord-speler-wide>
+        <app-scorebord-speler-wide  [speler]="wedstrijd.spelers[3]"
+                                [maxBrt]="wedstrijd.regels.maxBeurten"
+                                [isVijfde]="wedstrijd.regels.idxOptie == 4"
+                                [position]="'right'"></app-scorebord-speler-wide>
+    </div>
+</div>

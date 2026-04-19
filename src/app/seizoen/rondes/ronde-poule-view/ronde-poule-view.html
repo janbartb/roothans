@@ -1,0 +1,39 @@
+<div class="poule" [ngClass]="{'selectable': !koppelClick}">
+    <div class="flexbox flexbetween poule-header">
+        <div>
+            <span>Poule <b>{{poule.pouleId}}</b></span>
+        </div>
+        <div>
+            <span>{{poule.pouleDagNaam}} </span>
+            <span style="color: lightgreen;"> {{dateReverse(poule.pouleDatum)}}</span>
+        </div>
+        @if (pouleCheck) {
+            <div style="font-size: 1.25em; padding-right: .5em;">
+                @if (poule.pouleKoppels.length == maxKoppels) {
+                    <i style="color: lightgreen;" class="fas fa-check"></i>
+                }
+                @else {
+                    <span>&nbsp;</span>
+                }
+            </div>
+        }
+        <div style="padding-right: .5em;">
+            @if (allowDelete) {
+                <i class="fas fa-trash-alt btn-delete" (click)="deleteClicked($event)"></i>
+            }
+            @else {
+                <span>&nbsp;</span>
+            }
+        </div>
+    </div>
+    <div class="poule-body">
+        <div>
+            @for (koppel of poule.pouleKoppels; track $index) {
+                <div class="poule-koppel" [ngClass]="{'list-row': koppelClick, 'selected': $index == idxKoppel}" 
+                            (click)="kplClicked($index)">
+                    <app-koppel-row [pouleKoppel]="koppel" [view]="koppelView" [rang]="$index + 1"></app-koppel-row>
+                </div>
+            }
+        </div>
+    </div>
+</div>

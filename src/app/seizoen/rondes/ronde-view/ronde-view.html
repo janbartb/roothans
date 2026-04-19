@@ -1,0 +1,32 @@
+@if (type == 'row') {
+    <div class="flexbox flexmiddle" style="min-height: 3em;">
+        <div style="width: 6em;">
+            <span>Ronde {{ronde.rndId}}</span>
+        </div>
+        <div style="width: 10em;">
+            <span style="font-weight: bold;">{{ronde.rndNaam}}</span>
+        </div>
+        <div style="width: 8em;">
+            <span>{{ronde.rndType}} ronde</span>
+        </div>
+        <div style="width: 6em;">
+            <span>{{ronde.rndBeurten}} brt</span>
+        </div>
+        <div style="width: 10em; padding-top: .25em;">
+            <app-button [button]="btnPlan" [disabled]="!prevRonde.rndGepland" (btnClicked)="btnPlanClicked()"></app-button>
+        </div>
+        <div style="width: 3em;">
+            @if (ronde.rndGepland) {
+                <i class="fas fa-check" style="color: green;"></i>
+            }
+        </div>
+        <div style="width: 10em; padding-top: .25em;">
+            <app-button [button]="btnSpel" [disabled]="!ronde.rndGepland" (btnClicked)="btnSpelClicked()"></app-button>
+        </div>
+        <div style="width: 1.5em;">
+            @if (ronde.rndGespeeld) {
+                <i class="fas fa-check" style="color: green;"></i>
+            }            
+        </div>
+    </div>
+}

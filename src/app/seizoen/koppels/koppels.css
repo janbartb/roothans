@@ -1,0 +1,10 @@
+.delete-box {
+    width: 1.5em;
+    color: gray;
+}
+.delete-box:hover {
+    color: black
+}
+.delete-box .fa-check-square {
+    color: green
+}

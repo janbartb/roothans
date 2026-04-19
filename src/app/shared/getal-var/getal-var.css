@@ -1,0 +1,18 @@
+.getal-container {
+    padding-bottom: .25rem;
+    overflow: hidden;
+    transition: width 1s ease;
+}
+.getal-container.narrow {
+    font-family: "Arial Narrow";
+}
+
+.komma {
+    height: .8125em;
+    line-height: .8125em; 
+    letter-spacing: -.025em;
+}
+.komma span {
+    position: relative;
+    left: -.05em;
+}

@@ -1,0 +1,54 @@
+.kpd-kolom {
+    border-left: .125em solid black;
+    border-right: .125em solid black;
+}
+
+.kpd-title {
+    min-height: 1.25em;
+    line-height: 1.25em;
+    text-align: center;
+    background-color: #606060;
+    color: white;
+}
+.kpd-title span {
+    font-size: .75em;
+}
+
+.kpd-body {
+    padding: 0 .5em;
+}
+
+.koppel-row {
+    padding: 0 .5em;
+    cursor: pointer;
+}
+
+.koppel-first {
+    background-color: white;
+    color: black;
+}
+.koppel-first .selected {
+    background-color: #505050;
+    color: white;
+    font-weight: bold;
+}
+
+.koppel-second {
+    background-color: #beffbe;
+    color: black;
+}
+.koppel-second .selected {
+    background-color: darkgreen;
+    color: white;
+    font-weight: bold;
+}
+
+.koppel-rest {
+    background-color: #ffacac;
+    color: black;
+}
+.koppel-rest .selected {
+    background-color: #920000;
+    color: white;
+    font-weight: bold;
+}

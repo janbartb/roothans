@@ -1,0 +1,8 @@
+<div class="alert-container alert flexbox" [class]="alertService.alert.type" [ngClass]="{'visible': alertService.visible}">
+    <div class="flexgrow1 flexbox flexcenter flexmiddle">
+        <div class="alert-message">{{alertService.alert.text}}</div>
+    </div>
+    <div class="flexbox flexcenter flexmiddle" style="width: 3em;">
+        <div style="cursor: pointer;" (click)="alertService.hideAlert()">&times;</div>
+    </div>
+</div>

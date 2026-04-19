@@ -1,0 +1,98 @@
+<div class="fullheight flexbox flexcolumn" style="font-size: .75em;">
+    <div class="flexbox flexcenter" style="min-height: 2em; padding-right: .5rem;">
+        <div class="list-header flexbox flexmiddle" style="min-height: 2em;">
+            <div style="width: 6em;">
+                <span>ID</span>
+            </div>
+            <div style="width: 14em;">
+                <span class="sortable" (click)="sortClicked('nam')">Naam</span>
+                @if (sortCol == 'nam') {
+                    <i class="fas" [ngClass]="sortDir == 1 ? 'fa-sort-up' : 'fa-sort-down'" style="padding-left: .25em;"></i>
+                }
+            </div>
+            <div style="width: 1.5em;"></div>
+            <div style="width: 7em;">
+                <span>Spraak</span>
+            </div>
+            <div style="width: 7em;">
+                <span>Extra</span>
+            </div>
+            <div style="width: 8em;">
+                <span class="sortable" (click)="sortClicked('moy')">Moyenne</span>
+                @if (sortCol == 'moy') {
+                    <i class="fas" [ngClass]="sortDir == 1 ? 'fa-sort-up' : 'fa-sort-down'" style="padding-left: .25em;"></i>
+                }
+            </div>
+            <div style="width: 15em;">
+                <span>E-mail</span>
+            </div>
+            <div style="width: 1em;"></div>
+        </div>
+    </div>
+    <div class="flexgrow1 flexbox flexcenter" style="overflow-y: scroll;">
+        <div class="list-data">
+            @for (spl of spelers; track $index) {
+                <div class="list-row flexbox" [ngClass]="{'selected': $index == idxSpeler}" (click)="spelerClicked($index)">
+                    <div style="width: 6em;">
+                        <span>{{spl.id}}</span>
+                    </div>
+                    <div style="width: 14em;">
+                        <span>{{spl.vnaam}} {{spl.tvoeg}} {{spl.anaam}}</span>
+                    </div>
+                    <div style="width: 1.5em;">
+                        <i class="fas fa-volume-up btn-speak" (click)="naamUitspreken($event, $index)"></i>
+                    </div>
+                    <div style="width: 7em;">
+                        @if (spl.snaam != spl.vnaam) {
+                            <span>{{spl.snaam}}</span>
+                        }
+                    </div>
+                    <div style="width: 7em;">
+                        <span>{{spl.extra}}</span>
+                    </div>
+                    <div style="width: 8em;">
+                        <span>{{spl.moyenne | number:'1.3-3':'nl-NL'}}</span>
+                    </div>
+                    <div style="width: 15em;">
+                        <span>{{spl.email}}</span>
+                    </div>
+                    <div style="width: 1em;">
+                        <i class="fas fa-trash-alt btn-delete" (click)="deleteSpelerClicked($event, $index)"></i>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    @if (mode != 'add' || idxSpeler >= 0) {
+        <div class="flexbox flexcenter flexmiddle" style="min-height: 3em;">
+            <div>
+                <app-button [button]="btnAdd" (btnClicked)="buttonClicked($event)"></app-button>
+            </div>
+        </div>
+    }
+</div>
+@if (confirmVisible) {
+    <div class="overlay flexbox flexcenter flexmiddle">
+        <div style="opacity: 1;">
+            <div class="dialog" style="font-size: .75em;">
+                <app-confirm-dialog [title]="'Speler verwijderen'"
+                                    [texts]="confirmTexts"
+                                    (reply)="deleteSpelerReplied($event)"></app-confirm-dialog>
+            </div>
+        </div>
+    </div>
+}
+@if (dialogVisible) {
+    <div class="overlay flexbox flexcenter flexmiddle">
+        <div style="opacity: 1;">
+            <div class="dialog" style="font-size: .75em;">
+                <app-speler-dialog [speler]="speler"
+                                    [action]="mode"
+                                    [title]="dialogTitle"
+                                    [existing]="existingIds"
+                                    (cancel)="dialogCanceled()"
+                                    (confirm)="dialogConfirmed($event)"></app-speler-dialog>
+            </div>
+        </div>
+    </div>
+}
