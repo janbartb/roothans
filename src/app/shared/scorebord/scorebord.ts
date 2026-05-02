@@ -2,7 +2,7 @@ import { Component, EventEmitter, HostListener, inject, Input, OnInit, Output } 
 import { Speech } from '../../services/speech';
 import { Helper } from '../../services/helper';
 import { WedSpeler, Wedstrijd, WedTeam } from '../../model/wedstrijd';
-import { SpelerNamen, SpelerNamenDialog } from '../../model/dialogs';
+import { ConfirmDialogType, SpelerNamen, SpelerNamenDialog } from '../../model/dialogs';
 import { ModalMessage } from '../../model/modal-message';
 import { Alerts } from '../../services/alerts';
 import { NgClass } from '@angular/common';
@@ -58,8 +58,9 @@ export class Scorebord implements OnInit {
     teamLaatste5: number[] = [];
     toetsen: ActieToetsen = new ActieToetsen();
     namenDialog: SpelerNamenDialog = new SpelerNamenDialog();
-    confirmUndoDialog: ConfirmDialog = new ConfirmDialog();
-    isUndoDialogOpen: boolean = false;
+    confirmUndoDialog: ConfirmDialogType = new ConfirmDialogType('');
+    wisselDialog: ConfirmDialogType = new ConfirmDialogType('Spelers wisselen', ['Wissel de spelers om?']);
+    confirmOpslaan: ConfirmDialogType = new ConfirmDialogType('Uitslag opslaan', ['Uitslag van wedstrijd opslaan?']);
     modals: ModalMessage[] = [];
     modalVisible: boolean = false;
     textsToSpeak: string[] = [];
@@ -74,6 +75,17 @@ export class Scorebord implements OnInit {
     sayGenoteerd: boolean = false;
     alsoForZero: boolean = false;
     helpPopupVisible: boolean = false;
+
+    escapePressed() {
+        if (this.wedstrijd.wedGespeeld && !this.wedstrijd.wedOpgeslagen) {
+            this.confirmOpslaan.followUp = 'escape';
+            this.confirmOpslaan.texts = ['Uitslag van wedstrijd opslaan?', 'Laatste kans!'];
+            this.confirmOpslaan.open = true;
+        }
+        else {
+            this.keyPressed.emit('Escape');
+        }
+    }
 
     enterPressed() {
         if (this.wedstrijd.wedGespeeld) {
@@ -238,6 +250,14 @@ export class Scorebord implements OnInit {
         this.isDialogOpen = true;
     }
 
+    wisselDialogReplied(confirmed: boolean) {
+        if (confirmed) {
+            this.wisselSpelers();
+        }
+        this.wedstrijd.volgordeOk = true;
+        this.wisselDialog.open = false;
+    }
+
     namenDialogReplied(accepted: boolean) {
         if (accepted) {
             this.namenDialog.spelers.forEach(namSpl => {
@@ -305,10 +325,7 @@ export class Scorebord implements OnInit {
     handleKeyboardEvent(event: KeyboardEvent): boolean {
         //console.log(event);
         console.log(event.code + ' : ' + event.key);
-        if (!this.interactive) {
-            return false;
-        }
-        if (this.isDialogOpen || this.isUndoDialogOpen) {
+        if (this.isDialogOpen || this.confirmUndoDialog.open || this.wisselDialog.open || this.confirmOpslaan.open) {
             return false;
         }
         // if (this.alert.helpVisible && event.key != 'Shift') {
@@ -322,11 +339,7 @@ export class Scorebord implements OnInit {
             return false;
         }
         if (event.key === 'Escape') {
-            if (this.actieveSpeler.stand.serie > 0) {
-                this.addNumberToSerie('-1');
-                return false;
-            }
-            this.keyPressed.emit('Escape');
+            this.escapePressed();
             return false;
         }
         if (event.code === 'KeyN') {
@@ -388,6 +401,15 @@ export class Scorebord implements OnInit {
         this.repeatRemaining = false;
         this.sayGenoteerd = true;
         this.alsoForZero = false;
+        // const apparaten: Apparaat[] = this.appData.getConfig()?.apparaten || [];
+        // const toetsenOk = this.setActieToetsen(apparaten);
+        // if (!toetsenOk) {
+        //     this.alert.showAlert('Apparaten configuratie niet gevonden. Default toetsen worden gebruikt.', 'warning', 5);
+        //     this.setDefaultActieToetsen();
+        // }
+        // this.repeatRemaining = this.appData.getConfig()?.repeatRemaining || false;
+        // this.sayGenoteerd = this.appData.getConfig()?.sayGenoteerd || true;
+        // this.alsoForZero = this.appData.getConfig()?.alsoForZero || false;
         if (this.wedstrijd.wedGespeeld) {
             if (this.wedstrijd.telling.idxOptie == 0) {
                 if (this.isTeamWedstrijd()) {
@@ -400,8 +422,6 @@ export class Scorebord implements OnInit {
                     });
                 }
             }
-            // this.wedstrijd.message = new Message('success', 'EINDE WEDSTRIJD');
-            // this.wedstrijd.message.show();
             setTimeout(() => {
                 const modalMsg = new ModalMessage('klaar', ['Einde wedstrijd'], '', 2);
                 this.modals.push(modalMsg);
@@ -409,39 +429,30 @@ export class Scorebord implements OnInit {
             }, 2000);
             return;
         }
-        if (this.interactive) {
-            this.setMaxBeurten();
-            this.setActiveTeamEnSpeler();
+        this.setMaxBeurten();
+        this.setActiveTeamEnSpeler();
+        if (this.isTeamWedstrijd()) {
+            this.verhoogBeurtenEnBerekenData(this.actieveSpeler, this.actieveTeam);
+        }
+        else {
+            this.verhoogBeurtenEnBerekenData(this.actieveSpeler);
+        }
+        if (this.wedstrijd.telling.idxOptie == 0) {
             if (this.isTeamWedstrijd()) {
-                this.verhoogBeurtenEnBerekenData(this.actieveSpeler, this.actieveTeam);
+                this.oldPunten[0] = this.wedstrijd.teams[0].stand.punten;
+                this.oldPunten[1] = this.wedstrijd.teams[1].stand.punten;
             }
             else {
-                this.verhoogBeurtenEnBerekenData(this.actieveSpeler);
+                this.wedstrijd.spelers.forEach((spl, idx) => {
+                    this.oldPunten[idx] = spl.stand.punten;
+                });
             }
-            if (this.wedstrijd.telling.idxOptie == 0) {
-                if (this.isTeamWedstrijd()) {
-                    this.oldPunten[0] = this.wedstrijd.teams[0].stand.punten;
-                    this.oldPunten[1] = this.wedstrijd.teams[1].stand.punten;
-                }
-                else {
-                    this.wedstrijd.spelers.forEach((spl, idx) => {
-                        this.oldPunten[idx] = spl.stand.punten;
-                    });
-                }
-            }
+        }
+        if (this.wedstrijd.volgordeOk) {
             this.checkForEnterMessages();
         }
         else {
-            if (this.wedstrijd.aantSpelers == 5) {
-                this.idxTeam = 0;
-                this.actieveTeam = this.wedstrijd.teams[this.idxTeam];
-                this.idxSpeler = 0;
-                this.actieveSpeler = this.actieveTeam.spelers[this.idxSpeler];
-            }
-            else {
-                this.idxSpeler = 0;
-                this.actieveSpeler = this.wedstrijd.spelers[this.idxSpeler];
-            }
+            this.wisselDialog.open = true;
         }
     }
 
@@ -800,7 +811,7 @@ export class Scorebord implements OnInit {
         this.speakTexts();
         this.confirmUndoDialog.title = 'Bevestig beurt terug';
         this.confirmUndoDialog.texts = [`Laatste beurt ongedaan maken.`, `Weet u het zeker?`];
-        this.isUndoDialogOpen = true;
+        this.confirmUndoDialog.open = true;
     }
 
     confirmUndoLaatsteBeurtReplied(confirmed: boolean) {
@@ -810,7 +821,7 @@ export class Scorebord implements OnInit {
         if (confirmed) {
             this.undoLaatsteBeurt();
         }
-        this.isUndoDialogOpen = false;
+        this.confirmUndoDialog.open = false;
     }
 
     private undoLaatsteBeurt(): boolean {
@@ -1055,10 +1066,10 @@ export class Scorebord implements OnInit {
             if (idx != undefined && idx != null) {
                 let teg = this.wedstrijd.spelers[Math.abs(idx - 1)];
                 if (this.wedstrijd.regels.idxOptie == 1) {
-                    if ((spl.stand.gemiddelde / spl.splTsMoy) > (teg.stand.gemiddelde / teg.splTsMoy)) {
+                    if (spl.stand.aantCar > teg.stand.aantCar) {
                         punten = this.wedstrijd.telling.winstPunten;
                     }
-                    else if ((spl.stand.gemiddelde / spl.splTsMoy) == (teg.stand.gemiddelde / teg.splTsMoy)) {
+                    else if (spl.stand.aantCar == teg.stand.aantCar) {
                         punten = this.wedstrijd.telling.gelijkPunten;
                     }
                     else {
@@ -1155,6 +1166,29 @@ export class Scorebord implements OnInit {
         return punten;
     }
 
+    private wisselSpelers() {
+        const spl1: WedSpeler = JSON.parse(JSON.stringify(this.wedstrijd.spelers[0]));
+        const spl2: WedSpeler = JSON.parse(JSON.stringify(this.wedstrijd.spelers[1]));
+        this.wedstrijd.spelers[0] = spl2;
+        this.wedstrijd.spelers[1] = spl1;
+        this.wedstrijd.spelers[0].metWit = true;
+        this.wedstrijd.spelers[0].stand.aantBrt = 0;
+        this.wedstrijd.spelers[0].actief = false;
+        this.wedstrijd.spelers[0].stand.voortgang = 0;
+        this.wedstrijd.spelers[1].metWit = false;
+        this.wedstrijd.spelers[1].stand.aantBrt = 0;
+        this.wedstrijd.spelers[1].actief = false;
+        this.wedstrijd.spelers[1].stand.voortgang = 0;
+        this.setActiveTeamEnSpeler();
+        if (this.isTeamWedstrijd()) {
+            this.verhoogBeurtenEnBerekenData(this.actieveSpeler, this.actieveTeam);
+        }
+        else {
+            this.verhoogBeurtenEnBerekenData(this.actieveSpeler);
+        }
+        this.checkForEnterMessages();
+    }
+
     private setActiveTeamEnSpeler() {
         if (this.isTeamWedstrijd()) {
             this.idxTeam = this.wedstrijd.teams.findIndex(team => team.actief);
@@ -1170,7 +1204,7 @@ export class Scorebord implements OnInit {
             this.idxSpeler = this.wedstrijd.spelers.findIndex(spl => spl.actief);
             this.idxSpeler = (this.idxSpeler < 0) ? 0 : this.idxSpeler;
             this.actieveSpeler = this.wedstrijd.spelers[this.idxSpeler];
-            this.actieveSpeler.actief = true;    
+            this.actieveSpeler.actief = true;
         }
     }
 
@@ -1290,10 +1324,33 @@ export class Scorebord implements OnInit {
                 }
                 else if (this.wedstrijd.opslaanInComp && this.wedstrijd.wedGespeeld) {
                     this.idxSpeler = -1;
-                    this.keyPressed.emit('Ready');
+                    if (!this.wedstrijd.wedOpgeslagen) {
+                        setTimeout(() => {
+                            this.confirmOpslaan.followUp = '';
+                            this.confirmOpslaan.texts = ['Uitslag van wedstrijd opslaan?'];
+                            this.confirmOpslaan.open = true;
+                        }, 3000);
+                    }
                 }
             }, 1000);
         }
+    }
+
+    confirmOpslaanReplied(confirmed: boolean) {
+        if (confirmed) {
+            if (this.confirmOpslaan.followUp == 'escape') {
+                this.keyPressed.emit('OpslaanAndEscape');
+            }
+            else {
+                this.keyPressed.emit('Opslaan');
+            }
+        }
+        else {
+            if (this.confirmOpslaan.followUp == 'escape') {
+                this.keyPressed.emit('Escape')
+            }
+        }
+        this.confirmOpslaan.open = false;
     }
 
     private speakTexts(): void {

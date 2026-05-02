@@ -1,10 +1,23 @@
 import { Btn } from "./misc";
-import { PouleKoppelSpeler } from "./ronde";
 import { WedSpeler } from "./wedstrijd";
 
+export class ConfirmDialogType {
+    title: string = '';
+    texts: string[] = [];
+    followUp: string = '';
+    open: boolean = false;
+
+    constructor(title: string, texts?: string[]) {
+        this.title = title;
+        if (texts) {
+            this.texts = texts;
+        }
+    }
+}
+
 export class ConfirmEndOfMatchDialog {
-    acceptButton: Btn = new Btn('Enter', 'Ja');
-    rejectButton: Btn = new Btn('Esc', 'Nee');
+    title: string = 'opslaan wedstrijd';
+    texts: string[] = ['Uitslag van wedstrijd opslaan?'];
 }
 
 export class SpelerNamenDialog {

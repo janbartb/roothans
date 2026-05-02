@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Base } from '../../../base/base';
-import { Poule, PouleKoppel, PouleRonde, Ronde } from '../../../model/ronde';
+import { Poule, PouleRonde, Ronde, RondeKoppel, RondeKoppelWedstrijd } from '../../../model/ronde';
 import { ActivatedRoute } from '@angular/router';
 import { Seizoen } from '../../../model/seizoen';
 import { Koppel } from '../../../model/koppel';
@@ -19,6 +19,10 @@ class KoppelsPerDag {
     idxFirst: number = -1;
     idxSecond: number = -1;
     idxRest: number = -1;
+}
+
+interface IData {
+	[ key: string ]: any;
 }
 
 @Component({
@@ -44,12 +48,27 @@ export class PouleRondePlanning extends Base implements OnInit {
     maxWeekdagen: number = 4;  // geeft aan hoeveel maandagen, dinsdagen enz beschikbaar zijn voor de poule ronde
     touched: boolean = false;
     poulesOk: boolean = false;
+    matchToNrs: IData = {
+        m01 : 1,
+        m10 : 1,
+        m23 : 2,
+        m32 : 2,
+        m02 : 3,
+        m20 : 3,
+        m13 : 4,
+        m31 : 4,
+        m03 : 5,
+        m30 : 5,
+        m12 : 6,
+        m21 : 6
+    };
 
     btnSave: Btn = new Btn('save', 'Opslaan');
     btnSaveNext: Btn = new Btn('savenext', 'Opslaan en naar speeldata');
     btnNext: Btn = new Btn('next', 'Naar speeldata');
 
     opslaanClicked(andNext?: boolean) {
+        console.log(this.pouleRonde);
         this.dao.savePouleRondeFile(this.header.seizoen, this.ronde.fileNaam, this.pouleRonde)
         .then(resp => {
             this.alert.showSuccess(resp.message);
@@ -172,11 +191,36 @@ export class PouleRondePlanning extends Base implements OnInit {
             poule.pouleDagNr = kpd.dagNr;
             poule.pouleDagNaam = kpd.dagNaam;
         }
-        poule.pouleKoppels.push(new PouleKoppel(koppel));
+        poule.pouleKoppels.push(new RondeKoppel(koppel));
         poule.pouleKoppels.sort(this.comparePoulKoppels);
+        if (poule.pouleKoppels.length == this.config.maxKoppelsPerPoule) {
+            this.setWedstrijdenEnVolgorde(poule);
+        }
         this.removeKoppelFromKoppelsPerDagen(koppel);
         this.touched = true;
         this.poulesOk = this.allPoulesFilled();
+    }
+
+    private setWedstrijdenEnVolgorde(poule: Poule) {
+        poule.pouleKoppels.forEach((kop, idx) => {
+            kop.id = String.fromCharCode(65 + idx);
+            kop.spelers.forEach(spl => {
+                spl.wedstrijden = [];
+            });
+        });
+        poule.pouleKoppels.forEach((splKop, idxSK) => {
+            poule.pouleKoppels.forEach((tegKop, idxTK) => {
+                if (idxSK != idxTK) {
+                    const wedVolgNr = this.matchToNrs['m' + idxSK + idxTK];
+                    splKop.spelers.forEach((spl, idxS) => {
+                        const wed = new RondeKoppelWedstrijd(tegKop.koppel.spelers[idxS]);
+                        wed.volgNr = wedVolgNr;
+                        wed.tegPouleKoppelId = tegKop.id;
+                        spl.wedstrijden.push(wed);
+                    });
+                }
+            });
+        });
     }
 
     private allPoulesFilled(): boolean {
@@ -246,7 +290,7 @@ export class PouleRondePlanning extends Base implements OnInit {
         return b.kopMoyenne - a.kopMoyenne;
     }
 
-    private comparePoulKoppels(a: PouleKoppel, b: PouleKoppel): number {
+    private comparePoulKoppels(a: RondeKoppel, b: RondeKoppel): number {
         return b.koppel.kopMoyenne - a.koppel.kopMoyenne;
     }
 

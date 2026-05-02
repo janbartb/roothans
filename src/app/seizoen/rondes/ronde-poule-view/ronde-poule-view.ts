@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { KoppelRow } from '../../koppels/koppel-row/koppel-row';
 import { NgClass } from '@angular/common';
 import { Poule } from '../../../model/ronde';
@@ -12,7 +12,7 @@ import { Poule } from '../../../model/ronde';
     templateUrl: './ronde-poule-view.html',
     styleUrl: './ronde-poule-view.css',
 })
-export class RondePouleView {
+export class RondePouleView implements OnInit {
     @Input() poule: Poule = new Poule();
     @Input() idxKoppel: number = -1;
     @Input() maxKoppels: number = 4;
@@ -23,6 +23,7 @@ export class RondePouleView {
     @Input() allowDelete: boolean = true;
     @Output() koppelClicked: EventEmitter<number> = new EventEmitter<number>();
     @Output() deletePouleClicked: EventEmitter<string> = new EventEmitter<string>();
+    pouleGestart: boolean = false;
 
     kplClicked(idx: number) {
         if (this.koppelSelect) {
@@ -41,6 +42,10 @@ export class RondePouleView {
             return '';
         }
         return `${dat.substring(8)}-${dat.substring(5,7)}-${dat.substring(0,4)}`;
+    }
+
+    ngOnInit(): void {
+        this.pouleGestart = this.poule.pouleKoppels.some(pk => pk.uitslag.brt > 0);
     }
 
 }

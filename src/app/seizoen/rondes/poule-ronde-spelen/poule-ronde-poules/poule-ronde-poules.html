@@ -2,7 +2,7 @@
     <div class="flexgrow1">
         <div class="flexbox wrap">
             @for (poule of pouleRonde.poules; track $index) {
-                <div class="poule-container">
+                <div class="poule-container" [ngClass]="{'even': $index % 2 == 1}">
                     <div style="font-size: .5em; padding: .25em .25em 0 .25em;">
                         <div class="poule-view" [ngClass]="{'selected': $index == idxPoule}"
                                     (click)="pouleClicked($index)">
@@ -14,7 +14,7 @@
             }
         </div>
     </div>
-    <div class="flexbox flexcenter flexmiddle" style="font-size: .75em; min-height: 3em; border-top: .125em solid black;">
+    <div class="flexbox flexcenter flexmiddle" style="min-height: 3em; border-top: .125em solid black;">
         <div>
             <app-button [button]="btnWeds" [disabled]="idxPoule < 0" (btnClicked)="naarPouleClicked()"></app-button>
         </div>

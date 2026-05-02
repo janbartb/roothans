@@ -112,8 +112,34 @@
 @if (isDialogOpen) {
     <app-spelers-namen style="font-size: 1.25em;" [dialog]="namenDialog" (reply)="namenDialogReplied($event)"></app-spelers-namen>
 }
-@if (isUndoDialogOpen) {
-    <app-confirm-dialog style="font-size: 1.5em;" [title]="confirmUndoDialog.title" [texts]="confirmUndoDialog.texts"
-                (reply)="confirmUndoLaatsteBeurtReplied($event)"></app-confirm-dialog>
+@if (confirmUndoDialog.open) {
+    <div class="overlay flexbox flexcenter flexmiddle">
+        <div style="opacity: 1;">
+            <div class="dialog" style="font-size: 1.75em;">
+                <app-confirm-dialog style="font-size: 1.5em;" [dialog]="confirmUndoDialog"
+                            (reply)="confirmUndoLaatsteBeurtReplied($event)"></app-confirm-dialog>
+            </div>
+        </div>
+    </div>
+}
+@if (wisselDialog.open) {
+    <div class="overlay flexbox flexcenter flexmiddle">
+        <div style="opacity: 1;">
+            <div class="dialog" style="font-size: 2em;">
+                <app-confirm-dialog [dialog]="wisselDialog" 
+                                (reply)="wisselDialogReplied($event)"></app-confirm-dialog>
+            </div>
+        </div>
+    </div>
+}
+@if (confirmOpslaan.open) {
+    <div class="overlay flexbox flexcenter flexmiddle">
+        <div style="opacity: 1;">
+            <div class="dialog" style="font-size: 1.75em;">
+                <app-confirm-dialog [dialog]="confirmOpslaan" 
+                                (reply)="confirmOpslaanReplied($event)"></app-confirm-dialog>
+            </div>
+        </div>
+    </div>
 }
 <!-- <app-help-score></app-help-score> -->

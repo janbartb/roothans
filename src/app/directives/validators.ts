@@ -111,3 +111,24 @@ export function validDateNotFuture(): ValidatorFn {
         return !isValid ? {validDateNotFuture: {valid: false}} : null;
     };
 }
+
+export const wedstrijdFormValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+    const splCar = control.get('splCar')?.value || 0;
+    const splSer = control.get('splSer')?.value || 0;
+    const splWit = control.get('splWit')?.value;
+    const tegCar = control.get('tegCar')?.value || 0;
+    const tegSer = control.get('tegSer')?.value || 0;
+    const tegWit = control.get('tegWit')?.value;
+    const brt = control.get('beurten')?.value || 0;
+
+    if (splSer * brt < splCar || tegSer * brt < tegCar) {
+        return { serieTeLaag: true};
+    }
+    if (splSer > splCar || tegSer > tegCar) {
+        return { serieTeHoog: true};
+    }
+    if (splWit == tegWit) {
+        return { balKleurInvalid: true};
+    }
+    return null;
+};

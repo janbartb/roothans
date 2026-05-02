@@ -28,6 +28,19 @@
     </div>
     <div class="poule-body">
         <div>
+            <div class="flexbox" style="color: black;">
+                <div style="width: 4.5em;"></div>
+                <div class="ellipsis" style="width: 10em;"><span><b>Speler B</b></span></div>
+                <div style="width: 1.5em;"></div>
+                <div class="ellipsis" style="width: 10em;"><span><b>Speler A</b></span></div>
+                <div style="width: 2em;"></div>
+                <div style="width: 5.25em;"></div>
+                @if (pouleGestart) {
+                    <div><span><b>GW</b></span></div>
+                    <div style="width: 3em;"></div>
+                    <div><span><b>Score</b></span></div>
+                }
+            </div>
             @for (koppel of poule.pouleKoppels; track $index) {
                 <div class="poule-koppel" [ngClass]="{'list-row': koppelClick, 'selected': $index == idxKoppel}" 
                             (click)="kplClicked($index)">

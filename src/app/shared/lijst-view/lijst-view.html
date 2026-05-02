@@ -1,0 +1,26 @@
+<div>
+    <div class="flexbox">
+        @for (spl of spelers; track $index) {
+            <div class="spl-container">
+                <div class="spl-naam">
+                    <span>{{spl.speler.splBNaam}}</span>
+                </div>
+                <div class="spl-score arial">
+                    @for (beurt of spl.scores; track $index) {
+                        <div class="spl-score-line flexbox">
+                            <div class="spl-score-brt" [ngClass]="{'filler': beurt.filler}">
+                                <span>{{beurt.brt}}</span>
+                            </div>
+                            <div class="spl-score-car">
+                                <span>{{beurt.car}}</span>
+                            </div>
+                            <div class="spl-score-tot">
+                                <span>{{beurt.tot}}</span>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>

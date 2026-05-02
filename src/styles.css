@@ -37,6 +37,7 @@ input,select,textarea{ font: inherit; margin: 0; }
 .arial { font-family: Arial, Helvetica, sans-serif; }
 .arial-nw { font-family: "Arial Narrow"; }
 
+input { color: #1e461f; }
 input[type="text"], input[type="number"], input[type="password"], select {
     padding: 0 .25em;
     border-radius: .25em;
@@ -172,7 +173,7 @@ select:disabled, select.disabled {
     color: white;
     background-color: black;
     font-weight: bold;
-    padding: .25em 1em;
+    padding: .25em .5em;
     overflow: hidden;
 }
 .dialog-content {

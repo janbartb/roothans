@@ -1,8 +1,20 @@
 <div style="padding: 0 .25em;">
     <div class="button-back" [ngClass]="{'disabled': disabled}">
         <span>{{button.text}}</span>
-        <div class="button-front" [ngClass]="{'clicked': button.clicked, 'disabled': disabled}" (click)="buttonClicked()">
-            <span>{{button.text}}</span>
+        <div class="button-front" (click)="buttonClicked()"
+                    [ngClass]="{'clicked': button.clicked, 'disabled': disabled}">
+            <div class="button-front-inner" [ngClass]="{'disabled': disabled, 'default': button.default}">
+                @if (button.key.pos) {
+                    @if (button.key.pos > 1) {
+                        <span>{{button.text.substring(0, button.key.pos - 1)}}</span>
+                    }
+                    <span><u>{{button.text.substring(button.key.pos - 1, button.key.pos)}}</u></span>
+                    <span>{{button.text.substring(button.key.pos)}}</span>
+                }
+                @else {
+                    <span>{{button.text}}</span>
+                }
+            </div>
         </div>
     </div>
 </div>

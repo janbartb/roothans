@@ -1,0 +1,91 @@
+.row-header {
+    min-height: 3.125em;
+    height: 3.125em;
+    overflow-y: hidden;
+    color: #265728;
+    line-height: 1.2;
+}
+.row-content {
+    min-height: 24em;
+    height: 24em;
+    overflow-y: hidden;
+}
+.row-footer {
+    min-height: 3.625em;
+    height: 3.625em;
+    overflow-y: hidden;
+    padding-top: .25em;
+}
+.col-sectie.links {
+    padding: .5em .5em .5em 1em;
+}
+.col-sectie.rechts {
+    padding: .5em 1em .5em .5em;
+}
+.col-sectie .sectie-content {
+    height: 100%;
+    border-radius: .5em;
+    background-color: #dbefdc;
+    padding: 0 1em;
+}
+.row-datum {
+    min-height: 3em;
+    height: 3em;
+    overflow-y: hidden;
+}
+.row-speler {
+    min-height: 10em;
+    height: 10em;
+    overflow-y: hidden;
+    padding: 0 0 .5em 0;
+}
+.row-speler .speler-content {
+    height: 100%;
+    border-radius: .25em;
+    background-color: #163317;
+    padding: .25em .75em;
+}
+
+.speler-content .spl-naam {
+    color: #dbefdc;
+}
+.speler-content .sectie-stand {
+    padding-top: .5em;
+}
+.speler-content .sectie-stand .label, .speler-content .sectie-stand label {
+    color: #6ec071;
+}
+.speler-content .sectie-stand .data {
+    text-align: right;
+    color: #b7dfb8;
+    font-weight: bold;
+}
+.speler-content .sectie-bal {
+    width: 10em;
+}
+.speler-content .sectie-bal .spl-bal {
+    width: 2.5em;
+    height: 2.5em;
+}
+.speler-content .sectie-pnt {
+    width: 5em;
+    padding-right: 1em;
+    padding-top: 1.375em;
+}
+.speler-content .sectie-pnt .spl-pnt {
+    color: #c40000;
+    font-size: 3em;
+    font-weight: bold;
+}
+
+.row-header span {
+    font-size: 2em;
+}
+
+.row-content label, .row-content .label {
+    color: #357a38;
+}
+.row-content .data {
+    color: #1e461f;
+    font-weight: bold;
+}

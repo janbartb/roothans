@@ -1,47 +1,62 @@
-<div class="fullheight flexbox flexcolumn">
-    <div class="flexgrow1" style="font-size: 2em; padding: 0 .5em;">
-        <div class="flexbox" style="padding: .25em 0; color: green;">
-            <div class="spl-naam"><b>{{ronde.rndBeurten}}</b> beurten</div>
-            <div class="spl-moy">Moy</div>
-            <div class="flexgrow1 flexbox hdr-data">
-                <div class="spl-car">Car</div>
-                <div class="spl-moy">Moy</div>
-                <div class="spl-ser">Ser</div>
-                <div class="spl-pnt">Punt</div>
+@if (dataReady) {
+    <div>
+        <div class="row-header flexbox flexmiddle">
+            <div style="padding-left: 1em;">
+                <span style="font-size: 2.25em;">Poule <b>{{poule.pouleId}}</b></span>
+            </div>
+            <div style="padding-left: 3em;">
+                <span style="font-size: 2.25em;">match <b>{{matchVolgNr}}</b></span>
+            </div>
+            <div style="padding-left: 3em;">
+                <span style="font-size: 2.25em;">koppels <b>{{koppels[0].id}}</b> - <b>{{koppels[1].id}}</b></span>
+            </div>
+            <div class="flexgrow1" style="padding-right: 1em; text-align: right;">
+                <span style="font-size: 2.25em;"><b>{{ronde.rndBeurten}}</b> beurten</span>
             </div>
         </div>
-        @for (koppel of koppels; let idxK = $index; track $index) {
-            <div style="padding: .25em 0; border-top: .125em solid gray;">
-                <div class="flexbox">
-                    <div class="spl-naam" style="color: green; font-weight: bold;">Koppel {{koppel.id}}</div>
-                    <div class="spl-moy">{{koppel.koppel.kopMoyenne | number:'1.3-3':'nl-NL'}}</div>
-                    <div class="flexgrow1 flexbox spl-data">
-                        <div class="spl-car"></div>
-                        <div class="spl-moy"></div>
-                        <div class="spl-ser"></div>
-                        <div class="spl-pnt">
-                            <span>{{kopUitslagen[idxK].splUitslagen[0].pnt + kopUitslagen[idxK].splUitslagen[1].pnt}}</span>
-                        </div>
-                    </div>
+        <div class="row-match">
+            <app-match-view [koppels]="koppels" [idxSel]="idxWed" [idxWedBezig]="idxWedBezig"
+                        (wedClicked)="wedstrijdClicked($event)" (error)="showMatchViewError($event)"></app-match-view>
+        </div>
+        <div class="row-footer flexbox flexcenter flexmiddle">
+            <div style="position: relative; width: 9em;"><span>&nbsp;</span>
+                <div style="position: absolute; top: -.625em;">
+                    <span style="font-size: 1.5em; color: #1e461f;">Wedstrijd <b>{{idxWed + 1}}</b></span>
                 </div>
-                @for (spl of koppel.spelers;; let idxS = $index; track $index) {
-                    <div class="flexbox spl-spl" [ngClass]="{'selected': idxS == idxWed }" (click)="wedstrijdClicked(idxS)">
-                        <div class="spl-naam">{{spl.speler.splNaam}}</div>
-                        <div class="spl-moy">{{spl.speler.splMoy | number:'1.3-3':'nl-NL'}}</div>
-                        <div class="flexgrow1 flexbox spl-data">
-                            <div class="spl-car">{{kopUitslagen[idxK].splUitslagen[idxS].car}}</div>
-                            <div class="spl-moy">{{kopUitslagen[idxK].splUitslagen[idxS].moy | number:'1.3-3':'nl-NL'}}</div>
-                            <div class="spl-ser">{{kopUitslagen[idxK].splUitslagen[idxS].ser}}</div>
-                            <div class="spl-pnt">{{kopUitslagen[idxK].splUitslagen[idxS].pnt}}</div>
-                        </div>
+            </div>
+            @if (wedGespeeld) {
+                <div style="font-size: 1.25em;">
+                    <app-button [button]="btnNaar" (btnClicked)="naarWedstrijdClicked()"></app-button>
+                </div>
+            }
+            @else {
+                @if (idxWed == idxWedBezig) {
+                    <div style="font-size: 1.25em;">
+                        <app-button [button]="btnVervolg" (btnClicked)="naarWedstrijdClicked()"></app-button>
+                    </div>
+                    <div style="font-size: 1.25em;">
+                        <app-button [button]="btnOpnieuw" (btnClicked)="startOpnieuwClicked()"></app-button>
                     </div>
                 }
-            </div>
-        }
-    </div>
-    <div class="flexbox flexcenter flexmiddle" style="min-height: 4.5em; border-top: .125em solid black;">
-        <div style="font-size: 1.5em;">
-            <app-button [button]="btnWed" [disabled]="idxWed < 0" (btnClicked)="naarWedstrijdClicked()"></app-button>
+                @else {
+                    <div style="font-size: 1.25em;">
+                        <app-button [button]="btnStart" (btnClicked)="naarWedstrijdClicked()"></app-button>
+                    </div>
+                }
+                <div style="font-size: 1.25em;">
+                    <app-button [button]="btnAdd" (btnClicked)="uitslagToevoegenClicked()"></app-button>
+                </div>
+            }
         </div>
     </div>
-</div>
+}
+@if (confirmOpnieuw.open) {
+    <div class="overlay flexbox flexcenter flexmiddle">
+        <div style="opacity: 1;">
+            <div class="dialog" style="font-size: 1.75em;">
+                <app-confirm-dialog [dialog]="confirmOpnieuw"
+                                    (reply)="startOpnieuwReplied($event)"></app-confirm-dialog>
+            </div>
+        </div>
+    </div>
+}

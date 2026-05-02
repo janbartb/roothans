@@ -4,6 +4,7 @@ import { Speler } from '../model/speler';
 import { Koppel } from '../model/koppel';
 import { AfvalRonde, Poule, PouleRonde, Ronde } from '../model/ronde';
 import { Seizoen } from '../model/seizoen';
+import { Wedstrijd, WedstrijdLeesResultaat } from '../model/wedstrijd';
 
 @Injectable({
     providedIn: 'root',
@@ -17,6 +18,26 @@ export class Dao {
     constructor() {
         this.apiUrl = 'http://localhost:8080/rhapi';
         this.myHeaders.append("Content-Type", "application/json");
+    }
+
+    // WEDSTRIJD
+
+    async getWedstrijd(): Promise<WedstrijdLeesResultaat> {
+        const result: WedstrijdLeesResultaat = await this.getResource(this.apiUrl + `/wedstrijd`);
+        return result;
+    }
+
+    async saveWedstrijd(wedstrijd: Wedstrijd): Promise<ApiResponse> {
+        const response: Response = await fetch(this.apiUrl + `/wedstrijd`, {
+            method: 'POST',
+            body: JSON.stringify(wedstrijd),
+            headers: this.myHeaders
+        });
+        const json: ApiResponse = await response.json();
+        if (!response.ok) {
+            throw new Error(json.message);
+        }
+        return json;
     }
 
     // KOPPELS

@@ -1,0 +1,6 @@
+<div class="fullviewheight">
+    @if (wedReady) {
+        <app-scorebord [wedstrijd]="wedstrijd" 
+                (opslaan)="saveWedstrijd($event)" (keyPressed)="handleKey($event)"></app-scorebord>
+    }
+</div>

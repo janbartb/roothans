@@ -33,6 +33,7 @@
     width: 60em;
     height: 33.75em;
     position: relative; 
+    font-weight: bold;
     background-color: #265728; 
     color: #93cf95;
     overflow: hidden;
@@ -196,6 +197,7 @@
     position: absolute;
     z-index: 20;
     overflow: hidden;
+    font-weight: bold;
 }
 
 .notification-full {

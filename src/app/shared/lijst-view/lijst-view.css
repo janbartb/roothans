@@ -1,0 +1,42 @@
+.spl-container {
+    margin: 0 .5em;
+    padding: .25em .5em;
+    border: .0625em solid #1e461f;
+    background-color: white;
+}
+.spl-container .spl-naam {
+    line-height: 1.25;
+    font-weight: bold;
+    text-align: center;
+    color: #265728;
+}
+.spl-container .spl-score {
+    line-height: 1.125em;
+    font-size: .75em;
+    font-weight: bold;
+    text-align: right;
+    color: #1e461f;
+}
+
+.spl-score-line {
+    border-top: .0625em solid #93cf95;
+}
+
+.spl-score-brt {
+    width: 1.5em;
+    color: #357a38;
+    font-weight: normal;
+}
+.spl-score-brt.filler {
+    color: #b7dfb8;
+}
+
+.spl-score-car {
+    width: 4em;
+    padding-right: .25em;
+}
+
+.spl-score-tot {
+    width: 4em;
+    padding-right: .25em;
+}

@@ -1,6 +1,6 @@
 .button-back {
     position: relative;
-    padding: .25em 1em;
+    padding: .375em 1.125em;
     color: black;
     font-weight: bold;
     background-color: #b0b0b0;
@@ -15,10 +15,8 @@
     left: -.25em;
     right: .25em;
     bottom: .25em;
-    padding: .25em 1em;
-    color: white;
-    text-align: center;
-    background-color: #459c48;
+    padding: .0625em;
+    background-color: #357a38;
     border-radius: .25em;
     cursor: pointer;
     translate: 0 0;
@@ -27,10 +25,33 @@
 }
 .button-front.disabled {
     background-color: gray;
+    border-color: gray;
     cursor: not-allowed;
 }
-.button-front:not(.disabled):hover {
+.button-front-inner {
+    padding: .25em 1em;
+    border: .0625em solid #357a38;
+    color: white;
+    text-align: center;
     background-color: #357a38;
+    border-radius: .25em;
+    white-space: nowrap;
+}
+.button-front-inner.default {
+    border-color: #b7dfb8;
+}
+.button-front-inner.disabled {
+    background-color: gray;
+    cursor: not-allowed;
+}
+.button-front-inner.default.disabled {
+    border-color: gray;
+}
+.button-front:not(.disabled):hover {
+    background-color: #265728;
+}
+.button-front-inner:not(.disabled):hover {
+    background-color: #265728;
 }
 .button-front.clicked {
     translate: .25em .25em;

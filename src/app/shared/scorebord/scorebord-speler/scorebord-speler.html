@@ -1,5 +1,6 @@
 <div class="scorebord-spl" [ngClass]="{'actief': speler.actief, 'geel': !speler.metWit}">
     <app-scorebord-tall-info [naam]="speler.splBordNaam"
+                            [koppelId]="speler.splKoppelId"
                             [moyenne]="speler.splTsMoy"
                             [aantCar]="speler.splTsCar"
                             [aantBrt]="speler.splTsBrt"
@@ -17,10 +18,7 @@
     <app-scorebord-tall-status [aantCar]="speler.stand.aantCar"
                             [serie]="speler.stand.serie"
                             [voortgang]="speler.stand.voortgang"
-                            [teamAantCar]="speler.teamAantCar"
-                            [teamTsCar]="speler.teamTsCar"
-                            [teamMaxCar]="speler.teamMaxCar"
-                            [hilite]="hilite"
+                            [beurten]="speler.splTsBrt"
                             [position]="position"></app-scorebord-tall-status>
     <app-scorebord-tall-laatste5 [actief]="speler.actief"
                             [serView]="speler.stand.serView"

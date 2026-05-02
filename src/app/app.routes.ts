@@ -12,10 +12,11 @@ import { Rondes } from './seizoen/rondes/rondes';
 import { PouleRondePlanning } from './seizoen/rondes/poule-ronde-planning/poule-ronde-planning';
 import { Probeer } from './probeer/probeer';
 import { PouleRondePlanningData } from './seizoen/rondes/poule-ronde-planning/poule-ronde-planning-data/poule-ronde-planning-data';
-import { PouleRondeSpelen } from './seizoen/rondes/poule-ronde-spelen/poule-ronde-spelen';
-import { PouleRondeSpelenPoule } from './seizoen/rondes/poule-ronde-spelen/poule-ronde-spelen-poule/poule-ronde-spelen-poule';
 import { PouleRondeMatch } from './seizoen/rondes/poule-ronde-match/poule-ronde-match';
 import { PouleRondeWedstrijd } from './seizoen/rondes/poule-ronde-wedstrijd/poule-ronde-wedstrijd';
+import { PouleRondePoules } from './seizoen/rondes/poule-ronde-spelen/poule-ronde-poules/poule-ronde-poules';
+import { PouleRondePouleschema } from './seizoen/rondes/poule-ronde-spelen/poule-ronde-pouleschema/poule-ronde-pouleschema';
+import { PouleRondeScore } from './seizoen/rondes/poule-ronde-score/poule-ronde-score';
 
 export const routes: Routes = [
     { path: 'home', component: Home },
@@ -25,10 +26,11 @@ export const routes: Routes = [
     { path: 'koppels/toevoegen', component: KoppelsToevoegen },
     { path: 'koppels/:koppelId', component: KoppelPreferences },
     { path: 'koppels', component: Koppels },
-    { path: 'rondes/poule/:rondeId/spel/:pouleIdx/match/:splKopIdx/:tegKopIdx/:wedIdx', component: PouleRondeWedstrijd },
-    { path: 'rondes/poule/:rondeId/spel/:pouleIdx/match/:splIdx/:tegIdx', component: PouleRondeMatch },
-    { path: 'rondes/poule/:rondeId/spel/:pouleIdx', component: PouleRondeSpelenPoule },
-    { path: 'rondes/poule/:rondeId/spel', component: PouleRondeSpelen },
+    { path: 'rondes/poule/:rondeId/spel/:pouleIdx/match/:splKopId/:tegKopId/:wedIdx/score', component: PouleRondeScore },
+    { path: 'rondes/poule/:rondeId/spel/:pouleIdx/match/:splKopId/:tegKopId/:wedIdx', component: PouleRondeWedstrijd },
+    { path: 'rondes/poule/:rondeId/spel/:pouleIdx/match/:splKopId/:tegKopId', component: PouleRondeMatch },
+    { path: 'rondes/poule/:rondeId/spel/:pouleIdx', component: PouleRondePouleschema },
+    { path: 'rondes/poule/:rondeId/spel', component: PouleRondePoules },
     { path: 'rondes/poule/:rondeId/data', component: PouleRondePlanningData },
     { path: 'rondes/poule/:rondeId', component: PouleRondePlanning },
     { path: 'rondes', component: Rondes },

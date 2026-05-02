@@ -1,11 +1,15 @@
 export class Wedstrijd {
-    spel: string = 'standaard';
+    rondeId: number = 0;
+    pouleId: string = '';
+    idxWedstrijd: number = -1;
     aantSpelers: number = 0;
     regels: WedRegels = new WedRegels();
     telling: WedTelling = new WedTelling();
-    opslaanInComp: boolean = false;
+    opslaanInComp: boolean = true;
     wedOpgeslagen: boolean = false;
+    volgordeOk: boolean = false;
     wedGespeeld: boolean = false;
+    wedDatum: string = '';
     spelers: WedSpeler[] = [];
     teams: WedTeam[] = [];
 }
@@ -18,7 +22,7 @@ export class WedRegels {
      * 2 = vast aantal caramboles
      * 3 = aantal caramboles op basis van moyenne en <moyAantBrt> beurten
      */
-    idxOptie: number = 0;
+    idxOptie: number = 1;
     vastAantBrt: number = 0;
     vastAantCar: number = 0;
     vijfdeAantCar: number = 5;
@@ -33,9 +37,9 @@ export class WedTelling {
      * 0 = KNBB telling (1 punt per 10% van te maken caramboles)
      * 1 = telling aangegeven door <....Punten> velden
      */
-    idxOptie: number = 0;
-    winstPunten: number = 0;
-    gelijkPunten: number = 0;
+    idxOptie: number = 1;
+    winstPunten: number = 2;
+    gelijkPunten: number = 1;
     bovenMoyPunten: number = 0;
 }
 
@@ -52,6 +56,7 @@ export class WedTeam {
 }
 
 export class WedSpeler {
+    splKoppelId: string = '';
     splId: string = '';
     splNaam: string = '';
     splBordNaam: string = '';

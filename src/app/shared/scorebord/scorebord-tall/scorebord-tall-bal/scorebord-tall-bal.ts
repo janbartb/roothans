@@ -10,6 +10,7 @@ import { Component, Input } from '@angular/core';
     styleUrl: './scorebord-tall-bal.css',
 })
 export class ScorebordTallBal {
+    @Input() koppelId: string = '';
     @Input() aantCar: number = 0;
     @Input() aantBrt: number = 0;
     @Input() hilite: string = '';

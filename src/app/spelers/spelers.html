@@ -71,12 +71,11 @@
         </div>
     }
 </div>
-@if (confirmVisible) {
+@if (confirmDeleteDialog.open) {
     <div class="overlay flexbox flexcenter flexmiddle">
         <div style="opacity: 1;">
             <div class="dialog" style="font-size: .75em;">
-                <app-confirm-dialog [title]="'Speler verwijderen'"
-                                    [texts]="confirmTexts"
+                <app-confirm-dialog [dialog]="confirmDeleteDialog"
                                     (reply)="deleteSpelerReplied($event)"></app-confirm-dialog>
             </div>
         </div>

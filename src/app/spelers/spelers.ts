@@ -9,6 +9,7 @@ import { SpelerDialog } from "./speler-dialog/speler-dialog";
 import { Helper } from '../services/helper';
 import { ConfirmDialog } from '../shared/confirm-dialog/confirm-dialog';
 import { Speech } from '../services/speech';
+import { ConfirmDialogType } from '../model/dialogs';
 
 @Component({
     selector: 'app-spelers',
@@ -35,7 +36,7 @@ export class Spelers extends Base implements OnInit {
     existingIds: string[] = [];
     speler: Speler = new Speler();
     mode: string = 'edit';
-    confirmTexts: string[] = [];
+    confirmDeleteDialog: ConfirmDialogType = new ConfirmDialogType('verwijderen');
 
     btnAdd: Btn = new Btn('add', 'Speler toevoegen');
 
@@ -64,14 +65,14 @@ export class Spelers extends Base implements OnInit {
         this.idxSpeler = idx;
         this.idxToDelete = idx;
         const splToDelete = this.spelers[idx];
-        this.confirmTexts = [`Speler ${this.helper.getSpelerNaam(splToDelete)} verwijderen.`];
-        this.confirmVisible = true;
+        this.confirmDeleteDialog.texts = [`Speler ${this.helper.getSpelerNaam(splToDelete)} verwijderen.`];
+        this.confirmDeleteDialog.open = true;
     }
 
     deleteSpelerReplied(confirmed: boolean) {
         if (!confirmed) {
             this.idxSpeler = -1;
-            this.confirmVisible = false;
+            this.confirmDeleteDialog.open = false;
             return;
         }
         const splToDelete = this.spelers[this.idxToDelete];
@@ -84,7 +85,7 @@ export class Spelers extends Base implements OnInit {
         .catch(err => {
             this.alert.showError(err);
         });
-        this.confirmVisible = false;
+        this.confirmDeleteDialog.open = false;
     }
 
     naamUitspreken(event: MouseEvent, idx: number) {

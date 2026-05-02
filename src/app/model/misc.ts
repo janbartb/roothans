@@ -6,15 +6,32 @@ export class Alert {
 
 export class Btn {
     id: string = '';
-    key: string = '';
     text: string = '';
+    key: BtnKey = new BtnKey('', -1);
+    default: boolean = false;
     clicked: boolean = false;
 
-    constructor(id: string, txt: string, key?: string) {
+    constructor(id: string, txt: string, key?: string, keyPos?: number) {
         this.id = id;
         this.text = txt;
         if (key) {
-            this.key = key;
+            this.key = new BtnKey(key, -1);
+            if (key == 'enter') {
+                this.default = true;
+            }
+            else if (keyPos && keyPos > 0) {
+                this.key.pos = keyPos;
+            }
         }
+    }
+}
+
+export class BtnKey {
+    key: string = '';
+    pos: number = -1;
+
+    constructor(k: string, p: number) {
+        this.key = k;
+        this.pos = p;
     }
 }

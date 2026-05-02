@@ -1,0 +1,77 @@
+.row-wedstrijd {
+    height: 8em;
+    min-height: 8em;
+    max-height: 8em;
+    overflow-y: hidden;
+    padding: .0625em 1em;
+}
+.row-wedstrijd .wedstrijd {
+    height: 100%;
+    border-radius: .5em;
+    background-color: #dbefdc;
+    cursor: pointer;
+    border: .125em solid #dbefdc;
+}
+.row-wedstrijd .wedstrijd.totaal {
+    border-color: #6ec071;
+    cursor: default;
+}
+.row-wedstrijd .wedstrijd:hover {
+    border-color: gray;
+}
+.row-wedstrijd .wedstrijd.totaal:hover {
+    border-color: #6ec071;
+}
+.row-wedstrijd .wedstrijd.selected, .row-wedstrijd .wedstrijd.selected:hover {
+    border-color: red;
+    cursor: default;
+}
+
+.col-header {
+    width: 8em;
+    padding: 0 1em;
+    line-height: 1;
+    color: #2e6830;
+}
+.wed-bal {
+    width: 3.5em;
+    height: 3.5em;
+    line-height: 3.4em;
+    border-radius: 50%;
+    text-align: center;
+    background-color: #1e461f;
+    color: #b7dfb8;
+}
+.wed-bal span {
+    font-size: 2em;
+    font-weight: bold;
+}
+
+.wed-score {
+    line-height: 1;
+    color: #163317;
+}
+
+.col-speler {
+    width: 22.75em;
+    padding: .125em .5em;
+}
+.col-speler .wed-speler {
+    height: 100%;
+    border-radius: .5em;
+    background-color: #b7dfb8;
+    padding: 0 1em;
+}
+.row-naam {
+    height: 2em;
+    line-height: 1.1;
+    font-weight: bold;
+    color: #2e6830;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.col-tussen {
+    width: 3em;
+    color: #265728;
+}

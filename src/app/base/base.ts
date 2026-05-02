@@ -17,7 +17,6 @@ export class Base implements OnInit {
     alert = inject(Alerts);
     dialogVisible: boolean = false;
     dialogTitle: string = '';
-    confirmVisible: boolean = false;
 
     escapePressed() {
         this.gotoPrevPage();

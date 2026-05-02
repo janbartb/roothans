@@ -90,6 +90,15 @@
         @if (pouleKoppel.uitslag.brt > 0) {
             <div class="flexbox poule-uitslag">
                 <div>
+                    @if (aantGespeeld < 6) {
+                        <span>{{aantGespeeld}}</span>
+                    }
+                    @else {
+                        <i style="color: green;" class="fas fa-check"></i>
+                    }
+                </div>
+                <div style="width: 2.5em;"></div>
+                <div>
                     <span>{{pouleKoppel.spelers[0].uitslag.pnt}}</span>
                 </div>
                 <div>
@@ -101,7 +110,7 @@
                 <div>
                     <span>=</span>
                 </div>
-                <div style="width: 7em;">
+                <div style="width: 6.5em;">
                     <span>{{pouleKoppel.uitslag.pnt}} </span>
                     <span style="font-weight: normal; padding-left: 1em; color: gray;">punten</span>
                 </div>

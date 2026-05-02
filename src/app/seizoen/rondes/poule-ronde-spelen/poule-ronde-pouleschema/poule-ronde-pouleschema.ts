@@ -1,25 +1,21 @@
+import { DecimalPipe, NgClass } from '@angular/common';
 import { Component, HostListener, inject, OnInit } from '@angular/core';
 import { Base } from '../../../../base/base';
 import { ActivatedRoute } from '@angular/router';
 import { DateHelper } from '../../../../services/date-helper';
-import { Poule, PouleKoppel, PouleKoppelWedstrijd, PouleRonde, PouleSchema, PouleSchemaWedstrijd, Ronde } from '../../../../model/ronde';
 import { Seizoen } from '../../../../model/seizoen';
-import { DecimalPipe, NgClass } from '@angular/common';
-
-interface IData {
-	[ key: string ]: any;
-}
+import { Poule, PouleRonde, Ronde, RondeKoppel } from '../../../../model/ronde';
 
 @Component({
-    selector: 'app-poule-ronde-spelen-poule',
+    selector: 'app-poule-ronde-pouleschema',
     imports: [
         DecimalPipe,
         NgClass
     ],
-    templateUrl: './poule-ronde-spelen-poule.html',
-    styleUrl: './poule-ronde-spelen-poule.css',
+    templateUrl: './poule-ronde-pouleschema.html',
+    styleUrl: './poule-ronde-pouleschema.css',
 })
-export class PouleRondeSpelenPoule extends Base implements OnInit {
+export class PouleRondePouleschema extends Base implements OnInit {
     route = inject(ActivatedRoute);
     dater = inject(DateHelper);
     config: Seizoen = new Seizoen();
@@ -32,30 +28,8 @@ export class PouleRondeSpelenPoule extends Base implements OnInit {
     idxRow: number = 0;
     idxCol: number = 0;
     allesGespeeld: boolean = false;
-    matchToNrs: IData = {
-        m01 : 1,
-        m10 : 1,
-        m23 : 2,
-        m32 : 2,
-        m02 : 3,
-        m20 : 3,
-        m13 : 4,
-        m31 : 4,
-        m03 : 5,
-        m30 : 5,
-        m12 : 6,
-        m21 : 6
-    };
-    nrsToMatch: string[] = ['01', '23', '02', '13', '03', '12'];
-
-    override escapePressed(): void {
-        if (this.idxRow > 0 || this.idxCol > 0) {
-            this.idxRow = this.idxCol = 0;
-            this.setEersteTeSpelenMatch();
-            return;
-        }
-        super.escapePressed();
-    }
+    eerstVolgendeMatchNr: number = 0;
+    selectedMatchNr: number = 0;
 
     enterPressed() {
         if (this.idxRow == 0 && this.idxCol == 0) {
@@ -65,15 +39,50 @@ export class PouleRondeSpelenPoule extends Base implements OnInit {
     }
 
     wedstrijdNrPressed(nr: number) {
-        const match = this.nrsToMatch[nr - 1];
-        this.matchClicked(Number(match.substring(0,1)), Number(match.substring(1)));
+        let idxSpl = 0;
+        let idxTeg = 0;
+        this.poule.pouleKoppels.forEach((splKop, idxS) => {
+            splKop.spelers[0].wedstrijden.forEach(wed => {
+                if (wed.volgNr == nr) {
+                    idxSpl = idxS;
+                    idxTeg = this.poule.pouleKoppels.findIndex(kpl => kpl.id == wed.tegPouleKoppelId);
+                }
+            });
+        })
+        this.matchClicked(idxTeg, idxSpl);
     }
 
     matchClicked(idxR: number, idxC: number) {
         if (idxR == idxC) {
             return;
         }
-        this.gotoPage(`${this.router.url}/match/${idxR}/${idxC}`, this.router.url);
+        const kopSplId = this.poule.pouleKoppels[idxR].id;
+        const kopTegId = this.poule.pouleKoppels[idxC].id 
+        this.gotoPage(`${this.router.url}/match/${kopSplId}/${kopTegId}`, this.router.url);
+    }
+
+    getWedstrijdNrMatch(idxSpl: number, idxTeg: number): number {
+        const splKoppel = this.poule.pouleKoppels[idxSpl];
+        const tegKoppelId = this.poule.pouleKoppels[idxTeg].id;
+        const wed1 = splKoppel.spelers[0].wedstrijden.find(wed => wed.tegPouleKoppelId == tegKoppelId);
+        return wed1 ? wed1.volgNr : 0;
+    }
+
+    getWedstrijdNrNietGespeeldeMatch(idxSpl: number, idxTeg: number): number {
+        const splKoppel = this.poule.pouleKoppels[idxSpl];
+        const tegKoppelId = this.poule.pouleKoppels[idxTeg].id;
+        const wed1 = splKoppel.spelers[0].wedstrijden.find(wed => wed.tegPouleKoppelId == tegKoppelId);
+        if (!wed1) {
+            return 0;
+        }
+        const wed2 = splKoppel.spelers[1].wedstrijden.find(wed => wed.tegPouleKoppelId == tegKoppelId);
+        if (!wed2) {
+            return 0;
+        }
+        if (wed1.uitslag.brt > 0 || wed2.uitslag.brt > 0) {
+            return 0;
+        }
+        return wed1.volgNr;
     }
 
     @HostListener('document:keyup', ['$event'])
@@ -92,6 +101,7 @@ export class PouleRondeSpelenPoule extends Base implements OnInit {
             if (event.key === 'ArrowRight') {
                 this.moveRight();
             }
+            this.selectedMatchNr = this.getSelectedMatchNr();
             return false;
         }
         if (event.key >= '1' && event.key <= '6') {
@@ -151,10 +161,12 @@ export class PouleRondeSpelenPoule extends Base implements OnInit {
                 this.idxPoule = idx;
                 this.poule = this.pouleRonde.poules[this.idxPoule];
                 this.poule.pouleKoppels.sort(this.comparePouleKoppels);
-                this.setWedstrijdenEnVolgorde();
                 this.header.subtitle = `Seizoen ${this.header.seizoen} - ${this.ronde.rndNaam} wedstrijden Poule ${this.poule.pouleId}`;
-                this.setEersteTeSpelenMatch();
                 this.allesGespeeld = this.alleWedstrijdenGespeeld();
+                if (!this.allesGespeeld) {
+                    this.eerstVolgendeMatchNr = this.setEersteTeSpelenMatch();
+                    this.selectedMatchNr = this.eerstVolgendeMatchNr;
+                }
             })
             .catch(err => {
                 this.alert.showError(err);
@@ -162,24 +174,6 @@ export class PouleRondeSpelenPoule extends Base implements OnInit {
         })
         .catch(err => {
             this.alert.showError(err);
-        });
-    }
-
-    private setWedstrijdenEnVolgorde() {
-        this.poule.pouleKoppels.forEach((splKop, idxSK) => {
-            if (splKop.spelers[0].wedstrijden.length == 0) {
-                this.poule.pouleKoppels.forEach((tegKop, idxTK) => {
-                    if (idxSK != idxTK) {
-                        const wedVolgNr = this.matchToNrs['m' + idxSK + idxTK];
-                        splKop.spelers.forEach((spl, idxS) => {
-                            const wed = new PouleKoppelWedstrijd(tegKop.koppel.spelers[idxS]);
-                            wed.volgNr = wedVolgNr;
-                            wed.tegPouleKoppelId = tegKop.id;
-                            spl.wedstrijden.push(wed);
-                        });
-                    }
-                });
-            }
         });
     }
 
@@ -191,14 +185,14 @@ export class PouleRondeSpelenPoule extends Base implements OnInit {
         });
     }
 
-    private setEersteTeSpelenMatch() {
+    private setEersteTeSpelenMatch(): number {
         this.idxRow = this.idxCol = 0;
         let firstVolgNr = 100;
         this.poule.pouleKoppels.forEach((splKop, idxSK) => {
             this.poule.pouleKoppels.forEach((tegKop, idxTK) => {
                 splKop.spelers.forEach(spl => {
                     spl.wedstrijden.forEach(wed => {
-                        if (wed.uitslag.brt == 0 && wed.volgNr < firstVolgNr) {
+                        if (wed.tegPouleKoppelId == tegKop.id && wed.uitslag.brt == 0 && wed.volgNr < firstVolgNr) {
                             firstVolgNr = wed.volgNr;
                             this.idxRow = idxSK;
                             this.idxCol = idxTK;
@@ -207,14 +201,27 @@ export class PouleRondeSpelenPoule extends Base implements OnInit {
                 });
             });
         });
+        return firstVolgNr;
     }
 
-    private comparePouleKoppels(a: PouleKoppel, b: PouleKoppel): number {
+    private comparePouleKoppels(a: RondeKoppel, b: RondeKoppel): number {
         if (a.uitslag.pnt == b.uitslag.pnt) {
             return b.koppel.kopMoyenne - a.koppel.kopMoyenne;
         }
         else {
             return b.uitslag.pnt - a.uitslag.pnt;
+        }
+    }
+
+    private getSelectedMatchNr(): number {
+        const splKoppel = this.poule.pouleKoppels[this.idxRow];
+        const tegKoppelId = this.poule.pouleKoppels[this.idxCol].id;
+        const wed = splKoppel.spelers[0].wedstrijden.find(wd => wd.tegPouleKoppelId == tegKoppelId);
+        if (wed) {
+            return wed.volgNr;
+        }
+        else {
+            return this.eerstVolgendeMatchNr;
         }
     }
 
@@ -257,5 +264,5 @@ export class PouleRondeSpelenPoule extends Base implements OnInit {
             this.moveRight();
         }
     }
-    
+
 }

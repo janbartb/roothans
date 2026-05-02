@@ -1,3 +1,23 @@
+.row-header {
+    min-height: 3.125em;
+    max-height: 3.125em;
+    overflow-y: hidden;
+    color: #265728;
+    line-height: 1.2;
+}
+.row-match {
+    min-height: 24em;
+    max-height: 24em;
+    overflow-y: hidden;
+}
+.row-footer {
+    min-height: 3.625em;
+    max-height: 3.625em;
+    overflow-y: hidden;
+    padding-top: .25em;
+}
+
+
 .spl-spl {
     cursor: pointer;
 }

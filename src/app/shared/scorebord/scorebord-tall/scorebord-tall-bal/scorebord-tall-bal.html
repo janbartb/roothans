@@ -1,14 +1,18 @@
 <div class="speler-info-bal-container">
     <div class="speler-info-bal flexbox flexcenter flexmiddle">
         <div data-kleur="" class="biljartbal fullheight flexbox flexcenter flexmiddle" [ngClass]="{'rechthoek': aantCar == 0}">
-            <div style="position: relative; top: -.25em; left: -.125em;">
+            <div style="position: relative; top: -.25em; left: -.125em; text-align: center;">
                 @if (aantCar > 0) {
                     <span style="line-height: 1;" [ngClass]="{'clr-red': hilite == 'tscar'}" 
                             [style.font-size]="aantCar > 99 ? '3.5em' : '4.5em'">{{aantCar}}</span>
                 }
-                @else {
+                @else if (aantBrt > 0) {
                     <span style="line-height: 1;" 
                             [style.font-size]="aantBrt > 99 ? '3.5em' : '4.5em'">{{aantBrt}}</span>
+                }
+                @else {
+                    <span style="line-height: 1; font-size: 1em;">KOPPEL</span><br>
+                    <span style="line-height: 1; font-size: 3.5em;">{{koppelId}}</span>
                 }
             </div>
         </div>

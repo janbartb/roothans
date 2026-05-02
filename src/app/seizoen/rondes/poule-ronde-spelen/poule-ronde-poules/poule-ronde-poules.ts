@@ -1,25 +1,25 @@
 import { Component, HostListener, inject, OnInit } from '@angular/core';
-import { Base } from '../../../base/base';
-import { ActivatedRoute } from '@angular/router';
-import { Seizoen } from '../../../model/seizoen';
-import { Poule, PouleKoppel, PouleRonde, Ronde } from '../../../model/ronde';
-import { Btn } from '../../../model/misc';
-import { DateHelper } from '../../../services/date-helper';
-import { RondePouleView } from '../ronde-poule-view/ronde-poule-view';
-import { Button } from '../../../shared/button/button';
+import { RondePouleView } from '../../ronde-poule-view/ronde-poule-view';
+import { Button } from '../../../../shared/button/button';
 import { NgClass } from '@angular/common';
+import { Base } from '../../../../base/base';
+import { PouleRonde, Ronde, RondeKoppel } from '../../../../model/ronde';
+import { ActivatedRoute } from '@angular/router';
+import { DateHelper } from '../../../../services/date-helper';
+import { Seizoen } from '../../../../model/seizoen';
+import { Btn } from '../../../../model/misc';
 
 @Component({
-    selector: 'app-poule-ronde-spelen',
+    selector: 'app-poule-ronde-poules',
     imports: [
         RondePouleView,
         Button,
         NgClass
     ],
-    templateUrl: './poule-ronde-spelen.html',
-    styleUrl: './poule-ronde-spelen.css',
+    templateUrl: './poule-ronde-poules.html',
+    styleUrl: './poule-ronde-poules.css',
 })
-export class PouleRondeSpelen extends Base implements OnInit {
+export class PouleRondePoules extends Base implements OnInit {
     route = inject(ActivatedRoute);
     dater = inject(DateHelper);
     config: Seizoen = new Seizoen();
@@ -31,18 +31,25 @@ export class PouleRondeSpelen extends Base implements OnInit {
     touched: boolean = false;
     poulesOk: boolean = false;
 
-    btnWeds: Btn = new Btn('next', 'Naar wedstrijden');
+    btnWeds: Btn = new Btn('next', 'Naar wedstrijden', 'enter');
 
     naarPouleClicked() {
-        this.gotoPage(`rondes/poule/${this.ronde.rndId}/spel/${this.idxPoule}`, `rondes/poule/${this.ronde.rndId}/spel`);
+        if (this.idxPoule >= 0) {
+            this.gotoPage(`rondes/poule/${this.ronde.rndId}/spel/${this.idxPoule}`, `rondes/poule/${this.ronde.rndId}/spel`);
+        }
     }
 
-    pouleClicked(idx: number) {
+    pouleSelected(idx: number) {
         this.btnWeds.text = `Naar wedstrijden`;
         this.idxPoule = (idx == this.idxPoule) ? -1 : idx;
         if (this.idxPoule >= 0) {
             this.btnWeds.text += ` Poule ${this.pouleRonde.poules[this.idxPoule].pouleId}`;
         }
+    }
+
+    pouleClicked(idx: number) {
+        this.idxPoule = idx;
+        this.naarPouleClicked();
     }
 
     @HostListener('document:keyup', ['$event'])
@@ -59,13 +66,13 @@ export class PouleRondeSpelen extends Base implements OnInit {
         }
         if (event.key === 'Enter') {
             if (this.idxPoule >= 0) {
-                this.naarPouleClicked();
+                this.buttonPressed(this.btnWeds);
                 return false;
             }
             return true;
         }
         if (event.key === 'Escape') {
-            this.gotoPrevPage();
+            this.escapePressed();
             return false;
         }
         if (event.key === 'Home') {
@@ -119,13 +126,25 @@ export class PouleRondeSpelen extends Base implements OnInit {
         });
     }
 
+    private buttonPressed(btn: Btn) {
+        btn.clicked = true;
+        setTimeout(() => {
+            btn.clicked = false;
+            setTimeout(() => {
+                if (btn.key.key == 'enter') {
+                    this.naarPouleClicked();
+                }
+            }, 250);
+        }, 250);
+    }
+
     private selectNextPoule() {
         let idx = this.idxPoule;
         idx++;
         if (idx >= this.pouleRonde.poules.length) {
             idx = 0;
         }
-        this.pouleClicked(idx);
+        this.pouleSelected(idx);
     }
 
     private selectPrevPoule() {
@@ -134,10 +153,10 @@ export class PouleRondeSpelen extends Base implements OnInit {
         if (idx < 0) {
             idx = this.pouleRonde.poules.length - 1;
         }
-        this.pouleClicked(idx);
+        this.pouleSelected(idx);
     }
 
-    private comparePouleKoppels(a: PouleKoppel, b: PouleKoppel): number {
+    private comparePouleKoppels(a: RondeKoppel, b: RondeKoppel): number {
         if (a.uitslag.pnt == b.uitslag.pnt) {
             return b.koppel.kopMoyenne - a.koppel.kopMoyenne;
         }

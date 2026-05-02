@@ -1,96 +1,55 @@
-import { Component, HostListener, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import { Scorebord } from '../../../shared/scorebord/scorebord';
 import { Base } from '../../../base/base';
+import { Poule, PouleRonde, Ronde, RondeKoppel, Uitslag } from '../../../model/ronde';
 import { ActivatedRoute } from '@angular/router';
 import { Seizoen } from '../../../model/seizoen';
-import { Poule, PouleRonde, Ronde, RondeKoppel, RondeKoppelSpeler, RondeKoppelWedstrijd, Uitslag } from '../../../model/ronde';
 import { WedSpeler, Wedstrijd } from '../../../model/wedstrijd';
-import { DateHelper } from '../../../services/date-helper';
-import { Btn } from '../../../model/misc';
-import { KoppelSpeler, LijstSpeler } from '../../../model/speler';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { DecimalPipe, NgClass } from '@angular/common';
-import { isIntegerNotNegative, notEmpty, validDateNotFuture, wedstrijdFormValidator } from '../../../directives/validators';
-import { LijstView } from '../../../shared/lijst-view/lijst-view';
-import { Button } from '../../../shared/button/button';
+import { ConfirmDialogType } from '../../../model/dialogs';
 
 @Component({
-    selector: 'app-poule-ronde-wedstrijd',
+    selector: 'app-poule-ronde-score',
     imports: [
-        ReactiveFormsModule,
-        LijstView,
-        Button,
-        DecimalPipe,
-        NgClass
+        Scorebord
     ],
-    templateUrl: './poule-ronde-wedstrijd.html',
-    styleUrl: './poule-ronde-wedstrijd.css',
+    templateUrl: './poule-ronde-score.html',
+    styleUrl: './poule-ronde-score.css',
 })
-export class PouleRondeWedstrijd extends Base implements OnInit {
+export class PouleRondeScore extends Base implements OnInit {
     route = inject(ActivatedRoute);
-    fb = inject(FormBuilder);
-    dater = inject(DateHelper);
     config: Seizoen = new Seizoen();
     rondes: Ronde[] = [];
     ronde: Ronde = new Ronde(0, '', '', 0, '');
     pouleRonde: PouleRonde = new PouleRonde(0, '', 0, '');
     poule: Poule = new Poule();
+    wedstrijd: Wedstrijd = new Wedstrijd();
+    wedReady: boolean = false;
     koppels: RondeKoppel[] = [];
-    splSpl: RondeKoppelSpeler = new RondeKoppelSpeler(new KoppelSpeler());
-    tegSpl: RondeKoppelSpeler = new RondeKoppelSpeler(new KoppelSpeler());
-    splWed: RondeKoppelWedstrijd = new RondeKoppelWedstrijd(new KoppelSpeler());
-    tegWed: RondeKoppelWedstrijd = new RondeKoppelWedstrijd(new KoppelSpeler());
-    lijsten: LijstSpeler[] = [];
-    matchVolgNr: number = 0;
-    today: string = '';
     idxWed: number = -1;
-    viewMode: boolean = true;
-    dataReady: boolean = false;
 
-    btnSave: Btn = new Btn('save', 'Opslaan', 'enter');
-    btnDel: Btn = new Btn('del', 'Verwijder wedstrijd', 'enter');
-
-    uitslagForm!: FormGroup;
-
-    enterPressed() {
-
-    }
-
-    opslaanClicked() {
-
-    }
-
-    verwijderenClicked() {
-
-    }
-
-    kleurClicked(idx: number) {
-        if (idx == 0) {
-            this.splWit?.setValue(!this.splWit.value);
-            this.tegWit?.setValue(!this.splWit?.value);
-        }
-        else {
-            this.tegWit?.setValue(!this.tegWit.value);
-            this.splWit?.setValue(!this.tegWit?.value);
-        }
-    }
-
-    @HostListener('document:keyup', ['$event'])
-    handleKeyboardEvent(event: KeyboardEvent): boolean {
-        console.log(event.code + ' : ' + event.key);
-        if (event.key === 'Enter') {
-            this.enterPressed();
-            return false;
-        }
-        if (event.key === 'Escape') {
+    handleKey(key: string) {
+        if (key == 'Escape') {
             this.escapePressed();
-            return false;
         }
-        if (event.key === 'Home') {
-            this.gotoHome();
-            return false;
+        else if (key == 'OpslaanAndEscape') {
+            this.uitslagWedstrijdToevoegen(this.wedstrijd, true);
         }
-        return true;
+        else if (key == 'Lijst') {
+            // const toUrl = this.router.url.replace('score', 'lijst');
+            // this.gotoPage(this.router.url, toUrl);
+        }
+        else if (key == 'Opslaan') {
+            this.uitslagWedstrijdToevoegen(this.wedstrijd);
+        }
     }
+
+    saveWedstrijd(wed: Wedstrijd) {
+        this.dao.saveWedstrijd(wed)
+        .then()
+        .catch(err => {
+            this.alert.showError(err);
+        });
+    } 
 
     override ngOnInit(): void {
         super.ngOnInit();
@@ -139,15 +98,15 @@ export class PouleRondeWedstrijd extends Base implements OnInit {
         .then(results => {
             this.config = results[0];
             this.rondes = results[1];
+            if (results[2].gevonden) {
+                this.wedstrijd = results[2].wedstrijd;
+            }
             const idxRonde = this.rondes.findIndex(rnd => rnd.rndId == rondeId);
             if (idxRonde < 0) {
                 this.alert.showError(`Ronde met ID '${id}' niet gevonden.`);
                 return;
             }
             this.ronde = this.rondes[idxRonde];
-            this.today = new Date().toISOString().substring(0, 10);
-            this.header.datum = this.dater.dateReverse(this.today);
-            this.idxWed = wedIdx;
             this.dao.getPouleRondeFile(this.header.seizoen, this.ronde.fileNaam)
             .then(data => {
                 this.pouleRonde = data;
@@ -156,21 +115,20 @@ export class PouleRondeWedstrijd extends Base implements OnInit {
                 const tegKopIdx = this.poule.pouleKoppels.findIndex(kpl => kpl.id == tegKopId);
                 this.koppels.push(this.poule.pouleKoppels[splKopIdx]);
                 this.koppels.push(this.poule.pouleKoppels[tegKopIdx]);
-                this.splSpl = this.koppels[0].spelers[this.idxWed];
-                this.tegSpl = this.koppels[1].spelers[this.idxWed];
-                this.header.subtitle = `Seizoen ${this.header.seizoen} - ${this.ronde.rndNaam} wedstrijd Poule ${this.poule.pouleId}`;
-                this.createUitslagForm();
-                if (this.getWedstrijden()) {
-                    if (!this.viewMode) {
-                        this.createUitslagForm();
-                        this.header.subtitle = `Seizoen ${this.header.seizoen} - ${this.ronde.rndNaam} wedstrijd toevoegen Poule ${this.poule.pouleId}`;
-                    }
-                    else {
-                        this.lijsten = this.createScoreLijsten();
-                    }
-
+                this.idxWed = wedIdx;
+                if (!this.gelezenWedstrijdIsGeselecteerdeWedstrijd()) {
+                    this.wedstrijd = this.createNieuweWedstrijd();
+                    this.dao.saveWedstrijd(this.wedstrijd)
+                    .then(resp => {
+                        this.wedReady = true;
+                    })
+                    .catch(err => {
+                        this.alert.showError(err);
+                    });
                 }
-                this.dataReady = true;
+                else {
+                    this.wedReady = true;
+                }
             })
             .catch(err => {
                 this.alert.showError(err);
@@ -181,70 +139,8 @@ export class PouleRondeWedstrijd extends Base implements OnInit {
         });
     }
 
-    private buttonPressed(btn: Btn) {
-        btn.clicked = true;
-        setTimeout(() => {
-            btn.clicked = false;
-            setTimeout(() => {
-                // if (btn.key.key == 'enter') {
-                //     this.naarWedstrijdClicked();
-                // }
-                // else if (btn.key.key == 'S') {
-                //     this.startOpnieuwClicked();
-                // }
-                // else if (btn.key.key == 'U') {
-                //     this.uitslagToevoegenClicked();
-                // }
-            }, 250);
-        }, 250);
-    }
-
-    private getWedstrijden(): boolean {
-        let wed = this.koppels[0].spelers[this.idxWed].wedstrijden.find(wd => wd.tegPouleKoppelId == this.koppels[1].id);
-        if (wed) {
-            this.matchVolgNr = wed.volgNr;
-            this.viewMode = wed.uitslag.brt > 0;
-            this.splWed = wed;
-            console.log(this.splWed);
-        }
-        else {
-            this.alert.showError('Wedstrijd gegevens speler 1 niet gevonden');
-            return false;
-        }
-        wed = this.koppels[1].spelers[this.idxWed].wedstrijden.find(wd => wd.tegPouleKoppelId == this.koppels[0].id);
-        if (wed) {
-            this.tegWed = wed;
-            console.log(this.tegWed);
-        }
-        else {
-            this.alert.showError('Wedstrijd gegevens speler 2 niet gevonden');
-            return false;
-        }
-        return true;
-    }
-
-    createScoreLijsten(): LijstSpeler[] {
-        let result: LijstSpeler[] = [];
-        if (this.splWed.metWit) {
-            let spl = new LijstSpeler(this.koppels[0].spelers[this.idxWed].speler);
-            spl.score = this.splWed.score;
-            result.push(spl);
-            spl = new LijstSpeler(this.koppels[1].spelers[this.idxWed].speler);
-            spl.score = this.tegWed.score;
-            result.push(spl);
-        }
-        else {
-            let spl = new LijstSpeler(this.koppels[1].spelers[this.idxWed].speler);
-            spl.score = this.tegWed.score;
-            result.push(spl);
-            spl = new LijstSpeler(this.koppels[0].spelers[this.idxWed].speler);
-            spl.score = this.splWed.score;
-            result.push(spl);
-        }
-        return result;
-    }
-
-    private uitslagWedstrijdToevoegen(wed: Wedstrijd) {
+    private uitslagWedstrijdToevoegen(wed: Wedstrijd, andGoBack?: boolean) {
+        const vandaag = new Date().toISOString().substring(0, 10);
         const wedSpl = wed.spelers[0];
         const wedTeg = wed.spelers[1];
         const splKoppel = this.koppels.find(kpl => kpl.id == wedSpl.splKoppelId);
@@ -267,6 +163,7 @@ export class PouleRondeWedstrijd extends Base implements OnInit {
         }
         splWed.metWit = wedSpl.metWit;
         splWed.score = wedSpl.stand.score;
+        splWed.wedDatum = vandaag;
         splWed.uitslag.brt = wedSpl.stand.aantBrt;
         splWed.uitslag.car = wedSpl.stand.aantCar;
         splWed.uitslag.moy = wedSpl.stand.gemiddelde;
@@ -301,6 +198,7 @@ export class PouleRondeWedstrijd extends Base implements OnInit {
         }
         tegWed.metWit = wedTeg.metWit;
         tegWed.score = wedTeg.stand.score;
+        tegWed.wedDatum = vandaag;
         tegWed.uitslag.brt = wedTeg.stand.aantBrt;
         tegWed.uitslag.car = wedTeg.stand.aantCar;
         tegWed.uitslag.moy = wedTeg.stand.gemiddelde;
@@ -330,50 +228,67 @@ export class PouleRondeWedstrijd extends Base implements OnInit {
         this.dao.savePouleRondeFile(this.header.seizoen, this.ronde.fileNaam, this.pouleRonde)
         .then(resp => {
             this.alert.showSuccess('Uitslag succesvol opgeslagen.');
+            this.wedstrijd.wedOpgeslagen = true;
+            this.dao.saveWedstrijd(wed)
+            .then(resp => {
+                if (andGoBack) {
+                    super.escapePressed();
+                }
+            })
+            .catch(err => {
+                this.alert.showError(err);
+            });
         })
         .catch(err => {
             this.alert.showError(err);
         });
     }
 
-    private createUitslagForm() {
-        this.uitslagForm =  this.fb.nonNullable.group({
-            datum: [this.splWed.wedDatum || this.today, [Validators.required, notEmpty(), validDateNotFuture()]],
-            splWit: [this.splWed.metWit],
-            splCar: [this.splWed.uitslag.car, [Validators.min(0), isIntegerNotNegative()]],
-            splSer: [this.splWed.uitslag.ser, [Validators.min(0), isIntegerNotNegative()]],
-            tegWit: [this.tegWed.metWit],
-            tegCar: [this.tegWed.uitslag.car, [Validators.min(0), isIntegerNotNegative()]],
-            tegSer: [this.tegWed.uitslag.ser, [Validators.min(0), isIntegerNotNegative()]],
-            beurten: [this.ronde.rndBeurten]
-        }, { validators: wedstrijdFormValidator });
-        if (!this.viewMode) {
-            this.uitslagForm.get('datum')?.setValue(this.today);
-            this.uitslagForm.get('splWit')?.setValue(true);
-            this.uitslagForm.get('tegWit')?.setValue(true);
+    private createNieuweWedstrijd(): Wedstrijd {
+        let wed = new Wedstrijd();
+        wed.rondeId = this.ronde.rndId;
+        wed.pouleId = this.poule.pouleId;
+        wed.idxWedstrijd = this.idxWed;
+        wed.aantSpelers = 2;
+        wed.regels.idxOptie = 1;
+        wed.regels.vastAantBrt = this.ronde.rndBeurten;
+        wed.telling.idxOptie = 1;
+        wed.telling.winstPunten = this.config.pntWinst;
+        wed.telling.gelijkPunten = this.config.pntGelijk;
+        wed.telling.bovenMoyPunten = this.config.pntMoyenne;
+        wed.wedDatum = new Date().toISOString().substring(0, 10);
+        this.koppels.forEach((kpl, idx) => {
+            let spl = new WedSpeler();
+            const kopSpl = kpl.spelers[this.idxWed];
+            spl.splId = kopSpl.speler.splId;
+            spl.splNaam = kopSpl.speler.splNaam;
+            spl.splBordNaam = kopSpl.speler.splBNaam;
+            spl.splSpreekNaam = kopSpl.speler.splSnaam;
+            spl.splTsMoy = kopSpl.speler.splMoy;
+            spl.splTsBrt = wed.regels.vastAantBrt;
+            spl.metWit = idx == 0;
+            spl.splKoppelId = kpl.id;
+            wed.spelers.push(spl);
+        });
+        return wed;
+    }
+
+    private gelezenWedstrijdIsGeselecteerdeWedstrijd(): boolean {
+        return !this.wedstrijd.wedGespeeld &&
+                this.wedstrijd.rondeId == this.ronde.rndId &&
+                this.wedstrijd.pouleId == this.poule.pouleId &&
+                this.wedstrijd.spelers.every(spl => {
+                    return spl.splId == this.koppels[0].spelers[this.idxWed].speler.splId || spl.splId == this.koppels[1].spelers[this.idxWed].speler.splId;
+                });
+    }
+
+    private comparePouleKoppels(a: RondeKoppel, b: RondeKoppel): number {
+        if (a.uitslag.pnt == b.uitslag.pnt) {
+            return b.koppel.kopMoyenne - a.koppel.kopMoyenne;
+        }
+        else {
+            return b.uitslag.pnt - a.uitslag.pnt;
         }
     }
 
-    get datum() {
-        return this.uitslagForm?.get('datum');
-    }
-    get splWit() {
-        return this.uitslagForm?.get('splWit');
-    }
-    get splCar() {
-        return this.uitslagForm?.get('splCar');
-    }
-    get splSer() {
-        return this.uitslagForm?.get('splSer');
-    }
-    get tegWit() {
-        return this.uitslagForm?.get('tegWit');
-    }
-    get tegCar() {
-        return this.uitslagForm?.get('tegCar');
-    }
-    get tegSer() {
-        return this.uitslagForm?.get('tegSer');
-    }
-    
 }

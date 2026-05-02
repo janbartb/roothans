@@ -1,0 +1,158 @@
+<div>
+    <div class="row-koppel flexbox flexstretch">
+        <div class="col-koppel flexbox flexmiddle">
+            <div style="line-height: 1.25; padding-left: .25em;">
+                <span style="font-size: 1.75em;">Poule </span>
+                <span style="font-size: 1.75em; font-weight: bold;"> {{poule.pouleId}}</span>
+            </div>
+        </div>
+        @for (plKop of poule.pouleKoppels; let icol = $index; track $index) {
+            <div class="col-weds">
+                <div class="fullheight flexbox flexcenter flexmiddle">
+                    <div>
+                        <div class="naam-container">{{plKop.koppel.spelers[0].splNaam}}</div>
+                        <div class="naam-container">{{plKop.koppel.spelers[1].splNaam}}</div>
+                    </div>
+                </div>
+            </div>
+        }
+        <div class="col-totaal flexbox flexcenter flexmiddle">
+            <div style="line-height: 1.25; padding-left: .25em;">
+                <span style="font-size: 1.75em;">Totalen</span>
+            </div>
+        </div>
+    </div>
+    @for (splPlKop of poule.pouleKoppels; let irow = $index; track $index) {
+        <div class="row-weds flexbox flexstretch">
+            <div class="col-koppel-id flexbox flexcenter flexmiddle">
+                <div style="font-size: 2em; font-weight: bold; color: darkred;">
+                    <span>{{splPlKop.id}}</span>
+                </div>
+            </div>
+            <div class="col-koppel">
+                <div class="flexbox flexcolumn">
+                    <div class="flex50perc flexbox flexmiddle row-kplspeler border-btm">
+                        <div style="width: 100%;">
+                            <div class="speler-moy" style="font-size: .75em; line-height: 1; font-weight: normal; color: #2e6830;">
+                                <span>{{splPlKop.spelers[0].speler.splMoy | number:'1.3-3':'nl-NL'}}</span>
+                            </div>
+                            <div class="naam-container large">{{splPlKop.spelers[0].speler.splBNaam}}</div>
+                        </div>
+                    </div>
+                    <div class="flex50perc flexbox flexmiddle row-kplspeler border-top">
+                        <div style="width: 100%;">
+                            <div class="naam-container large">{{splPlKop.spelers[1].speler.splBNaam}}</div>
+                            <div class="speler-moy" style="font-size: .75em; line-height: 1; font-weight: normal; color: #2e6830;">
+                                <span>{{splPlKop.spelers[1].speler.splMoy | number:'1.3-3':'nl-NL'}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @for (tegPlKop of poule.pouleKoppels; let icol = $index; track $index) {
+                <div class="col-weds">
+                    <div class="fullheight" [ngClass]="{'filler': irow == icol, 'selected': irow == idxRow && icol == idxCol}">
+                        @if (irow != icol) {
+                            @if (getWedstrijdNrNietGespeeldeMatch(irow, icol) > 0) {
+                                <div class="fullheight flexbox flexcenter flexmiddle" (click)="matchClicked(irow, icol)">
+                                    <div class="wed-volgnr arial">
+                                        <span>{{getWedstrijdNrNietGespeeldeMatch(irow, icol)}}</span>
+                                    </div>
+                                </div>
+                            }
+                            @else {
+                                <div class="fullheight flexbox flexcolumn" (click)="matchClicked(irow, icol)">
+                                    @for (idx of [0, 1]; track $index) {
+                                        <div class="flex50perc row-speler arial"
+                                                    [ngClass]="{'border-btm': idx == 0, 'border-top': idx == 1}">
+                                            @for (wed of splPlKop.spelers[idx].wedstrijden; track $index) {
+                                                @if (wed.tegPouleKoppelId == tegPlKop.id) {
+                                                    @if (wed.uitslag.brt > 0) {
+                                                        <div class="fullheight flexbox flexstretch">
+                                                            <div class="flex70perc flexbox flexmiddle wed-uitslag">
+                                                                <div class="flexbox flexcolumn" [ngClass]="{'reverse': idx == 0}">
+                                                                    <div>
+                                                                        <span style="font-size: 1.5em;">
+                                                                            <b>{{wed.uitslag.car}}</b> 
+                                                                            <span style="font-size: .7em; padding: 0 .5em;">in</span>
+                                                                            <span style="font-size: .7em;">{{ronde.rndBeurten}}</span>
+                                                                        </span>
+                                                                    </div>
+                                                                    <div>
+                                                                        <span>{{wed.uitslag.moy | number:'1.3-3':'nl-NL'}}</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="flex30perc flexbox flexcenter flexmiddle">
+                                                                <div class="wed-punten">{{wed.uitslag.pnt}}</div>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                    @else {
+                                                        <div class="fullheight flexbox flexcenter flexmiddle">
+                                                            <!-- <div style="line-height: 1.25; color: #2e6830;">Nog te spelen</div> -->
+                                                            <div class="wed-volgnr" style="font-size: .5em;">
+                                                                <span>{{getWedstrijdNrMatch(irow, icol)}}</span>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                }
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            }
+            <div class="col-totaal arial" style="color: darkred;">
+                <div class="flexbox flexstretch">
+                    <div class="flex60perc flexbox flexcolumn">
+                        @for (idx of [0, 1]; track $index) {
+                            <div class="flex50perc row-speler arial" [ngClass]="{'border-btm': idx == 0, 'border-top': idx == 1}">
+                                <div class="fullheight flexbox flexstretch">
+                                    <div class="flex70perc flexbox flexmiddle spl-uitslag">
+                                        @if (splPlKop.spelers[idx].uitslag.brt > 0) {
+                                            <div class="flexbox flexcolumn" [ngClass]="{'reverse': idx == 0}">
+                                                <div>
+                                                    <span style="font-size: 1.5em;">
+                                                        <b>{{splPlKop.spelers[idx].uitslag.car}}</b> 
+                                                        <span style="font-size: .7em; padding: 0 .5em;">in</span>
+                                                        <span style="font-size: .7em;">{{splPlKop.spelers[idx].uitslag.brt}}</span>
+                                                    </span>
+                                                </div>
+                                                <div>
+                                                    <span>{{splPlKop.spelers[idx].uitslag.moy | number:'1.3-3':'nl-NL'}}</span>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                    <div class="flex30perc flexbox flexcenter flexmiddle">
+                                        <div class="spl-punten">{{splPlKop.spelers[idx].uitslag.pnt}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="flex40perc flexbox flexmiddle flexright" style="padding-right: 1em; border-left: .125em solid #459c48;">
+                        <div>
+                            <span style="font-size: 4em; font-weight: bold;">{{splPlKop.uitslag.pnt}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    <div class="row-bottom">
+        <div style="text-align: center; color: green; padding-top: .375em;">
+            @if (idxRow > 0 || idxCol > 0) {
+                <span>Toets <b>[enter]</b> om naar match <b>{{selectedMatchNr}}</b> te gaan, of </span>
+                <span>toets een nummer of klik op een nummer om naar die match te gaan.</span>
+            }
+            @else {
+                <span>Toets een nummer of klik op een nummer om naar die match te gaan</span>
+            }
+        </div>
+    </div>
+</div>

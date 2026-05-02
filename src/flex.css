@@ -1,9 +1,15 @@
 .flexbox {
     display: flex;
 }
+.flexbox.reverse {
+    flex-direction: row-reverse;
+}
 
 .flexbox.flexcolumn {
     flex-direction: column;
+}
+.flexbox.flexcolumn.reverse {
+    flex-direction: column-reverse;
 }
 
 .flexbox.flexleft {

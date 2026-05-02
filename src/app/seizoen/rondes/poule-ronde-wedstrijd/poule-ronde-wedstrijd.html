@@ -1,1 +1,277 @@
-<p>poule-ronde-wedstrijd works!</p>
+@if (dataReady) {
+    <div style="line-height: 1.2;">
+        <div class="row-header flexbox flexmiddle">
+            <div style="padding-left: 1em;">
+                <span>Poule <b>{{poule.pouleId}}</b></span>
+            </div>
+            <div style="padding-left: 3em;">
+                <span>match <b>{{matchVolgNr}}</b> - wedstrijd <b>{{idxWed + 1}}</b></span>
+            </div>
+            <div style="padding-left: 3em;">
+                <span>koppels <b>{{koppels[0].id}}</b> - <b>{{koppels[1].id}}</b></span>
+            </div>
+            <div class="flexgrow1" style="padding-right: 1em; text-align: right;">
+                <span><b>{{ronde.rndBeurten}}</b> beurten</span>
+            </div>
+        </div>
+        <div class="row-content flexbox flexstretch">
+            <!-- SPELER DATA -->
+            <div class="flex60perc col-sectie links" style="overflow-x: hidden;">
+                <div class="sectie-content">
+                    @if (uitslagForm) {
+                        <form [formGroup]="uitslagForm">
+                            <div class="row-datum flexbox flexmiddle">
+                                <div style="padding-right: .5em;">
+                                    <label for="datum" style="font-size: 1.5em;">Wedstrijd gespeeld op</label>
+                                </div>
+                                <div>
+                                    @if (viewMode) {
+                                        <span class="data" style="font-size: 1.5em;">{{dater.dateReverse(splWed.wedDatum)}}</span>
+                                    }
+                                    @else {
+                                        <span style="font-size: 1.5em;">
+                                            <input type="text" id="datum" style="width: 6em;" formControlName="datum" autocomplete="off"
+                                                    [ngClass]="{'invalid': datum?.invalid && (datum?.dirty), 'valid': datum?.valid && (datum?.dirty)}"
+                                                    (blur)="datum?.setValue(datum?.value.trim())">
+                                        </span>
+
+                                    }
+                                </div>
+                            </div>
+                            <div class="row-speler">
+                                <div class="speler-content">
+                                    <div class="spl-naam flexbox">
+                                        <div class="flexgrow1">
+                                            <span style="font-size: 1.5em;"><b>{{splSpl.speler.splNaam}}</b> (<b>{{koppels[0].id}}</b>)</span>
+                                        </div>
+                                        <div>
+                                            <span style="font-size: 1.5em;">{{splSpl.speler.splMoy | number:'1.3-3':'nl-NL'}}</span>
+                                        </div>
+                                    </div>
+                                    <div class="flexbox">
+                                        <div class="sectie-bal flexbox flexcenter">
+                                            @if (viewMode) {
+                                                <div style="padding-top: 2em;">
+                                                    <div class="spl-bal biljartbal" [ngClass]="splWed.metWit ? 'wit' : 'geel'" data-kleur=""></div>
+                                                </div>
+                                            }
+                                            @else {
+                                                <div class="flexbox flexcolumn flexmiddle" style="padding-top: 1em;">
+                                                    <div style="font-size: 1em; cursor: pointer;" 
+                                                                (click)="kleurClicked(0)">
+                                                        <i style="color: #b7dfb8;" [ngClass]="splWit?.value ? 'fas fa-check-square' : 'far fa-square'"></i>
+                                                        <span style="color: #6ec071;"> met wit</span>
+                                                    </div>
+                                                    <div style="padding-top: .5em;">
+                                                        <div class="spl-bal biljartbal" [ngClass]="splWit?.value ? 'wit' : 'geel'" data-kleur=""></div>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                        <div class="flexgrow1 sectie-stand">
+                                            <div style="font-size: 1.5em;">
+                                                <table class="tbl-normal">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td><label for="splCar">caramboles</label></td>
+                                                            @if (viewMode) {
+                                                                <td class="data">{{splWed.uitslag.car}}</td>
+                                                            }
+                                                            @else {
+                                                                <td>
+                                                                    <input type="number" id="splCar" style="width: 3em;" formControlName="splCar" autocomplete="off"
+                                                                        [ngClass]="{'invalid': splCar?.invalid && (splCar?.dirty), 
+                                                                                    'valid': splCar?.valid && (splCar?.dirty)}">
+                                                                </td>
+                                                            }
+                                                        </tr>
+                                                        <tr>
+                                                            <td><label for="splMoy">moyenne</label></td>
+                                                            @if (viewMode) {
+                                                                <td class="data">{{splWed.uitslag.moy | number:'1.3-3':'nl-NL'}}</td>
+                                                            }
+                                                            @else {
+                                                                <td class="data">{{splCar?.value / ronde.rndBeurten | number:'1.3-3':'nl-NL'}}</td>
+                                                            }
+                                                        </tr>
+                                                        <tr>
+                                                            <td><label for="splSer">serie</label></td>
+                                                            @if (viewMode) {
+                                                                <td class="data">{{splWed.uitslag.ser}}</td>
+                                                            }
+                                                            @else {
+                                                                <td>
+                                                                    <input type="number" id="splSer" style="width: 3em;" formControlName="splSer" autocomplete="off"
+                                                                        [ngClass]="{'invalid': splSer?.invalid && (splSer?.dirty), 
+                                                                                    'valid': splSer?.valid && (splSer?.dirty)}">
+                                                                </td>
+                                                            }
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="sectie-pnt flexbox flexright">
+                                            <div class="spl-pnt">
+                                                @if (viewMode) {
+                                                    <span>{{splWed.uitslag.pnt}}</span>
+                                                }
+                                                @else {
+                                                    <span>{{splCar?.value > tegCar?.value ? 2 : (splCar?.value < tegCar?.value ? 0 : 1)}}</span>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row-speler">
+                                <div class="speler-content">
+                                    <div class="spl-naam flexbox">
+                                        <div class="flexgrow1">
+                                            <span style="font-size: 1.5em;"><b>{{tegSpl.speler.splNaam}}</b> (<b>{{koppels[1].id}}</b>)</span>
+                                        </div>
+                                        <div>
+                                            <span style="font-size: 1.5em;">{{tegSpl.speler.splMoy | number:'1.3-3':'nl-NL'}}</span>
+                                        </div>
+                                    </div>
+                                    <div class="flexbox">
+                                        <div class="sectie-bal flexbox flexcenter">
+                                            @if (viewMode) {
+                                                <div style="padding-top: 2em;">
+                                                    <div class="spl-bal biljartbal" [ngClass]="tegWed.metWit ? 'wit' : 'geel'" data-kleur=""></div>
+                                                </div>
+                                            }
+                                            @else {
+                                                <div class="flexbox flexcolumn flexmiddle" style="padding-top: 1em;">
+                                                    <div style="font-size: 1em; cursor: pointer;" 
+                                                                (click)="kleurClicked(1)">
+                                                        <i style="color: #b7dfb8;" [ngClass]="tegWit?.value ? 'fas fa-check-square' : 'far fa-square'"></i>
+                                                        <span style="color: #6ec071;"> met wit</span>
+                                                    </div>
+                                                    <div style="padding-top: .5em;">
+                                                        <div class="spl-bal biljartbal" [ngClass]="tegWit?.value ? 'wit' : 'geel'" data-kleur=""></div>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                        <div class="flexgrow1 sectie-stand">
+                                            <div style="font-size: 1.5em;">
+                                                <table class="tbl-normal">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td><label for="tegCar">caramboles</label></td>
+                                                            @if (viewMode) {
+                                                                <td class="data">{{tegWed.uitslag.car}}</td>
+                                                            }
+                                                            @else {
+                                                                <td>
+                                                                    <input type="number" id="tegCar" style="width: 3em;" formControlName="tegCar" autocomplete="off"
+                                                                        [ngClass]="{'invalid': tegCar?.invalid && (tegCar?.dirty), 
+                                                                                    'valid': tegCar?.valid && (tegCar?.dirty)}">
+                                                                </td>
+                                                            }
+                                                        </tr>
+                                                        <tr>
+                                                            <td><label for="tegMoy">moyenne</label></td>
+                                                            @if (viewMode) {
+                                                                <td class="data">{{tegWed.uitslag.moy | number:'1.3-3':'nl-NL'}}</td>
+                                                            }
+                                                            @else {
+                                                                <td class="data">{{tegCar?.value / ronde.rndBeurten | number:'1.3-3':'nl-NL'}}</td>
+                                                            }
+                                                        </tr>
+                                                        <tr>
+                                                            <td><label for="tegSer">serie</label></td>
+                                                            @if (viewMode) {
+                                                                <td class="data">{{tegWed.uitslag.ser}}</td>
+                                                            }
+                                                            @else {
+                                                                <td>
+                                                                    <input type="number" id="tegSer" style="width: 3em;" formControlName="tegSer" autocomplete="off"
+                                                                        [ngClass]="{'invalid': tegSer?.invalid && (tegSer?.dirty), 
+                                                                                    'valid': tegSer?.valid && (tegSer?.dirty)}">
+                                                                </td>
+                                                            }
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="sectie-pnt flexbox flexright">
+                                            <div class="spl-pnt">
+                                                @if (viewMode) {
+                                                    <span>{{tegWed.uitslag.pnt}}</span>
+                                                }
+                                                @else {
+                                                    <span>{{tegCar?.value > splCar?.value ? 2 : (tegCar?.value < splCar?.value ? 0 : 1)}}</span>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    }
+                </div>
+            </div>
+            <!-- SCORE LIJST -->
+            <div class="flex40perc col-sectie rechts" style="overflow-x: hidden;">
+                <div class="sectie-content flexbox flexcolumn">
+                    <div style="height: 3em; max-height: 3em; line-height: 3em; text-align: center;">
+                        <span class="label" style="font-size: 1.5em;">Score lijsten</span>
+                    </div>
+                    <div class="flexgrow1 flexbox flexcenter">
+                        <div>
+                            @if (!lijsten.length) {
+                                <div style="text-align: center; padding-top: 5em; color: #1e461f;">
+                                    <span style="font-size: 1.25em;">Niet beschikbaar</span>
+                                </div>
+                            }
+                            @else {
+                                <div>
+                                    <app-lijst-view [spelers]="lijsten"></app-lijst-view>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row-footer flexbox flexcenter flexmiddle">
+            @if (viewMode) {
+                <div style="font-size: 1.25em;">
+                    <app-button [button]="btnDel" (btnClicked)="verwijderenClicked()"></app-button>
+                </div>
+            }
+            @else {
+                <div style="font-size: 1.25em;">
+                    <app-button [button]="btnSave" [disabled]="!uitslagForm || !uitslagForm.valid"
+                                (btnClicked)="opslaanClicked()"></app-button>
+                </div>
+            }
+            <!-- @if (wedGespeeld) {
+                <div style="font-size: 1.25em;">
+                    <app-button [button]="btnNaar" (btnClicked)="naarWedstrijdClicked()"></app-button>
+                </div>
+            }
+            @else {
+                @if (idxWed == idxWedBezig) {
+                    <div style="font-size: 1.25em;">
+                        <app-button [button]="btnVervolg" (btnClicked)="naarWedstrijdClicked()"></app-button>
+                    </div>
+                    <div style="font-size: 1.25em;">
+                        <app-button [button]="btnOpnieuw" (btnClicked)="startOpnieuwClicked()"></app-button>
+                    </div>
+                }
+                @else {
+                    <div style="font-size: 1.25em;">
+                        <app-button [button]="btnStart" (btnClicked)="naarWedstrijdClicked()"></app-button>
+                    </div>
+                }
+                <div style="font-size: 1.25em;">
+                    <app-button [button]="btnAdd" (btnClicked)="uitslagToevoegenClicked()"></app-button>
+                </div>
+            } -->
+        </div>
+    </div>
+}

@@ -9,9 +9,9 @@
 .poule-uitslag {
     color: red;
     font-weight: bold;
-    padding-left: 2em;
+    padding-left: 2.5em;
 }
 .poule-uitslag div {
-    width: 2em;
+    width: 1.5em;
     text-align: right;
 }
