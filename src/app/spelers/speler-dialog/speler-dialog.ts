@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, inject, Input, OnInit, Output } from '@angular/core';
 import { Speler } from '../../model/speler';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { greaterZero, notEmpty } from '../../directives/validators';
@@ -53,8 +53,40 @@ export class SpelerDialog implements OnInit {
         this.speech.speak(this.snaam?.value, true);
     }
 
+    @HostListener('document:keyup', ['$event'])
+    handleKeyboardEvent(event: KeyboardEvent): boolean {
+        console.log(event.code + ' : ' + event.key);
+        if (event.key === 'Enter') {
+            if (this.spelerForm && this.spelerForm.valid) {
+                this.buttonPressed(this.btnConfirm);
+                return false;
+            }
+            return true;
+        }
+        if (event.key === 'Escape') {
+            this.buttonPressed(this.btnCancel);
+            return false;
+        }
+        return true;
+    }
+
     ngOnInit(): void {
         this.createSpelerForm();
+    }
+
+    private buttonPressed(btn: Btn) {
+        btn.clicked = true;
+        setTimeout(() => {
+            btn.clicked = false;
+            setTimeout(() => {
+                if (btn.id == 'ok') {
+                    this.confirmed();
+                }
+                if (btn.id == 'cancel') {
+                    this.canceled();
+                }
+            }, 250);
+        }, 250);
     }
 
     private createSpelerForm() {

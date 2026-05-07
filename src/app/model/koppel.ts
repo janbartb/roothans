@@ -1,4 +1,3 @@
-import { SpeelDag } from "./seizoen";
 import { KoppelSpeler } from "./speler";
 
 export class Koppel {

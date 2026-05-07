@@ -20,11 +20,13 @@ export class Rondes extends Base implements OnInit {
     koppels: Koppel[] = [];
 
     planningClicked(rondeId: number) {
-        this.gotoPage(`rondes/poule/${rondeId}`, 'rondes');
+        const rondeType = this.rondes[rondeId - 1].rndType;
+        this.gotoPage(`rondes/${rondeType}/${rondeId}`, 'rondes');
     }
 
     spelenClicked(rondeId: number) {
-        this.gotoPage(`rondes/poule/${rondeId}/spel`, 'rondes');        
+        const rondeType = this.rondes[rondeId - 1].rndType;
+        this.gotoPage(`rondes/${rondeType}/${rondeId}/spel`, 'rondes');        
     }
 
     override ngOnInit(): void {

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, HostListener, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Base } from '../base/base';
 import { Btn } from '../model/misc';
@@ -21,8 +21,8 @@ export class Home extends Base implements OnInit {
     intervalHandle: number = -1;
     countdownStopped: boolean = false;
 
-    btnProcede: Btn = new Btn('go', 'Naar hoofdmenu');
-    btnStop: Btn = new Btn('stop', 'Stop countdown');
+    btnProcede: Btn = new Btn('go', 'Naar hoofdmenu', 'enter');
+    btnStop: Btn = new Btn('stop', 'Stop countdown', 's', 1);
 
     buttonProcedeClicked() {
         this.gotoMainMenu();
@@ -47,6 +47,20 @@ export class Home extends Base implements OnInit {
         }, 1000);
     }
 
+    @HostListener('document:keyup', ['$event'])
+    handleKeyboardEvent(event: KeyboardEvent): boolean {
+        console.log(event.code + ' : ' + event.key);
+        if (event.key === 'Enter') {
+            this.buttonPressed(this.btnProcede);
+            return false;
+        }
+        if (event.key === 'Escape' || event.code === 'KeyS') {
+            this.buttonPressed(this.btnStop);
+            return false;
+        }
+        return true;
+    }
+
     override ngOnInit(): void {
         this.header.subtitle = 'home';
         this.header.urlHistory = [];
@@ -54,6 +68,21 @@ export class Home extends Base implements OnInit {
         this.header.seizoen = '';
         sessionStorage.removeItem('seizoen');
         this.countdown();
+    }
+
+    private buttonPressed(btn: Btn) {
+        btn.clicked = true;
+        setTimeout(() => {
+            btn.clicked = false;
+            setTimeout(() => {
+                if (btn.id == 'go') {
+                    this.buttonProcedeClicked();
+                }
+                else if (btn.id == 'stop') {
+                    this.buttonStopClicked();
+                }
+            }, 250);
+        }, 250);
     }
 
 }

@@ -223,8 +223,8 @@
                     <div class="flexgrow1 flexbox flexcenter">
                         <div>
                             @if (!lijsten.length) {
-                                <div style="text-align: center; padding-top: 5em; color: #1e461f;">
-                                    <span style="font-size: 1.25em;">Niet beschikbaar</span>
+                                <div style="text-align: center; padding-top: 6em; color: #1e461f;">
+                                    <span style="font-size: 1.25em;">Niet aanwezig</span>
                                 </div>
                             }
                             @else {
@@ -249,29 +249,16 @@
                                 (btnClicked)="opslaanClicked()"></app-button>
                 </div>
             }
-            <!-- @if (wedGespeeld) {
-                <div style="font-size: 1.25em;">
-                    <app-button [button]="btnNaar" (btnClicked)="naarWedstrijdClicked()"></app-button>
-                </div>
-            }
-            @else {
-                @if (idxWed == idxWedBezig) {
-                    <div style="font-size: 1.25em;">
-                        <app-button [button]="btnVervolg" (btnClicked)="naarWedstrijdClicked()"></app-button>
-                    </div>
-                    <div style="font-size: 1.25em;">
-                        <app-button [button]="btnOpnieuw" (btnClicked)="startOpnieuwClicked()"></app-button>
-                    </div>
-                }
-                @else {
-                    <div style="font-size: 1.25em;">
-                        <app-button [button]="btnStart" (btnClicked)="naarWedstrijdClicked()"></app-button>
-                    </div>
-                }
-                <div style="font-size: 1.25em;">
-                    <app-button [button]="btnAdd" (btnClicked)="uitslagToevoegenClicked()"></app-button>
-                </div>
-            } -->
+        </div>
+    </div>
+}
+@if (confirmDelete.open) {
+    <div class="overlay flexbox flexcenter flexmiddle">
+        <div style="opacity: 1;">
+            <div class="dialog" style="font-size: 1.75em;">
+                <app-confirm-dialog [dialog]="confirmDelete" [sure]="true"
+                                    (reply)="confirmVerwijderenReplied($event)"></app-confirm-dialog>
+            </div>
         </div>
     </div>
 }

@@ -6,25 +6,40 @@
         @else {
             <div class="flexbox flexcenter flexmiddle list-header" style="min-height: 3em; padding-right: 16px;">
                 <div style="width: 4em;">ID</div>
-                <div class="sortable" style="width: 15em;">
-                    <span (click)="sortClicked('spl1')">Speler 1</span>
-                    @if (sortCol == 'spl1') {
-                        <i class="fas" [ngClass]="sortDir == 1 ? 'fa-sort-up' : 'fa-sort-down'" style="padding-left: .25em;"></i>
-                    }
+                <div class="flexbox" style="width: 15em;">
+                    <div class="sortable" (click)="sortClicked('spl1')">
+                        <span>Speler 1</span>
+                        @if (sortCol == 'spl1') {
+                            <i class="fas" [ngClass]="sortDir == 1 ? 'fa-sort-up' : 'fa-sort-down'" style="padding-left: .25em;"></i>
+                        }
+                        @else {
+                            <i style="padding-left: .25em; color: #93cf95;" class="fas fa-sort"></i>
+                        }
+                    </div>
                 </div>
                 <div style="width: 2em;"></div>
-                <div class="sortable" style="width: 15em;">
-                    <span (click)="sortClicked('spl2')">Speler 2</span>
-                    @if (sortCol == 'spl2') {
-                        <i class="fas" [ngClass]="sortDir == 1 ? 'fa-sort-up' : 'fa-sort-down'" style="padding-left: .25em;"></i>
-                    }
+                <div class="flexbox" style="width: 15em;">
+                    <div class="sortable" (click)="sortClicked('spl2')">
+                        <span>Speler 2</span>
+                        @if (sortCol == 'spl2') {
+                            <i class="fas" [ngClass]="sortDir == 1 ? 'fa-sort-up' : 'fa-sort-down'" style="padding-left: .25em;"></i>
+                        }
+                        @else {
+                            <i style="padding-left: .25em; color: #93cf95;" class="fas fa-sort"></i>
+                        }
+                    </div>
                 </div>
                 <div style="width: 2em;"></div>
-                <div class="sortable" style="width: 8em;">
-                    <span (click)="sortClicked('moy')">Koppel<br>moyenne</span>
-                    @if (sortCol == 'moy') {
-                        <i class="fas" [ngClass]="sortDir == 1 ? 'fa-sort-up' : 'fa-sort-down'" style="padding-left: .25em;"></i>
-                    }
+                <div class="flexbox" style="width: 8em;">
+                    <div class="sortable" (click)="sortClicked('moy')">
+                        <span>Koppel<br>moyenne</span>
+                        @if (sortCol == 'moy') {
+                            <i class="fas" [ngClass]="sortDir == 1 ? 'fa-sort-up' : 'fa-sort-down'" style="padding-left: .25em;"></i>
+                        }
+                        @else {
+                            <i style="padding-left: .25em; color: #93cf95;" class="fas fa-sort"></i>
+                        }
+                    </div>
                 </div>
                 <div style="width: 14em;">
                     <span>Voorkeur dagen</span>
@@ -49,7 +64,7 @@
             </div>
         }
     </div>
-    <div class="flexbox flexcenter flexmiddle" style="min-height: 3em; border-top: .125em solid black;">
+    <div class="flexbox flexcenter flexmiddle" style="min-height: 3em;">
         <div class="flexbox">
             <app-button [button]="btnAdd" [disabled]="koppels.length == config.maxKoppels" (btnClicked)="toevoegenClicked()"></app-button>
             @if (markedForDelete.length) {

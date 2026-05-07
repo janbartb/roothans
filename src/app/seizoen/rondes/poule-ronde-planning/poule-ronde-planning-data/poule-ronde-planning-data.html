@@ -1,45 +1,56 @@
 <div class="fullheight flexbox flexcolumn">
-    <div class="flexgrow1 flexbox flexstretch" style="overflow: hidden;">
-        @for (ppd of poulesPerDagen; track $index) {
-            <div class="flex25perc flexbox flexcolumn ppd-kolom">
-                <div class="ppd-title">
-                    <span>{{ppd.dagNaam}}</span>
-                </div>
-                <div class="flexgrow1 ppd-body">
-                    @for (poul of ppd.poules; track $index) {
-                        <div style="font-size: .5em; padding: .25em .25em 0 .25em;">
-                            <div class="poule-view" [ngClass]="{'selected': poul.pouleId == poule.pouleId}"
-                                        (click)="pouleClicked(poul.pouleId)">
-                                <app-ronde-poule-view [poule]="poul" [allowDelete]="false"
-                                                    [koppelClick]="false"></app-ronde-poule-view>
+    <div class="flexgrow1 sectie-row" style="overflow-y: hidden;">
+        <div class="sectie-content fullheight flexbox flexcolumn" style="overflow: hidden;">
+            <div class="sectie-title">
+                <span><b>Poules per voorkeurdag</b></span>
+            </div>
+            <div class="sectie-data flexgrow1 flexbox flexstretch" style="overflow: hidden;">
+                @for (ppd of poulesPerDagen; track $index) {
+                    <div class="flex25perc sectie-dag" style="overflow-y: hidden;">
+                        <div class="fullheight flexbox flexcolumn sectie-dag-content" style="overflow-y: hidden;">
+                            <div class="sectie-title">
+                                <span>{{ppd.dagNaam}}</span>
+                            </div>
+                            <div class="flexgrow1 ppd-body">
+                                @for (poul of ppd.poules; track $index) {
+                                    <div style="font-size: .5em; padding: .25em .25em 0 .25em;">
+                                        <div class="poule-view"(click)="pouleClicked(poul.pouleVolgNr)">
+                                            <app-ronde-poule-view [poule]="poul" [allowDelete]="false" 
+                                                                [selected]="poul.pouleVolgNr == poule.pouleVolgNr"
+                                                                [koppelClick]="false"></app-ronde-poule-view>
+                                        </div>
+                                    </div>
+                                }
                             </div>
                         </div>
-                    }
-                </div>
-            </div>
-        }
-    </div>
-    <div style="min-height: 3.5em; border-top: .125em solid black;">
-        <div class="fullheight flexbox flexcenter flexmiddle" style="font-size: .75em;">
-            <div style="padding-right: .5em; font-weight: bold;"><label for="">Speeldatum poule </label></div>
-            @for (poule of pouleRonde.poules; track $index) {
-                <div class="poule-button flexbox flexcenter flexmiddle" [ngClass]="{'selected': $index == idxPoule}"
-                                (click)="pouleButtonClicked($index)">
-                    <div>{{poule.pouleId}}</div>
-                </div>
-            }
-            <div style="padding: 0 .5em; font-weight: bold;"><label for="">:</label></div>
-            <div>
-                <select style="width: 7em;" [(ngModel)]="poule.pouleDatum" (change)="pouleDatumSelected()">
-                    <option value=""></option>
-                    @for (dat of mogelijkePouleSpeelData; track $index) {
-                        <option [value]="dat">{{dat}}</option>
-                    }
-                </select>
+                    </div>
+                }
             </div>
         </div>
     </div>
-    <div class="flexbox flexcenter flexmiddle" style="font-size: .75em; min-height: 3em; border-top: .125em solid black;">
+    <div class="sectie-row" style="height: 3.5em; min-height: 3.5em;">
+        <div class="sectie-buttons fullheight">
+            <div class="fullheight flexbox flexcenter flexmiddle" style="font-size: .75em;">
+                <div style="padding-right: .5em; font-weight: bold;"><label for="">Speeldatum poule </label></div>
+                @for (poule of pouleRonde.poules; track $index) {
+                    <div class="poule-button flexbox flexcenter flexmiddle" [ngClass]="{'selected': $index == idxPoule}"
+                                    (click)="pouleButtonClicked($index)">
+                        <div>{{poule.pouleVolgNr}}</div>
+                    </div>
+                }
+                <div style="padding: 0 .5em; font-weight: bold;"><label for="">:</label></div>
+                <div>
+                    <select style="width: 7em;" [(ngModel)]="poule.pouleDatum" (change)="pouleDatumSelected()">
+                        <option value=""></option>
+                        @for (dat of mogelijkePouleSpeelData; track $index) {
+                            <option [value]="dat">{{dat}}</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="flexbox flexcenter flexmiddle" style="font-size: .75em; min-height: 3em;">
         @if (poulesOk) {
             @if (touched) {
                 <div>
@@ -57,7 +68,7 @@
         }
         @else {
             <div>
-                <app-button [button]="btnSave" [disabled]="!touched" (btnClicked)="opslaanClicked()"></app-button>
+                <app-button [button]="btnSaveDef" [disabled]="!touched" (btnClicked)="opslaanClicked()"></app-button>
             </div>
         }
     </div>

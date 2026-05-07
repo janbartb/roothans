@@ -206,7 +206,12 @@ export class PouleRondePouleschema extends Base implements OnInit {
 
     private comparePouleKoppels(a: RondeKoppel, b: RondeKoppel): number {
         if (a.uitslag.pnt == b.uitslag.pnt) {
-            return b.koppel.kopMoyenne - a.koppel.kopMoyenne;
+            if ((b.uitslag.moy / b.koppel.kopMoyenne) == (a.uitslag.moy / a.koppel.kopMoyenne)) {
+                return b.koppel.kopMoyenne - a.koppel.kopMoyenne;
+            }
+            else {
+                return (b.uitslag.moy / b.koppel.kopMoyenne) - (a.uitslag.moy / a.koppel.kopMoyenne);
+            }
         }
         else {
             return b.uitslag.pnt - a.uitslag.pnt;

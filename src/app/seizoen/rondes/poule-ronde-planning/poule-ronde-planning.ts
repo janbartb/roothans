@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, HostListener, inject, OnInit } from '@angular/core';
 import { Base } from '../../../base/base';
 import { Poule, PouleRonde, Ronde, RondeKoppel, RondeKoppelWedstrijd } from '../../../model/ronde';
 import { ActivatedRoute } from '@angular/router';
@@ -63,9 +63,10 @@ export class PouleRondePlanning extends Base implements OnInit {
         m21 : 6
     };
 
-    btnSave: Btn = new Btn('save', 'Opslaan');
+    btnSaveDef: Btn = new Btn('savedef', 'Opslaan', 'enter');
+    btnSave: Btn = new Btn('save', 'Opslaan', 's', 3);
     btnSaveNext: Btn = new Btn('savenext', 'Opslaan en naar speeldata');
-    btnNext: Btn = new Btn('next', 'Naar speeldata');
+    btnNext: Btn = new Btn('next', 'Naar speeldata', 'enter');
 
     opslaanClicked(andNext?: boolean) {
         console.log(this.pouleRonde);
@@ -84,6 +85,12 @@ export class PouleRondePlanning extends Base implements OnInit {
 
     nextClicked() {
         this.gotoPage(`rondes/poule/${this.ronde.rndId}/data`, `rondes/poule/${this.ronde.rndId}`);
+    }
+
+    clearHovered() {
+        this.koppelsPerDagen.forEach(kpd => {
+            kpd.idxFirst = kpd.idxSecond = kpd.idxRest = -1;
+        });
     }
 
     koppelHovered(koppel: Koppel) {
@@ -106,7 +113,7 @@ export class PouleRondePlanning extends Base implements OnInit {
                 return;
             }
             availDagPoule = new Poule();
-            availDagPoule.pouleId = String.fromCharCode(65 + this.pouleRonde.poules.length);
+            //availDagPoule.pouleId = String.fromCharCode(65 + this.pouleRonde.poules.length);
             this.pouleRonde.poules.push(availDagPoule);
             this.addKoppelToPoule(availDagPoule, koppel, kpd);
         }
@@ -130,9 +137,43 @@ export class PouleRondePlanning extends Base implements OnInit {
             this.pouleKoppelBackToKoppelsPerDagen(kpl.koppel);
         });
         this.pouleRonde.poules.splice(idx, 1);
-        this.renamePoules();
+        //this.renamePoules();
         this.touched = true;
         this.poulesOk = false;
+    }
+
+    @HostListener('document:keyup', ['$event'])
+    handleKeyboardEvent(event: KeyboardEvent): boolean {
+        console.log(event.code + ' : ' + event.key);
+        if (event.key === 'Enter') {
+            if (this.poulesOk) {
+                if (this.touched) {
+                    this.buttonPressed(this.btnSaveNext);
+                    return false;
+                }
+                else {
+                    this.buttonPressed(this.btnNext);
+                    return false;
+                }
+            }
+            else {
+                this.buttonPressed(this.btnSaveDef);
+                return false;
+            }
+        }
+        if (event.key === 'Escape') {
+            this.escapePressed();
+            return false;
+        }
+        if (event.code === 'KeyS') {
+            this.buttonPressed(this.btnSave);
+            return false;
+        }
+        if (event.key === 'Home') {
+            this.gotoHome();
+            return false;
+        }
+        return true;
     }
 
     override ngOnInit(): void {
@@ -164,12 +205,15 @@ export class PouleRondePlanning extends Base implements OnInit {
             this.header.subtitle = `Seizoen ${this.header.seizoen} - Planning ${this.ronde.rndNaam} - Poules aanmaken`;
             this.dao.getPouleRondeFile(this.header.seizoen, this.ronde.fileNaam)
             .then(data => {
+                console.log(data);
                 this.pouleRonde = data;
                 this.fillKoppelsPerDagen();
                 if (!this.pouleRonde.poules) {
                     this.pouleRonde.poules = [];
                 }
                 this.pouleRonde.poules.forEach(poule => {
+                    poule.pouleVolgNr = 0;
+                    poule.pouleId = '';
                     poule.pouleKoppels.forEach(pkop => {
                         this.removeKoppelFromKoppelsPerDagen(pkop.koppel);
                     });
@@ -184,6 +228,24 @@ export class PouleRondePlanning extends Base implements OnInit {
         .catch(err => {
             this.alert.showError(err);
         });
+    }
+
+    private buttonPressed(btn: Btn) {
+        btn.clicked = true;
+        setTimeout(() => {
+            btn.clicked = false;
+            setTimeout(() => {
+                if (btn.id == 'save' || btn.id == 'savedef') {
+                    this.opslaanClicked();
+                }
+                else if (btn.id == 'savenext') {
+                    this.opslaanClicked(true);
+                }
+                else if (btn.id == 'next') {
+                    this.nextClicked();
+                }
+            }, 250);
+        }, 250);
     }
 
     private addKoppelToPoule(poule: Poule, koppel: Koppel, kpd: KoppelsPerDag) {

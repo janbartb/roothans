@@ -1,12 +1,13 @@
 <div class="fullheight">
     <div class="fullheight flexbox flexcenter flexmiddle">
-        <div style="font-size: .75em;">
+        <div>
             <div style="padding: .5em 0;">
                 @if (seizoenen.length && selectForm) {
                     <form [formGroup]="selectForm">
                         <div class="flexbox" style="padding-top: .75rem;">
                             <div class="flexgrow1">
-                                <app-button [button]="btnSelect" (btnClicked)="buttonSelectClicked()"></app-button>
+                                <app-button [button]="btnSelect" [disabled]="!(selectForm && selectForm.valid)"
+                                        (btnClicked)="buttonSelectClicked()"></app-button>
                             </div>
                             <div style="padding-left: .5em; width: 4.5em;">
                                 <select id="selSeiz" style="width: 4em;" formControlName="selSeiz">
@@ -24,7 +25,7 @@
                     <form [formGroup]="nieuwForm">
                         <div class="flexbox">
                             <div class="flexgrow1">
-                                <app-button [button]="btnNieuw" [disabled]="!newSeiz || newSeiz.invalid" 
+                                <app-button [button]="btnNieuw" [disabled]="!(newSeiz && newSeiz.valid)" 
                                         (btnClicked)="buttonNieuwClicked()"></app-button>
                             </div>
                             <div style="padding-left: .5em; width: 4.5em;">
@@ -60,3 +61,13 @@
         </div>
     </div>
 </div>
+@if (confirmNieuw.open) {
+    <div class="overlay flexbox flexcenter flexmiddle">
+        <div style="opacity: 1;">
+            <div class="dialog">
+                <app-confirm-dialog [dialog]="confirmNieuw" [sure]="true"
+                                    (reply)="confirmNieuwReplied($event)"></app-confirm-dialog>
+            </div>
+        </div>
+    </div>
+}

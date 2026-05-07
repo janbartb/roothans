@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, HostListener, inject, OnInit } from '@angular/core';
 import { Base } from '../base/base';
 import { Speler } from '../model/speler';
 import { DecimalPipe, NgClass } from '@angular/common';
@@ -36,18 +36,16 @@ export class Spelers extends Base implements OnInit {
     existingIds: string[] = [];
     speler: Speler = new Speler();
     mode: string = 'edit';
-    confirmDeleteDialog: ConfirmDialogType = new ConfirmDialogType('verwijderen');
+    confirmDeleteDialog: ConfirmDialogType = new ConfirmDialogType('Speler verwijderen');
 
-    btnAdd: Btn = new Btn('add', 'Speler toevoegen');
+    btnAdd: Btn = new Btn('add', 'Toevoegen speler', 'T', 1);
 
-    buttonClicked(key: string) {
-        if (key == 'add') {
-            this.mode = 'add';
-            this.dialogTitle = 'Speler toevoegen';
-            this.speler = new Speler();
-            this.idxSpeler = -1;
-            this.dialogVisible = true;
-        }
+    toevoegenClicked() {
+        this.mode = 'add';
+        this.dialogTitle = 'Speler toevoegen';
+        this.speler = new Speler();
+        this.idxSpeler = -1;
+        this.dialogVisible = true;
     }
 
     spelerClicked(idx: number) {
@@ -140,6 +138,27 @@ export class Spelers extends Base implements OnInit {
         this.dialogVisible = false;
     }
 
+    @HostListener('document:keyup', ['$event'])
+    handleKeyboardEvent(event: KeyboardEvent): boolean {
+        console.log(event.code + ' : ' + event.key);
+        if (this.dialogVisible || this.confirmDeleteDialog.open) {
+            return false;
+        }
+        if (event.key === 'Escape') {
+            this.escapePressed();
+            return false;
+        }
+        if (event.code === 'KeyT') {
+            this.buttonPressed(this.btnAdd);
+            return false;
+        }
+        if (event.key === 'Home') {
+            this.gotoHome();
+            return false;
+        }
+        return true;
+    }
+
     override ngOnInit(): void {
         super.ngOnInit();
         this.header.subtitle = 'Onderhoud spelers';
@@ -155,6 +174,18 @@ export class Spelers extends Base implements OnInit {
         .catch(err => {
             this.alert.showError(err);
         })
+    }
+
+    private buttonPressed(btn: Btn) {
+        btn.clicked = true;
+        setTimeout(() => {
+            btn.clicked = false;
+            setTimeout(() => {
+                if (btn.id == 'add') {
+                    this.toevoegenClicked();
+                }
+            }, 250);
+        }, 250);
     }
 
     private sortSpelers(colNaam: string) {

@@ -22,8 +22,8 @@
     </div>
     <div class="flexbox flexcenter" style="padding-top: 1em;">
         @if (!countdownStopped) {
-            <app-button style="font-size: .75em;" [button]="btnStop" (btnClicked)="buttonStopClicked()"></app-button>
+            <app-button [button]="btnStop" (btnClicked)="buttonStopClicked()"></app-button>
         }
-        <app-button style="font-size: .75em;" [button]="btnProcede" (btnClicked)="buttonProcedeClicked()"></app-button>
+        <app-button [button]="btnProcede" (btnClicked)="buttonProcedeClicked()"></app-button>
     </div>
 </div>

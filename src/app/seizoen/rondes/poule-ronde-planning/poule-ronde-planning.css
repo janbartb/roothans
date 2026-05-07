@@ -1,54 +1,56 @@
-.kpd-kolom {
-    border-left: .125em solid black;
-    border-right: .125em solid black;
+.sectie-row {
+    padding: .125em;
 }
-
-.kpd-title {
+.sectie-content {
+    background-color: #dbefdc;
+    border-radius: .5em;
+    overflow: hidden;
+    border: .0625em solid #1e461f;
+}
+.sectie-data {
+    padding: .125em;
+}
+.sectie-title {
     min-height: 1.25em;
     line-height: 1.25em;
+    background-color: #1e461f;
+    color: #b7dfb8;
     text-align: center;
-    background-color: #606060;
-    color: white;
 }
-.kpd-title span {
+.sectie-title span {
     font-size: .75em;
 }
 
-.kpd-body {
-    padding: 0 .5em;
+.sectie-dag {
+    padding: .0625em;
+}
+.sectie-dag .sectie-title {
+    background-color: #265728;
+}
+.sectie-dag-content {
+    background-color: #dbefdc;
+    border-radius: .25em;
+    overflow: hidden;
+    border: .0625em solid #265728;
+}
+.sectie-dag-data {
+    margin: .125em;
+}
+
+.voorkeur-header {
+    padding-left: 3em;
+    margin-right: .25em;
+    font-weight: bold;
+    background-color: #265728;
+    color: #dbefdc;
 }
 
 .koppel-row {
     padding: 0 .5em;
+    margin-right: .25em;
     cursor: pointer;
 }
-
-.koppel-first {
-    background-color: white;
-    color: black;
-}
-.koppel-first .selected {
-    background-color: #505050;
-    color: white;
-    font-weight: bold;
-}
-
-.koppel-second {
-    background-color: #beffbe;
-    color: black;
-}
-.koppel-second .selected {
-    background-color: darkgreen;
-    color: white;
-    font-weight: bold;
-}
-
-.koppel-rest {
-    background-color: #ffacac;
-    color: black;
-}
-.koppel-rest .selected {
-    background-color: #920000;
-    color: white;
-    font-weight: bold;
+.koppel-row.selected {
+    background-color: darkred;
+    color: #f4faf4;
 }

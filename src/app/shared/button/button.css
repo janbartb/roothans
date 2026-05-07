@@ -31,14 +31,14 @@
 .button-front-inner {
     padding: .25em 1em;
     border: .0625em solid #357a38;
-    color: white;
+    color: #f4faf4;
     text-align: center;
     background-color: #357a38;
     border-radius: .25em;
     white-space: nowrap;
 }
 .button-front-inner.default {
-    border-color: #b7dfb8;
+    border-color: #f4faf4;
 }
 .button-front-inner.disabled {
     background-color: gray;

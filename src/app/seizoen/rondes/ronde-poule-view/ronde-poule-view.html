@@ -1,7 +1,13 @@
-<div class="poule" [ngClass]="{'selectable': !koppelClick}">
+<div class="poule" [ngClass]="{'selectable': !koppelClick, 'selected': selected}">
     <div class="flexbox flexbetween poule-header">
         <div>
-            <span>Poule <b>{{poule.pouleId}}</b></span>
+            <span>Poule </span>
+            @if (poule.pouleVolgNr > 0) {
+                <span> <b>{{poule.pouleVolgNr}}</b></span>
+            }
+            @else {
+                <span> <b>{{poule.pouleId}}</b></span>
+            }
         </div>
         <div>
             <span>{{poule.pouleDagNaam}} </span>
@@ -28,17 +34,25 @@
     </div>
     <div class="poule-body">
         <div>
-            <div class="flexbox" style="color: black;">
-                <div style="width: 4.5em;"></div>
-                <div class="ellipsis" style="width: 10em;"><span><b>Speler B</b></span></div>
-                <div style="width: 1.5em;"></div>
-                <div class="ellipsis" style="width: 10em;"><span><b>Speler A</b></span></div>
-                <div style="width: 2em;"></div>
-                <div style="width: 5.25em;"></div>
-                @if (pouleGestart) {
-                    <div><span><b>GW</b></span></div>
-                    <div style="width: 3em;"></div>
-                    <div><span><b>Score</b></span></div>
+            <div class="flexbox" style="color: #1e461f;">
+                @if (koppelView == 'poule-uitslag') {
+                    <div style="width: 4.5em;"></div>
+                    <div class="ellipsis" style="width: 10em;"><span><b>Speler B</b></span></div>
+                    <div style="width: 1.5em;"></div>
+                    <div class="ellipsis" style="width: 10em;"><span><b>Speler A</b></span></div>
+                    <div style="width: 2em;"></div>
+                    <div style="width: 5.25em;"></div>
+                    @if (pouleGestart) {
+                        <div><span><b>GW</b></span></div>
+                        <div style="width: 3em;"></div>
+                        <div><span><b>Score</b></span></div>
+                    }
+                }
+                @else {
+                    <div style="width: .5em;"></div>
+                    <div class="ellipsis" style="width: 10em;"><span><b>Speler B</b></span></div>
+                    <div style="width: 1.5em;"></div>
+                    <div class="ellipsis" style="width: 10em;"><span><b>Speler A</b></span></div>
                 }
             </div>
             @for (koppel of poule.pouleKoppels; track $index) {

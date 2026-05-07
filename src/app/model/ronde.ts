@@ -30,10 +30,13 @@ export class PouleRonde extends Ronde {
 
 export class Poule {
     pouleId: string = '';
+    pouleVolgNr: number = 0;
     pouleDagNr: number = -1;
     pouleDagNaam: string = '';
     pouleDatum: string = '';
     pouleKoppels: RondeKoppel[] = [];
+    pouleGestart: boolean = false;
+    pouleGespeeld: boolean = false;
 }
 
 export class RondeKoppel {
@@ -81,7 +84,39 @@ export class Uitslag {
     pnt: number = 0;
 }
 
-export class AfvalRonde {
-    id: number = 0;
-    naam: string = '';    
+export class AfvalRonde extends Ronde {
+    koppels: AfvalKoppel[] = [];
+    matches: AfvalMatch[] = [];
+
+    constructor(id: number, naam: string, brt: number, file: string) {
+        super(id, naam, 'afval', brt, file);
+    }
+}
+
+export class AfvalKoppel {
+    id: string = '';
+    koppel: Koppel = new Koppel();
+    pouleId: string = '';
+    pouleRang: number = 0;
+    afgevallen: boolean = false;
+}
+
+export class AfvalMatch {
+    splKoppelId: string = '';
+    tegKoppelId: string = '';
+    splKoppel: AfvalKoppel = new AfvalKoppel();
+    tegKoppel: AfvalKoppel = new AfvalKoppel();
+    datum: string = '';
+    splKopUitslag: Uitslag = new Uitslag();
+    tegKopUitslag: Uitslag = new Uitslag();
+    splBarrageWinst: boolean = false;
+    tegBarrageWinst: boolean = false;
+    wedstrijden: AfvalWedstrijd[] = [];
+}
+
+export class AfvalWedstrijd {
+    splSpeler: KoppelSpeler = new KoppelSpeler();
+    tegSpeler: KoppelSpeler = new KoppelSpeler();
+    splUitslag: Uitslag = new Uitslag();
+    tegUitslag: Uitslag = new Uitslag();
 }

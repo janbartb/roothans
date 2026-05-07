@@ -3,7 +3,7 @@ import { RondePouleView } from '../../ronde-poule-view/ronde-poule-view';
 import { Button } from '../../../../shared/button/button';
 import { NgClass } from '@angular/common';
 import { Base } from '../../../../base/base';
-import { PouleRonde, Ronde, RondeKoppel } from '../../../../model/ronde';
+import { Poule, PouleRonde, Ronde, RondeKoppel } from '../../../../model/ronde';
 import { ActivatedRoute } from '@angular/router';
 import { DateHelper } from '../../../../services/date-helper';
 import { Seizoen } from '../../../../model/seizoen';
@@ -31,7 +31,7 @@ export class PouleRondePoules extends Base implements OnInit {
     touched: boolean = false;
     poulesOk: boolean = false;
 
-    btnWeds: Btn = new Btn('next', 'Naar wedstrijden', 'enter');
+    btnWeds: Btn = new Btn('next', 'Naar wedstrijdschema', 'enter');
 
     naarPouleClicked() {
         if (this.idxPoule >= 0) {
@@ -40,7 +40,7 @@ export class PouleRondePoules extends Base implements OnInit {
     }
 
     pouleSelected(idx: number) {
-        this.btnWeds.text = `Naar wedstrijden`;
+        this.btnWeds.text = `Naar wedstrijdschema`;
         this.idxPoule = (idx == this.idxPoule) ? -1 : idx;
         if (this.idxPoule >= 0) {
             this.btnWeds.text += ` Poule ${this.pouleRonde.poules[this.idxPoule].pouleId}`;
@@ -111,7 +111,15 @@ export class PouleRondePoules extends Base implements OnInit {
             this.dao.getPouleRondeFile(this.header.seizoen, this.ronde.fileNaam)
             .then(data => {
                 this.pouleRonde = data;
-                this.pouleRonde.poules.forEach(pl => {
+                this.pouleRonde.poules.sort(this.comparePoules);
+                if (this.pouleRonde.poules[0].pouleId == '') {
+                    this.pouleRonde.poules.forEach((pl, idx) => {
+                        pl.pouleVolgNr = 0;
+                        pl.pouleId = String.fromCharCode(65 + idx);
+                    });
+                    this.pouleRondeOpslaan();
+                }
+                this.pouleRonde.poules.forEach((pl) => {
                     pl.pouleKoppels.sort(this.comparePouleKoppels);
                 });
                 //this.today = '2026-01-05';
@@ -156,13 +164,30 @@ export class PouleRondePoules extends Base implements OnInit {
         this.pouleSelected(idx);
     }
 
+    private pouleRondeOpslaan() {
+        this.dao.savePouleRondeFile(this.header.seizoen, this.ronde.fileNaam, this.pouleRonde)
+        .then()
+        .catch(err => {
+            this.alert.showError(err);
+        });
+    }
+
     private comparePouleKoppels(a: RondeKoppel, b: RondeKoppel): number {
         if (a.uitslag.pnt == b.uitslag.pnt) {
-            return b.koppel.kopMoyenne - a.koppel.kopMoyenne;
+            if ((b.uitslag.moy / b.koppel.kopMoyenne) == (a.uitslag.moy / a.koppel.kopMoyenne)) {
+                return b.koppel.kopMoyenne - a.koppel.kopMoyenne;
+            }
+            else {
+                return (b.uitslag.moy / b.koppel.kopMoyenne) - (a.uitslag.moy / a.koppel.kopMoyenne);
+            }
         }
         else {
             return b.uitslag.pnt - a.uitslag.pnt;
         }
+    }
+
+    private comparePoules(a: Poule, b: Poule): number {
+        return a.pouleDatum < b.pouleDatum ? -1 : 1;
     }
 
 }

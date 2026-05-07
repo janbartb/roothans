@@ -16,7 +16,7 @@ body {
 }
 
 label {
-    color: green;
+    color: #2e6830;
 }
 label .req {
     color: red;
@@ -106,18 +106,19 @@ select:disabled, select.disabled {
     font-weight: bold;
 }
 .list-header .sortable:hover {
-    color: darkgreen;
+    color: #1e461f;
 }
 .list-row {
     cursor: pointer;
     padding: 0 1em;
+    color: #265728;
 }
 .list-row:hover {
     background-color: lightgray;
 }
 .list-row.selected {
     color: white;
-    background-color: green;
+    background-color: #265728;
 }
 .list-row .btn-delete {
     color: gray;
@@ -151,8 +152,8 @@ select:disabled, select.disabled {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     background-color: black;
     overflow: auto;
     /* background-color:rgb(0,0,0); */

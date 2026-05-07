@@ -14,6 +14,7 @@ import { Poule } from '../../../model/ronde';
 })
 export class RondePouleView implements OnInit {
     @Input() poule: Poule = new Poule();
+    @Input() selected: boolean = false;
     @Input() idxKoppel: number = -1;
     @Input() maxKoppels: number = 4;
     @Input() koppelView: string = 'poule';

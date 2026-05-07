@@ -8,7 +8,7 @@
                     </div>
                 </div>
                 <div class="col-speler">
-                    <div class="wed-speler">
+                    <div class="wed-speler ">
                         <div class="row-naam" style="text-align: right;">
                             <span style="font-size: 1.75em;">{{koppels[0].spelers[idxW].speler.splNaam}}</span>
                         </div>
@@ -20,7 +20,7 @@
                                     </div>
                                 </div>
                                 <div style="width: 5em; height: 5em;" class="wed-punten flexbox flexcenter flexmiddle arial">
-                                    <div style="font-size: 3em; color: darkred;"><b>{{wed.spelers[0].uitslag.pnt}}</b></div>
+                                    <div style="font-size: 3em; color: #c40000;"><b>{{wed.spelers[0].uitslag.pnt}}</b></div>
                                 </div>
                                 <div class="wed-score flexgrow1 flexbox flexcolumn flexend arial">
                                     <div>
@@ -39,7 +39,7 @@
                         @else if (idxWedBezig == idxW) {
                             <div class="fullheight flexbox flexcenter">
                                 <div style="padding-top: 1.5em;">
-                                    <span style="font-size: 1.25em; color: #265728;">Wedstrijd is al gestart...</span>
+                                    <span style="font-size: 1.25em; color: #93cf95;">Wedstrijd is al gestart...</span>
                                 </div>
                             </div>
                         }
@@ -81,7 +81,7 @@
                                     </div>
                                 </div>
                                 <div style="width: 5em; height: 5em;" class="wed-punten flexbox flexcenter flexmiddle arial">
-                                    <div style="font-size: 3em; color: darkred;"><b>{{wed.spelers[1].uitslag.pnt}}</b></div>
+                                    <div style="font-size: 3em; color: #c40000;"><b>{{wed.spelers[1].uitslag.pnt}}</b></div>
                                 </div>
                                 <div style="width: 6em; height: 5em;" class="wed-punten flexbox flexcenter flexmiddle">
                                     <div style="width: 3em; height: 3em;" class="biljartbal" data-kleur 
@@ -93,7 +93,7 @@
                         @else if (idxWedBezig == idxW) {
                             <div class="fullheight flexbox flexcenter">
                                 <div style="padding-top: 1.5em;">
-                                    <span style="font-size: 1.25em; color: #265728;">Wedstrijd is al gestart...</span>
+                                    <span style="font-size: 1.25em; color: #93cf95;">Wedstrijd is al gestart...</span>
                                 </div>
                             </div>
                         }
@@ -110,15 +110,13 @@
                 </div>
             </div>
             <div class="col-speler">
-                <div class="wed-speler">
+                <div class="wed-speler totaal">
                     <div class="row-naam" style="text-align: right;">
                         <span style="font-size: 1.75em;">Koppel {{koppels[0].id}}</span>
                     </div>
                     @if (totaal.spelers[0].uitslag.brt > 0) {
                         <div class="fullheight flexbox flexstretch">
-                            <div style="width: 6em; height: 5em;" class="wed-punten flexbox flexcenter flexmiddle">
-                                
-                            </div>
+                            <div style="width: 6em; height: 5em;" class="wed-punten flexbox flexcenter flexmiddle"></div>
                             <div style="width: 5em; height: 5em;" class="wed-punten flexbox flexcenter flexmiddle arial">
                                 <div style="font-size: 3em; color: darkred;"><b>{{totaal.spelers[0].uitslag.pnt}}</b></div>
                             </div>
@@ -155,7 +153,7 @@
                 }
             </div>
             <div class="col-speler">
-                <div class="wed-speler">
+                <div class="wed-speler totaal">
                     <div class="row-naam">
                         <span style="font-size: 1.75em;">Koppel {{koppels[1].id}}</span>
                     </div>

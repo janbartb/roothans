@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { Base } from '../../base/base';
 import { Koppel } from '../../model/koppel';
 import { Button } from '../../shared/button/button';
@@ -24,8 +24,8 @@ export class Koppels extends Base implements OnInit {
     sortCol: string = 'moy';
     sortDir: number = -1;
 
-    btnAdd: Btn = new Btn('add', 'Koppels toevoegen');
-    btnDel: Btn = new Btn('del', 'Verwijder gemarkeerde koppels');
+    btnAdd: Btn = new Btn('add', 'Koppels toevoegen', 'enter');
+    btnDel: Btn = new Btn('del', 'Verwijder gemarkeerde koppels', 'V', 1);
 
     markForDeleteClicked(event: MouseEvent, idx: number) {
         event.stopPropagation();
@@ -70,6 +70,34 @@ export class Koppels extends Base implements OnInit {
         this.sortKoppels(colNaam);
     }
 
+    @HostListener('document:keyup', ['$event'])
+    handleKeyboardEvent(event: KeyboardEvent): boolean {
+        console.log(event.code + ' : ' + event.key);
+        if (event.key === 'Enter') {
+            if (this.koppels.length < this.config.maxKoppels) {
+                this.buttonPressed(this.btnAdd);
+                return false;
+            }
+            return true;
+        }
+        if (event.key === 'Escape') {
+            this.escapePressed();
+            return false;
+        }
+        if (event.code === 'KeyV') {
+            if (this.markedForDelete.length) {
+                this.buttonPressed(this.btnDel);
+                return false;
+            }
+            return true;
+        }
+        if (event.key === 'Home') {
+            this.gotoHome();
+            return false;
+        }
+        return true;
+    }
+
     override ngOnInit(): void {
         super.ngOnInit();
         this.header.subtitle = 'Seizoen ' + this.header.seizoen + ' - Koppels';
@@ -87,6 +115,21 @@ export class Koppels extends Base implements OnInit {
         .catch(err => {
             this.alert.showError(err);
         });
+    }
+
+    private buttonPressed(btn: Btn) {
+        btn.clicked = true;
+        setTimeout(() => {
+            btn.clicked = false;
+            setTimeout(() => {
+                if (btn.id == 'add') {
+                    this.toevoegenClicked();
+                }
+                else if (btn.id == 'del') {
+                    this.deleteClicked();
+                }
+            }, 250);
+        }, 250);
     }
 
     private sortKoppels(colNaam: string) {

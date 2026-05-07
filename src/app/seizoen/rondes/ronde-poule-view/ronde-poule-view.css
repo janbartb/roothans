@@ -1,7 +1,10 @@
 .poule {
-    border: .125em solid black;
+    border: .125em solid #163317;
     border-radius: .5em;
     overflow: hidden;
+}
+.poule.selected {
+    border-color: #ac0000;
 }
 .poule.selectable {
     cursor: pointer;
@@ -10,9 +13,12 @@
     background-color: lightgray;
 }
 .poule-header {
-    background-color: black;
-    color: white;
+    background-color: #163317;
+    color: #dbefdc;
     padding: .125em .5em;
+}
+.poule.selected .poule-header {
+    background-color: #ac0000;
 }
 .poule-header span {
     font-size: 1.25em;
@@ -25,6 +31,7 @@
     color: red;
 }
 .poule-body {
+    background-color: #f4faf4;
     padding: .5em;
 }
 .poule-koppel {

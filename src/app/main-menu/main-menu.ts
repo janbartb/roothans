@@ -1,15 +1,18 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, HostListener, inject, OnInit } from '@angular/core';
 import { Base } from '../base/base';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { noDuplicateNumbers, validJaar } from '../directives/validators';
 import { Btn } from '../model/misc';
 import { Button } from '../shared/button/button';
 import { NgClass } from '@angular/common';
+import { ConfirmDialogType } from '../model/dialogs';
+import { ConfirmDialog } from '../shared/confirm-dialog/confirm-dialog';
 
 @Component({
     selector: 'app-main-menu',
     imports: [
         ReactiveFormsModule,
+        ConfirmDialog,
         Button,
         NgClass
     ],
@@ -23,10 +26,11 @@ export class MainMenu extends Base implements OnInit {
     newSeizoen: number = 0;
     minSeizoen: number = 0;
     maxSeizoen: number = 9999;
+    confirmNieuw: ConfirmDialogType = new ConfirmDialogType('Nieuw seizoen');
 
-    btnNieuw: Btn = new Btn('new', 'Start nieuw seizoen :');
-    btnSelect: Btn = new Btn('sel', 'Ga naar seizoen :');
-    btnSpelers: Btn = new Btn('spl', 'Onderhoud spelers');
+    btnNieuw: Btn = new Btn('new', 'Start nieuw seizoen :', 'n', 7);
+    btnSelect: Btn = new Btn('sel', 'Ga naar seizoen :', 'enter');
+    btnSpelers: Btn = new Btn('spl', 'Onderhoud spelers', 's', 11);
     btnProbeer: Btn = new Btn('try', 'Probeer');
 
     nieuwForm!: FormGroup;
@@ -43,23 +47,68 @@ export class MainMenu extends Base implements OnInit {
         if (!(this.nieuwForm && this.nieuwForm.valid)) {
             return;
         }
-        //const seiz = {'seizoen': this.newSeiz?.value}
-        this.dao.createSeizoen(this.newSeiz?.value)
-        .then(resp => {
-            this.alert.showSuccess(resp.message);
-            this.gotoSeizoen(this.newSeiz?.value);
-        })
-        .catch(err => {
-            this.alert.showError(err);
-        });
+        this.confirmNieuw.texts = [`Nieuw seizoen ${this.newSeiz?.value} aanmaken.`];
+        this.confirmNieuw.open = true;
     }
 
     buttonSpelersClicked() {
         this.gotoPage('spelers', 'main');
     }
 
+    confirmNieuwReplied(confirmed: boolean) {
+        if (confirmed) {
+            this.dao.createSeizoen(this.newSeiz?.value)
+            .then(resp => {
+                this.alert.showSuccess(resp.message);
+                this.confirmNieuw.open = false;
+                this.gotoSeizoen(this.newSeiz?.value);
+            })
+            .catch(err => {
+                this.alert.showError(err);
+            });
+        }
+        else {
+            this.confirmNieuw.open = false;
+        }
+    }
+
     buttonProbeerClicked() {
         this.gotoPage('probeer', 'main');
+    }
+
+    @HostListener('document:keyup', ['$event'])
+    handleKeyboardEvent(event: KeyboardEvent): boolean {
+        console.log(event.code + ' : ' + event.key);
+        if (this.confirmNieuw.open) {
+            return false;
+        }
+        if (event.key === 'Enter') {
+            if (this.selectForm && this.selectForm.valid) {
+                this.buttonPressed(this.btnSelect);
+                return false;
+            }
+            return true;
+        }
+        if (event.key === 'Escape') {
+            this.escapePressed();
+            return false;
+        }
+        if (event.code === 'KeyN') {
+            if (this.newSeiz && this.newSeiz.valid) {
+                this.buttonPressed(this.btnNieuw);
+                return false;
+            }
+            return true;
+        }
+        if (event.code === 'KeyS') {
+            this.buttonPressed(this.btnSpelers);
+            return false;
+        }
+        if (event.key === 'Home') {
+            this.gotoHome();
+            return false;
+        }
+        return true;
     }
 
     override ngOnInit(): void {
@@ -81,6 +130,24 @@ export class MainMenu extends Base implements OnInit {
         .catch(err => {
             this.alert.showError(err);
         });
+    }
+
+    private buttonPressed(btn: Btn) {
+        btn.clicked = true;
+        setTimeout(() => {
+            btn.clicked = false;
+            setTimeout(() => {
+                if (btn.id == 'sel') {
+                    this.buttonSelectClicked();
+                }
+                else if (btn.id == 'new') {
+                    this.buttonNieuwClicked();
+                }
+                else if (btn.id == 'spl') {
+                    this.buttonSpelersClicked();
+                }
+            }, 250);
+        }, 250);
     }
 
     private gotoSeizoen(seizoen: string) {

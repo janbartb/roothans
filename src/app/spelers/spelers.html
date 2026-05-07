@@ -1,14 +1,19 @@
-<div class="fullheight flexbox flexcolumn" style="font-size: .75em;">
+<div class="fullheight flexbox flexcolumn" style="font-size: .75em; overflow-y: hidden;">
     <div class="flexbox flexcenter" style="min-height: 2em; padding-right: .5rem;">
-        <div class="list-header flexbox flexmiddle" style="min-height: 2em;">
+        <div class="list-header flexbox flexmiddle" style="min-height: 2em; height: 2em;">
             <div style="width: 6em;">
                 <span>ID</span>
             </div>
-            <div style="width: 14em;">
-                <span class="sortable" (click)="sortClicked('nam')">Naam</span>
-                @if (sortCol == 'nam') {
-                    <i class="fas" [ngClass]="sortDir == 1 ? 'fa-sort-up' : 'fa-sort-down'" style="padding-left: .25em;"></i>
-                }
+            <div class="flexbox" style="width: 14em;">
+                <div class="sortable" (click)="sortClicked('nam')">
+                    <span>Naam</span>
+                    @if (sortCol == 'nam') {
+                        <i class="fas" [ngClass]="sortDir == 1 ? 'fa-sort-up' : 'fa-sort-down'" style="padding-left: .25em;"></i>
+                    }
+                    @else {
+                        <i style="padding-left: .25em; color: #93cf95;" class="fas fa-sort"></i>
+                    }
+                </div>
             </div>
             <div style="width: 1.5em;"></div>
             <div style="width: 7em;">
@@ -17,11 +22,16 @@
             <div style="width: 7em;">
                 <span>Extra</span>
             </div>
-            <div style="width: 8em;">
-                <span class="sortable" (click)="sortClicked('moy')">Moyenne</span>
-                @if (sortCol == 'moy') {
-                    <i class="fas" [ngClass]="sortDir == 1 ? 'fa-sort-up' : 'fa-sort-down'" style="padding-left: .25em;"></i>
-                }
+            <div class="flexbox" style="width: 8em;">
+                <div class="sortable" (click)="sortClicked('moy')">
+                    <span>Moyenne</span>
+                    @if (sortCol == 'moy') {
+                        <i class="fas" [ngClass]="sortDir == 1 ? 'fa-sort-up' : 'fa-sort-down'" style="padding-left: .25em;"></i>
+                    }
+                    @else {
+                        <i style="padding-left: .25em; color: #93cf95;" class="fas fa-sort"></i>
+                    }
+                </div>
             </div>
             <div style="width: 15em;">
                 <span>E-mail</span>
@@ -32,7 +42,8 @@
     <div class="flexgrow1 flexbox flexcenter" style="overflow-y: scroll;">
         <div class="list-data">
             @for (spl of spelers; track $index) {
-                <div class="list-row flexbox" [ngClass]="{'selected': $index == idxSpeler}" (click)="spelerClicked($index)">
+                <div class="list-row flexbox" [ngClass]="{'selected': $index == idxSpeler}" (click)="spelerClicked($index)"
+                            style="border-radius: .5em;">
                     <div style="width: 6em;">
                         <span>{{spl.id}}</span>
                     </div>
@@ -63,19 +74,17 @@
             }
         </div>
     </div>
-    @if (mode != 'add' || idxSpeler >= 0) {
-        <div class="flexbox flexcenter flexmiddle" style="min-height: 3em;">
-            <div>
-                <app-button [button]="btnAdd" (btnClicked)="buttonClicked($event)"></app-button>
-            </div>
+    <div class="flexbox flexcenter flexmiddle" style="min-height: 3em; height: 3em;">
+        <div>
+            <app-button [button]="btnAdd" (btnClicked)="toevoegenClicked()"></app-button>
         </div>
-    }
+    </div>
 </div>
 @if (confirmDeleteDialog.open) {
     <div class="overlay flexbox flexcenter flexmiddle">
         <div style="opacity: 1;">
             <div class="dialog" style="font-size: .75em;">
-                <app-confirm-dialog [dialog]="confirmDeleteDialog"
+                <app-confirm-dialog [dialog]="confirmDeleteDialog" [sure]="true"
                                     (reply)="deleteSpelerReplied($event)"></app-confirm-dialog>
             </div>
         </div>

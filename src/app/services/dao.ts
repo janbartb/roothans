@@ -129,26 +129,6 @@ export class Dao {
         return json;
     }
 
-    // POULES
-
-    async getPoules(seizoen: string): Promise<Poule[]> {
-        const result: Poule[] = await this.getResource(this.apiUrl + `/seizoenen/${seizoen}/poules`);
-        return result;
-    }
-
-    async savePoules(seizoen: string, poules: Poule[]): Promise<ApiResponse> {
-        const response: Response = await fetch(this.apiUrl + `/seizoenen/${seizoen}/poules`, {
-            method: 'POST',
-            body: JSON.stringify(poules),
-            headers: this.myHeaders
-        });
-        const json: ApiResponse = await response.json();
-        if (!response.ok) {
-            throw new Error(json.message);
-        }
-        return json;
-    }
-
     // INIT SPELERS
 
     async getFiles(): Promise<string[]> {

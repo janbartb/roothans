@@ -5,6 +5,7 @@ export class Seizoen {
     pntWinst: number = 2;
     pntGelijk: number = 1;
     pntMoyenne: number = 0;
+    huidigeRonde: number = 0;
     speelDagen: SpeelDag[] = [];
 }
 

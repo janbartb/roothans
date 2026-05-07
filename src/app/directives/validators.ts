@@ -121,7 +121,7 @@ export const wedstrijdFormValidator: ValidatorFn = (control: AbstractControl): V
     const tegWit = control.get('tegWit')?.value;
     const brt = control.get('beurten')?.value || 0;
 
-    if (splSer * brt < splCar || tegSer * brt < tegCar) {
+    if ((splSer * brt) < splCar || (tegSer * brt) < tegCar) {
         return { serieTeLaag: true};
     }
     if (splSer > splCar || tegSer > tegCar) {

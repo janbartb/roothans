@@ -1,80 +1,112 @@
-<div class="fullheight flexbox flexcolumn" style="font-size: .75em;">
-    <div class="flexgrow1 flexbox flexstretch">
-        <div class="flex50perc flexbox flexcenter flexmiddle">
-            <div>
-                @if (settingsForm) {
-                    <form [formGroup]="settingsForm">
+<div class="fullheight flexbox flexcolumn">
+    <div class="flexgrow1 flexbox flexcolumn sectie-page">
+        <div class="flexgrow1 flexbox flexstretch sectie-row-top">
+            <div class="flex60perc sectie-col-left">
+                <div class="sectie flexbox flexcenter flexmiddle">
+                    <div>
+                        @if (settingsForm) {
+                            <form [formGroup]="settingsForm">
+                                <div>
+                                    <table class="tbl-normal">
+                                        <tr>
+                                            <td><label for="maxKoppels">Max. aantal koppels</label></td>
+                                            <td>
+                                                <input type="number" id="maxKoppels" style="width: 3em;" formControlName="maxKoppels"
+                                                    [ngClass]="{'invalid': maxKoppels?.invalid && (maxKoppels?.dirty), 
+                                                                'valid': maxKoppels?.valid && (maxKoppels?.dirty)}">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><label for="maxKoppelsPerPoule">Max. aantal koppels per poule</label></td>
+                                            <td>
+                                                <input type="number" id="maxKoppelsPerPoule" style="width: 3em;" formControlName="maxKoppelsPerPoule"
+                                                    [ngClass]="{'invalid': maxKoppelsPerPoule?.invalid && (maxKoppelsPerPoule?.dirty), 
+                                                                'valid': maxKoppelsPerPoule?.valid && (maxKoppelsPerPoule?.dirty)}">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="min-height: 2em; height: 2em;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><label for="pntWinst">Aantal punten bij winst</label></td>
+                                            <td>
+                                                <input type="number" id="pntWinst" style="width: 3em;" formControlName="pntWinst"
+                                                    [ngClass]="{'invalid': pntWinst?.invalid && (pntWinst?.dirty), 
+                                                                'valid': pntWinst?.valid && (pntWinst?.dirty)}">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><label for="pntGelijk">Aantal punten bij gelijkspel</label></td>
+                                            <td>
+                                                <input type="number" id="pntGelijk" style="width: 3em;" formControlName="pntGelijk"
+                                                    [ngClass]="{'invalid': pntGelijk?.invalid && (pntGelijk?.dirty), 
+                                                                'valid': pntGelijk?.valid && (pntGelijk?.dirty)}">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><label for="pntMoyenne">Aantal punten indien boven moyenne</label></td>
+                                            <td>
+                                                <input type="number" id="pntMoyenne" style="width: 3em;" formControlName="pntMoyenne"
+                                                    [ngClass]="{'invalid': pntMoyenne?.invalid && (pntMoyenne?.dirty), 
+                                                                'valid': pntMoyenne?.valid && (pntMoyenne?.dirty)}">
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </form>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="flex40perc sectie-col-right">
+                <div class="sectie flexbox flexcenter flexmiddle">
+                    <div>
+                        <div style="padding-bottom: 1em;"><label for="">Mogelijke speeldagen</label></div>
                         <div>
-                            <table class="tbl-normal">
-                                <tr>
-                                    <td><label for="">Max. aantal koppels</label></td>
-                                    <td>
-                                        <input type="number" id="maxKoppels" style="width: 3em;" formControlName="maxKoppels"
-                                            [ngClass]="{'invalid': maxKoppels?.invalid && (maxKoppels?.dirty), 
-                                                        'valid': maxKoppels?.valid && (maxKoppels?.dirty)}">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><label for="">Max. aantal koppels per poule</label></td>
-                                    <td>
-                                        <input type="number" id="maxKoppelsPerPoule" style="width: 3em;" formControlName="maxKoppelsPerPoule"
-                                            [ngClass]="{'invalid': maxKoppelsPerPoule?.invalid && (maxKoppelsPerPoule?.dirty), 
-                                                        'valid': maxKoppelsPerPoule?.valid && (maxKoppelsPerPoule?.dirty)}">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="min-height: 3em; height: 3em;"></td>
-                                </tr>
-                                <tr>
-                                    <td><label for="">Aantal punten bij winst</label></td>
-                                    <td>
-                                        <input type="number" id="pntWinst" style="width: 3em;" formControlName="pntWinst"
-                                            [ngClass]="{'invalid': pntWinst?.invalid && (pntWinst?.dirty), 
-                                                        'valid': pntWinst?.valid && (pntWinst?.dirty)}">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><label for="">Aantal punten bij gelijkspel</label></td>
-                                    <td>
-                                        <input type="number" id="pntGelijk" style="width: 3em;" formControlName="pntGelijk"
-                                            [ngClass]="{'invalid': pntGelijk?.invalid && (pntGelijk?.dirty), 
-                                                        'valid': pntGelijk?.valid && (pntGelijk?.dirty)}">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><label for="">Aantal punten indien boven moyenne</label></td>
-                                    <td>
-                                        <input type="number" id="pntMoyenne" style="width: 3em;" formControlName="pntMoyenne"
-                                            [ngClass]="{'invalid': pntMoyenne?.invalid && (pntMoyenne?.dirty), 
-                                                        'valid': pntMoyenne?.valid && (pntMoyenne?.dirty)}">
-                                    </td>
-                                </tr>
-                            </table>
+                            @for (dag of alleDagen; track $index) {
+                                <div class="flexbox" style="cursor: pointer;" (click)="dagClicked($index)">
+                                    <div style="color: green;"><i [ngClass]="dag.selected ? 'fas fa-check-square' : 'far fa-square'"></i></div>
+                                    <div style="padding-left: .5em;">
+                                        <span>{{dag.dagNaam}}</span>
+                                    </div>
+                                </div>
+                            }
                         </div>
-                    </form>
-                }
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="flex50perc flexbox flexcenter flexmiddle" style="border-left: .25em solid black;">
-            <div>
-                <div style="padding-bottom: 1em;"><label for="">Mogelijke speeldagen</label></div>
-                <div>
-                    @for (dag of alleDagen; track $index) {
-                        <div class="flexbox" style="cursor: pointer;" (click)="dagClicked($index)">
-                            <div style="color: green;"><i [ngClass]="dag.selected ? 'fas fa-check-square' : 'far fa-square'"></i></div>
-                            <div style="padding-left: .5em;">
-                                <span>{{dag.dagNaam}}</span>
-                            </div>
+        <div class="sectie-row-bottom" style="height: 5em;">
+            <div class="fullheight sectie-col">
+                <div class="sectie flexbox flexmiddle">
+                    <div class="flex55perc flexbox flexright">
+                        <div style="padding-right: .5em;">
+                            <label for="huidigeRonde">Momenteel wordt gespeeld in ronde</label>
                         </div>
-                    }
+                        @if (statusForm) {
+                            <form [formGroup]="statusForm">
+                                <div>
+                                    <input type="number" id="huidigeRonde" style="width: 2.25em;" formControlName="huidigeRonde"
+                                        [ngClass]="{'invalid': huidigeRonde?.invalid && (huidigeRonde?.dirty), 
+                                                    'valid': huidigeRonde?.valid && (huidigeRonde?.dirty)}">
+                                </div>
+                            </form>
+                        }
+                    </div>
+                    <div class="flex45perc">
+                        <div style="padding-left: 1em;">
+                            <span>{{rondeNaam}}</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="flexbox flexcenter flexmiddle" style="min-height: 3.25em; border-top: .25em solid black;">
-        <div>
-            <app-button [button]="btnSave" [disabled]="!(settingsForm && settingsForm.valid && alleDagen.filter(dg => dg.selected).length > 0)"
-                        (btnClicked)="opslaanClicked()"></app-button>
+    <div class="flexbox flexcenter" style="min-height: 3.25em; height: 3.25em; padding-top: .125em;">
+        <div style="font-size: 1.25em;">
+            <app-button [button]="btnSave" 
+                    [disabled]="!(settingsForm && settingsForm.valid && statusForm && statusForm.valid && alleDagen.filter(dg => dg.selected).length > 0)"
+                    (btnClicked)="opslaanClicked()"></app-button>
         </div>
     </div>
 </div>

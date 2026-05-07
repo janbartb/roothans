@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, HostListener, inject, OnInit } from '@angular/core';
 import { Base } from '../../../../base/base';
 import { ActivatedRoute } from '@angular/router';
 import { Seizoen } from '../../../../model/seizoen';
@@ -46,16 +46,19 @@ export class PouleRondePlanningData extends Base implements OnInit {
     maxPoules: number = 0;
     touched: boolean = false;
     poulesOk: boolean = false;
+    firstDigit: string = '';
+    lastDigit: string = '';
 
-    btnSave: Btn = new Btn('save', 'Opslaan');
-    btnSaveNext: Btn = new Btn('saveexit', 'Opslaan en planning afsluiten');
-    btnNext: Btn = new Btn('exit', 'Terug naar rondes');
+    btnSave: Btn = new Btn('save', 'Opslaan', 's', 3);
+    btnSaveDef: Btn = new Btn('savedef', 'Opslaan', 'enter');
+    btnSaveNext: Btn = new Btn('saveexit', 'Opslaan en planning afsluiten', 'enter');
+    btnNext: Btn = new Btn('exit', 'Terug naar rondes', 'enter');
 
     opslaanClicked(andExit?: boolean) {
         this.poulesOk = this.allDatesFilledOk();
         if (this.poulesOk) {
             this.pouleRonde.poules.sort(this.comparePoules);
-            this.renamePoules();
+            // this.renamePoules();
             this.fillAllPouleKoppelIds();
         }
         this.dao.savePouleRondeFile(this.header.seizoen, this.ronde.fileNaam, this.pouleRonde)
@@ -92,8 +95,8 @@ export class PouleRondePlanningData extends Base implements OnInit {
         this.goBackToPage(`rondes`);
     }
 
-    pouleClicked(id: string) {
-        const idx = this.pouleRonde.poules.findIndex(pl => pl.pouleId == id);
+    pouleClicked(nr: number) {
+        const idx = this.pouleRonde.poules.findIndex(pl => pl.pouleVolgNr == nr);
         if (idx >= 0) {
             this.pouleButtonClicked(idx);
         }
@@ -108,19 +111,61 @@ export class PouleRondePlanningData extends Base implements OnInit {
         this.idxPoule = idx;
         this.poule = this.pouleRonde.poules[idx];
         this.mogelijkePouleSpeelData = this.getMogelijkePouleSpeelData(this.poule.pouleDagNr);
-        console.log(this.mogelijkePouleSpeelData);
+        // console.log(this.mogelijkePouleSpeelData);
     }
 
     pouleDatumSelected() {
         this.touched = true;
         if (this.poule.pouleDatum != '') {
             this.pouleRonde.poules.forEach(pl => {
-                if (pl.pouleId != this.poule.pouleId && pl.pouleDatum == this.poule.pouleDatum) {
+                if (pl.pouleVolgNr != this.poule.pouleVolgNr && pl.pouleDatum == this.poule.pouleDatum) {
                     pl.pouleDatum = '';
                 }
             });
         }
         this.poulesOk = this.allDatesFilledOk();
+    }
+
+    @HostListener('document:keyup', ['$event'])
+    handleKeyboardEvent(event: KeyboardEvent): boolean {
+        console.log(event.code + ' : ' + event.key);
+        if (event.key === 'Enter') {
+            if (this.poulesOk) {
+                if (this.touched) {
+                    this.buttonPressed(this.btnSaveNext);
+                    return false;
+                }
+                else {
+                    this.buttonPressed(this.btnNext);
+                    return false;
+                }
+            }
+            else {
+                this.buttonPressed(this.btnSaveDef);
+                return false;
+            }
+        }
+        if (event.key === 'Escape') {
+            this.escapePressed();
+            return false;
+        }
+        if (event.code === 'KeyS') {
+            this.buttonPressed(this.btnSave);
+            return false;
+        }
+        if (event.code >= 'Digit1' && event.code <= 'Digit9') {
+            if (event.code >= this.firstDigit && event.code <= this.lastDigit) {
+                const idx = Number(event.code.substring(5)) - 1;
+                this.pouleButtonClicked(idx);
+                return false;
+            }
+            return true;
+        }
+        if (event.key === 'Home') {
+            this.gotoHome();
+            return false;
+        }
+        return true;
     }
 
     override ngOnInit(): void {
@@ -158,6 +203,16 @@ export class PouleRondePlanningData extends Base implements OnInit {
                     this.gotoPrevPage();
                     return;
                 }
+                this.pouleRonde.poules.forEach((pl, idx) => {
+                    pl.pouleId = '';
+                    pl.pouleVolgNr = idx + 1;
+                });
+                if (this.pouleRonde.poules.length > 0) {
+                    this.firstDigit = 'Digit1';
+                    if (this.pouleRonde.poules.length < 10) {
+                        this.lastDigit = 'Digit' + this.pouleRonde.poules.length;
+                    }
+                }
                 this.fillPoulesPerDagen();
                 this.fillAllMogelijkeSpeelData();
                 this.poulesOk = this.allDatesFilledOk();
@@ -170,6 +225,24 @@ export class PouleRondePlanningData extends Base implements OnInit {
         .catch(err => {
             this.alert.showError(err);
         });
+    }
+
+    private buttonPressed(btn: Btn) {
+        btn.clicked = true;
+        setTimeout(() => {
+            btn.clicked = false;
+            setTimeout(() => {
+                if (btn.id == 'save' || btn.id == 'savedef') {
+                    this.opslaanClicked();
+                }
+                else if (btn.id == 'saveexit') {
+                    this.opslaanClicked(true);
+                }
+                else if (btn.id == 'exit') {
+                    this.exitClicked();
+                }
+            }, 250);
+        }, 250);
     }
 
     private getMogelijkePouleSpeelData(dagNr: number): string[] {

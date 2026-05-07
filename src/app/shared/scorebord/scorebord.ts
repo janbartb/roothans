@@ -59,7 +59,7 @@ export class Scorebord implements OnInit {
     toetsen: ActieToetsen = new ActieToetsen();
     namenDialog: SpelerNamenDialog = new SpelerNamenDialog();
     confirmUndoDialog: ConfirmDialogType = new ConfirmDialogType('');
-    wisselDialog: ConfirmDialogType = new ConfirmDialogType('Spelers wisselen', ['Wissel de spelers om?']);
+    wisselDialog: ConfirmDialogType = new ConfirmDialogType('Wie begint');
     confirmOpslaan: ConfirmDialogType = new ConfirmDialogType('Uitslag opslaan', ['Uitslag van wedstrijd opslaan?']);
     modals: ModalMessage[] = [];
     modalVisible: boolean = false;
@@ -250,12 +250,20 @@ export class Scorebord implements OnInit {
         this.isDialogOpen = true;
     }
 
+    openWisselDialog() {
+        this.wisselDialog.texts = [`${this.wedstrijd.spelers[0].splBordNaam} (${this.wedstrijd.spelers[0].splKoppelId}) begint. Klopt dat?`];
+        this.wisselDialog.open = true;
+    }
+
     wisselDialogReplied(confirmed: boolean) {
         if (confirmed) {
+            this.wedstrijd.volgordeOk = true;
+            this.wisselDialog.open = false;
+            this.checkForEnterMessages();
+        }
+        else {
             this.wisselSpelers();
         }
-        this.wedstrijd.volgordeOk = true;
-        this.wisselDialog.open = false;
     }
 
     namenDialogReplied(accepted: boolean) {
@@ -349,6 +357,13 @@ export class Scorebord implements OnInit {
         if (event.code === 'KeyS') {
             this.toggleSpeech();
             return false;
+        }
+        if (event.code === 'KeyW') {
+            if (this.wedstrijd.spelers[1].stand.aantBrt == 0) {
+                this.openWisselDialog();
+                return false;
+            }
+            return true;
         }
         if (event.code === 'KeyH' || event.code === 'Slash') {
             this.toggleHelpPopup();
@@ -452,7 +467,7 @@ export class Scorebord implements OnInit {
             this.checkForEnterMessages();
         }
         else {
-            this.wisselDialog.open = true;
+            this.openWisselDialog();
         }
     }
 
@@ -1186,7 +1201,7 @@ export class Scorebord implements OnInit {
         else {
             this.verhoogBeurtenEnBerekenData(this.actieveSpeler);
         }
-        this.checkForEnterMessages();
+        this.openWisselDialog();
     }
 
     private setActiveTeamEnSpeler() {
