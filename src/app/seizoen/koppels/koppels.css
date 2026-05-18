@@ -8,3 +8,10 @@
 .delete-box .fa-check-square {
     color: green
 }
+
+.delete-trash {
+    cursor: pointer;
+}
+.delete-trash:hover {
+    color: darkred;
+}

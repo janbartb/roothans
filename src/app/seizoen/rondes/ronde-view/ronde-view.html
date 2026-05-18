@@ -13,18 +13,18 @@
             <span>{{ronde.rndBeurten}} brt</span>
         </div>
         <div style="width: 10em; padding-top: .25em;">
-            <app-button [button]="btnPlan" [disabled]="!prevRonde.rndGepland" (btnClicked)="btnPlanClicked()"></app-button>
+            <app-button [button]="btnPlan" [disabled]="!prevRonde.status.gepland" (btnClicked)="btnPlanClicked()"></app-button>
         </div>
         <div style="width: 3em;">
-            @if (ronde.rndGepland) {
+            @if (ronde.status.gepland) {
                 <i class="fas fa-check" style="color: green;"></i>
             }
         </div>
         <div style="width: 10em; padding-top: .25em;">
-            <app-button [button]="btnSpel" [disabled]="!ronde.rndGepland" (btnClicked)="btnSpelClicked()"></app-button>
+            <app-button [button]="btnSpel" [disabled]="!ronde.status.gepland" (btnClicked)="btnSpelClicked()"></app-button>
         </div>
         <div style="width: 1.5em;">
-            @if (ronde.rndGespeeld) {
+            @if (ronde.status.gereed) {
                 <i class="fas fa-check" style="color: green;"></i>
             }            
         </div>

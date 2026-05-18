@@ -3,7 +3,7 @@ import { RondePouleView } from '../../ronde-poule-view/ronde-poule-view';
 import { Button } from '../../../../shared/button/button';
 import { NgClass } from '@angular/common';
 import { Base } from '../../../../base/base';
-import { Poule, PouleRonde, Ronde, RondeKoppel } from '../../../../model/ronde';
+import { Poule, PouleRonde, Ronde, PouleKoppel } from '../../../../model/ronde';
 import { ActivatedRoute } from '@angular/router';
 import { DateHelper } from '../../../../services/date-helper';
 import { Seizoen } from '../../../../model/seizoen';
@@ -172,7 +172,7 @@ export class PouleRondePoules extends Base implements OnInit {
         });
     }
 
-    private comparePouleKoppels(a: RondeKoppel, b: RondeKoppel): number {
+    private comparePouleKoppels(a: PouleKoppel, b: PouleKoppel): number {
         if (a.uitslag.pnt == b.uitslag.pnt) {
             if ((b.uitslag.moy / b.koppel.kopMoyenne) == (a.uitslag.moy / a.koppel.kopMoyenne)) {
                 return b.koppel.kopMoyenne - a.koppel.kopMoyenne;

@@ -1,6 +1,6 @@
 import { Component, HostListener, inject, OnInit } from '@angular/core';
 import { Base } from '../../../base/base';
-import { Poule, PouleRonde, Ronde, RondeKoppel, RondeKoppelWedstrijd } from '../../../model/ronde';
+import { Poule, PouleRonde, Ronde, PouleKoppel, PouleKoppelWedstrijd } from '../../../model/ronde';
 import { ActivatedRoute } from '@angular/router';
 import { Seizoen } from '../../../model/seizoen';
 import { Koppel } from '../../../model/koppel';
@@ -253,7 +253,7 @@ export class PouleRondePlanning extends Base implements OnInit {
             poule.pouleDagNr = kpd.dagNr;
             poule.pouleDagNaam = kpd.dagNaam;
         }
-        poule.pouleKoppels.push(new RondeKoppel(koppel));
+        poule.pouleKoppels.push(new PouleKoppel(koppel));
         poule.pouleKoppels.sort(this.comparePoulKoppels);
         if (poule.pouleKoppels.length == this.config.maxKoppelsPerPoule) {
             this.setWedstrijdenEnVolgorde(poule);
@@ -275,7 +275,7 @@ export class PouleRondePlanning extends Base implements OnInit {
                 if (idxSK != idxTK) {
                     const wedVolgNr = this.matchToNrs['m' + idxSK + idxTK];
                     splKop.spelers.forEach((spl, idxS) => {
-                        const wed = new RondeKoppelWedstrijd(tegKop.koppel.spelers[idxS]);
+                        const wed = new PouleKoppelWedstrijd(tegKop.koppel.spelers[idxS]);
                         wed.volgNr = wedVolgNr;
                         wed.tegPouleKoppelId = tegKop.id;
                         spl.wedstrijden.push(wed);
@@ -352,7 +352,7 @@ export class PouleRondePlanning extends Base implements OnInit {
         return b.kopMoyenne - a.kopMoyenne;
     }
 
-    private comparePoulKoppels(a: RondeKoppel, b: RondeKoppel): number {
+    private comparePoulKoppels(a: PouleKoppel, b: PouleKoppel): number {
         return b.koppel.kopMoyenne - a.koppel.kopMoyenne;
     }
 

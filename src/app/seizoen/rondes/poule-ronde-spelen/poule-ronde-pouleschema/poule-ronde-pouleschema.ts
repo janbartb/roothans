@@ -4,7 +4,7 @@ import { Base } from '../../../../base/base';
 import { ActivatedRoute } from '@angular/router';
 import { DateHelper } from '../../../../services/date-helper';
 import { Seizoen } from '../../../../model/seizoen';
-import { Poule, PouleRonde, Ronde, RondeKoppel } from '../../../../model/ronde';
+import { Poule, PouleRonde, Ronde, PouleKoppel } from '../../../../model/ronde';
 
 @Component({
     selector: 'app-poule-ronde-pouleschema',
@@ -204,7 +204,7 @@ export class PouleRondePouleschema extends Base implements OnInit {
         return firstVolgNr;
     }
 
-    private comparePouleKoppels(a: RondeKoppel, b: RondeKoppel): number {
+    private comparePouleKoppels(a: PouleKoppel, b: PouleKoppel): number {
         if (a.uitslag.pnt == b.uitslag.pnt) {
             if ((b.uitslag.moy / b.koppel.kopMoyenne) == (a.uitslag.moy / a.koppel.kopMoyenne)) {
                 return b.koppel.kopMoyenne - a.koppel.kopMoyenne;

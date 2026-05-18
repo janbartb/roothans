@@ -6,6 +6,7 @@ export class Koppel {
     spelers: KoppelSpeler[] = [];
     kopMoyenne: number = 0;
     voorkeurDagen: number[] = [];
+    dagenNiet: string[] = [];
 
     constructor() {
         this.spelers.push(new KoppelSpeler());

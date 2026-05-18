@@ -3,7 +3,7 @@ import { Base } from '../../../base/base';
 import { ActivatedRoute } from '@angular/router';
 import { DateHelper } from '../../../services/date-helper';
 import { Seizoen } from '../../../model/seizoen';
-import { Poule, PouleRonde, Ronde, RondeKoppel } from '../../../model/ronde';
+import { Poule, PouleRonde, Ronde, PouleKoppel } from '../../../model/ronde';
 import { Btn } from '../../../model/misc';
 import { Button } from '../../../shared/button/button';
 import { NgClass } from '@angular/common';
@@ -30,7 +30,7 @@ export class PouleRondeMatch extends Base implements OnInit {
     ronde: Ronde = new Ronde(0, '', '', 0, '');
     pouleRonde: PouleRonde = new PouleRonde(0, '', 0, '');
     poule: Poule = new Poule();
-    koppels: RondeKoppel[] = [];
+    koppels: PouleKoppel[] = [];
     wedstrijd: Wedstrijd = new Wedstrijd();
     confirmOpnieuw: ConfirmDialogType = new ConfirmDialogType('Opnieuw starten');
     matchVolgNr: number = 0;

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, HostListener, inject, OnInit } from '@angular/core';
 import { Base } from '../../../base/base';
 import { Koppel } from '../../../model/koppel';
 import { KoppelSpeler, Speler } from '../../../model/speler';
@@ -57,14 +57,22 @@ export class KoppelsToevoegen extends Base implements OnInit {
     spelersInKoppel: Speler[] = [];
     idxKoppelAdded: number = 0;
     idxKoppelSaved: number = 0;
-    sortCol: string = 'moy';
-    sortDir: number = -1;
+    sortCol: string = 'nam';
+    sortDir: number = 1;
 
-    btnOk: Btn = new Btn('ok', 'Ok');
-    btnCancel: Btn = new Btn('cancel', 'Cancel');
+    btnOk: Btn = new Btn('ok', 'Ok', 'O', 1);
+    btnReset: Btn = new Btn('reset', 'Reset', 'R', 1);
 
-    btnSave: Btn = new Btn('save', 'Toegevoegde koppels opslaan');
-    btnCopyPrev: Btn = new Btn('copy', '');
+    btnSave: Btn = new Btn('save', 'Toegevoegde koppels opslaan', 's', 23);
+
+    enterPressed() {
+        if (this.koppelToAddValid) {
+            this.buttonPressed(this.btnOk);
+        }
+        else if (this.koppelsAdded.length > 0) {
+            this.buttonPressed(this.btnSave);
+        }
+    }
 
     opslaanClicked() {
         let allKoppels: Koppel[] = [];
@@ -74,7 +82,6 @@ export class KoppelsToevoegen extends Base implements OnInit {
         .then(resp => {
             this.alert.showSuccess(resp.message);
             this.koppelsSaved = allKoppels;
-            this.header.subtitle = 'Seizoen ' + this.header.seizoen + ` - Koppels (${this.koppelsSaved.length}) - toevoegen`;
             this.koppelsAdded = [];
             if (this.koppelsSaved.length == this.config.maxKoppels) {
                 this.gotoPrevPage();
@@ -101,7 +108,7 @@ export class KoppelsToevoegen extends Base implements OnInit {
         }
     }
 
-    cancelClicked() {
+    resetClicked() {
         this.koppelToAdd.spelers.forEach(kopSpl => {
             let i = this.spelersInKoppel.findIndex(spl => spl.id == kopSpl.splId);
             if (i >= 0) {
@@ -117,6 +124,10 @@ export class KoppelsToevoegen extends Base implements OnInit {
 
     spelerClicked(idx: number) {
         if (this.maxKoppelsBereikt) {
+            return;
+        }
+        if (this.koppelToAdd.spelers.every(sp => sp.splId != '')) {
+            this.alert.showWarning('Er zijn al 2 spelers ingevuld. Klik op [Cancel] om andere spelers te selecteren.');
             return;
         }
         const speler = this.spelers[idx];
@@ -192,25 +203,57 @@ export class KoppelsToevoegen extends Base implements OnInit {
         this.sortSpelers(colNaam);
     }
 
+    @HostListener('document:keyup', ['$event'])
+    handleKeyboardEvent(event: KeyboardEvent): boolean {
+        console.log(event.code + ' : ' + event.key);
+        if (event.key === 'Enter') {
+            this.enterPressed();
+            return false;
+        }
+        if (event.key === 'Escape') {
+            this.escapePressed();
+            return false;
+        }
+        if (event.code === 'KeyO') {
+            if (this.koppelToAddValid) {
+                this.buttonPressed(this.btnOk);
+                return false;
+            }
+            return true;
+        }
+        if (event.code === 'KeyS') {
+            if (this.koppelsAdded.length > 0) {
+                this.buttonPressed(this.btnSave);
+                return false;
+            }
+            return true;
+        }
+        if (event.code === 'KeyR') {
+            this.buttonPressed(this.btnReset);
+            return false;
+        }
+        if (event.key === 'Home') {
+            this.gotoHome();
+            return false;
+        }
+        return true;
+    }
+
     override ngOnInit(): void {
         super.ngOnInit();
         this.header.subtitle = 'Seizoen ' + this.header.seizoen + ' - Koppels toevoegen';
 
         Promise.all([
-            this.dao.getSeizoenen(),
             this.dao.getKoppels(this.header.seizoen),
             this.dao.getSpelers(),
             this.dao.getSeizoenFile(this.header.seizoen)
         ])
         .then(results => {
-            this.seizoenen = results[0].map(s => Number(s));
-            this.vorigSeizoen = this.getVorigSeizoen();
-            this.koppelsSaved = results[1];
+            this.koppelsSaved = results[0];
             this.existingIds = this.koppelsSaved.map(kpl => Number(kpl.kopId.substring(1)));
-            this.header.subtitle = 'Seizoen ' + this.header.seizoen + ` - Koppels (${this.koppelsSaved.length}) - toevoegen`;
-            this.config = results[3];
+            this.config = results[2];
             this.maxKoppelsBereikt = this.koppelsSaved.length == this.config.maxKoppels;
-            results[2].forEach(spl => {
+            results[1].forEach(spl => {
                 if (this.spelerZitAlInKoppel(spl)) {
                     this.spelersInKoppel.push(spl);
                 }
@@ -219,39 +262,43 @@ export class KoppelsToevoegen extends Base implements OnInit {
                 }
             });
             this.sortSpelers(this.sortCol);
-            if (this.vorigSeizoen != '') {
-                this.dao.getKoppels(this.vorigSeizoen)
-                .then(result => {
-                    this.prevSeizoenKoppels = result;
-                    if (this.prevSeizoenKoppels.length) {
-                        this.btnCopyPrev.text = `Alles overnemen van seizoen ${this.vorigSeizoen} (${this.prevSeizoenKoppels.length})`;
-                    }
-                })
-                .catch(err => {
-                    this.alert.showError(err);
-                });
-            }
             this.koppelToAdd = this.getNewKoppel();
+            this.btnSave.default = true;
         })
         .catch(err => {
             this.alert.showError(err);
         });
     }
 
-    private checkKoppelToAdd() {
-        this.koppelToAddValid = this.koppelToAdd.spelers.every(spl => spl.splId != '') &&
-                                this.koppelToAdd.voorkeurDagen[0] > -1;
+    private buttonPressed(btn: Btn) {
+        btn.clicked = true;
+        setTimeout(() => {
+            btn.clicked = false;
+            setTimeout(() => {
+                if (btn.id == 'ok') {
+                    this.okClicked();
+                }
+                else if (btn.id == 'reset') {
+                    this.resetClicked();
+                }
+                else if (btn.id == 'save') {
+                    this.opslaanClicked();
+                }
+            }, 250);
+        }, 250);
     }
 
-    private getVorigSeizoen(): string {
-        let result = 0;
-        const currSeizoen = Number(this.header.seizoen);
-        this.seizoenen.forEach(seiz => {
-            if (seiz > result && seiz < currSeizoen) {
-                result = seiz;
-            }
-        });
-        return result == 0 ? '' : '' + result;
+    private checkKoppelToAdd() {
+        this.koppelToAddValid = this.koppelToAdd.spelers.every(spl => spl.splId != '') &&
+                                this.koppelToAdd.voorkeurDagen[0] > -1 && this.koppelToAdd.voorkeurDagen[1] > -1;
+        if (this.koppelToAddValid) {
+            this.btnOk.default = true;
+            this.btnSave.default = false;
+        }
+        else {
+            this.btnOk.default = false;
+            this.btnSave.default = true;
+        }
     }
 
     private spelerZitAlInKoppel(spl: Speler): boolean {
@@ -265,6 +312,8 @@ export class KoppelsToevoegen extends Base implements OnInit {
         this.config.speelDagen.forEach(sd => {
             result.voorkeurDagen.push(-1);
         });
+        this.btnOk.default = false;
+        this.btnSave.default = true;
         return result;
     }
 

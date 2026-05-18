@@ -1,10 +1,10 @@
 .page-header {
     height: 3em;
-    background-color: black;
+    background-color: #102511;
 }
 
 .page-title {
-    color: lightgray;
+    color: #dbefdc;
     font-weight: bold;
     text-align: center;
     line-height: 1.5em;
@@ -14,16 +14,16 @@
     text-align: center;
 }
 .page-subtitle span {
-    color: white;
+    color: #f4faf4;
     font-size: .75em;
     font-weight: bold;
 }
 
 .header-btn {
-    color: lightgray;
+    color: #b7dfb8;
     cursor: pointer;
 }
 .header-btn:hover {
-    color: white;
+    color: #f4faf4;
     transform: scale(1.25);
 }

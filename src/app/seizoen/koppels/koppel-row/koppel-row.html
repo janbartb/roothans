@@ -142,7 +142,7 @@
     </div>
 }
 @else {
-    <div class="flexbox" [ngClass]="{'list-row': selectable}" (click)="koppelClicked()">
+    <div class="flexbox" [ngClass]="{'clickable': selectable}" (click)="koppelClicked()">
         <div style="width: 4em;">
             <span>{{koppel.kopId}}</span>
         </div>
@@ -157,9 +157,9 @@
         <div style="width: 8em;">
             <span>{{koppel.kopMoyenne | number:'1.3-3':'nl-NL'}}</span>
         </div>
-        <div style="width: 14em;">
+        <div class="flexbox" style="width: 10em; overflow: hidden;">
             @for (dagNr of koppel.voorkeurDagen; track $index) {
-                <span style="padding-right: 1em;">{{speelDagen.find(sd => sd.dagNr == dagNr)?.dagNaam?.substring(0, 2)}}</span>
+                <div style="width: 2em;">{{speelDagen.find(sd => sd.dagNr == dagNr)?.dagNaam?.substring(0, 2)}}</div>
             }
         </div>
     </div>

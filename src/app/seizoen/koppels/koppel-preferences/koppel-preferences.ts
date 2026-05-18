@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, HostListener, inject, OnInit } from '@angular/core';
 import { Base } from '../../../base/base';
 import { Koppel } from '../../../model/koppel';
 import { ActivatedRoute } from '@angular/router';
@@ -27,15 +27,18 @@ export class KoppelPreferences extends Base implements OnInit {
     koppel: Koppel = new Koppel();
     config: Seizoen = new Seizoen();
     dagen: number[] = [];
+    dagenValid: boolean = true;
     gewijzigd: boolean = false;
     
-    btnSave: Btn = new Btn('save', 'Opslaan');
+    btnSave: Btn = new Btn('save', 'Opslaan', 's', 3);
+
+    enterPressed() {
+        if (this.gewijzigd && this.dagenValid) {
+            this.buttonPressed(this.btnSave);
+        }
+    }
 
     opslaanClicked() {
-        if (!this.gewijzigd) {
-            this.gotoPrevPage();
-            return;
-        }
         this.koppel.voorkeurDagen = this.dagen;
         this.dao.saveKoppels(this.header.seizoen, this.koppels)
         .then(resp => {
@@ -65,7 +68,26 @@ export class KoppelPreferences extends Base implements OnInit {
             }
         }
         this.dagen[idx] = waarde;
+        this.dagenValid = this.dagen[0] > -1 && this.dagen[1] > -1;
         this.gewijzigd = this.dagenGewijzigd();
+    }
+
+    @HostListener('document:keyup', ['$event'])
+    handleKeyboardEvent(event: KeyboardEvent): boolean {
+        console.log(event.code + ' : ' + event.key);
+        if (event.key === 'Enter' || event.code === 'KeyS') {
+            this.enterPressed();
+            return false;
+        }
+        if (event.key === 'Escape') {
+            this.escapePressed();
+            return false;
+        }
+        if (event.key === 'Home') {
+            this.gotoHome();
+            return false;
+        }
+        return true;
     }
 
     override ngOnInit(): void {
@@ -93,10 +115,23 @@ export class KoppelPreferences extends Base implements OnInit {
             this.koppel = this.koppels[this.idxKoppel];
             this.dagen = this.koppel.voorkeurDagen.filter(dg => true);
             this.header.subtitle = `Seizoen ${this.header.seizoen} - koppel ${id} - Voorkeurdagen`;
+            this.btnSave.default = true;
         })
         .catch(err => {
             this.alert.showError(err);
         });
+    }
+
+    private buttonPressed(btn: Btn) {
+        btn.clicked = true;
+        setTimeout(() => {
+            btn.clicked = false;
+            setTimeout(() => {
+                if (btn.id == 'save') {
+                    this.opslaanClicked();
+                }
+            }, 250);
+        }, 250);
     }
 
     private dagenGewijzigd(): boolean {

@@ -18,6 +18,7 @@ import { PouleRondePouleschema } from './seizoen/rondes/poule-ronde-spelen/poule
 import { PouleRondeScore } from './seizoen/rondes/poule-ronde-score/poule-ronde-score';
 import { SeizoenMenu } from './seizoen/seizoen-menu/seizoen-menu';
 import { AfvalRondePlanning } from './seizoen/rondes/afval/afval-ronde-planning/afval-ronde-planning';
+import { AfvalRondePlanner } from './seizoen/rondes/afval/afval-ronde-planner/afval-ronde-planner';
 
 export const routes: Routes = [
     { path: 'home', component: Home },
@@ -34,7 +35,8 @@ export const routes: Routes = [
     { path: 'rondes/poule/:rondeId/spel', component: PouleRondePoules },
     { path: 'rondes/poule/:rondeId/data', component: PouleRondePlanningData },
     { path: 'rondes/poule/:rondeId', component: PouleRondePlanning },
-    { path: 'rondes/afval/:rondeId', component: AfvalRondePlanning },
+    { path: 'rondes/afval/:rondeId/plan', component: AfvalRondePlanning },
+    { path: 'rondes/afval/:rondeId/planner', component: AfvalRondePlanner },
     { path: 'rondes', component: Rondes },
     { path: 'init', component: InitSpelers },
     { path: 'spelers', component: Spelers },

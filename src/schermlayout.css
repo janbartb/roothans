@@ -1,0 +1,102 @@
+/* sectie containers */
+
+.container {
+    padding: .125em;
+}
+.container.links {
+    padding-right: .0625em;
+}
+.container.rechts {
+    padding-left: .0625em;
+}
+.container.boven {
+    padding-bottom: .0625em;
+}
+.container.onder {
+    padding-top: .0625em;
+}
+
+.grid-container {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+}
+
+/* secties */
+
+.sectie {
+    border-radius: .5em;
+    background-color: #b7dfb8;
+    color: #163317;
+    overflow: hidden;
+}
+.sectie.donker {
+    background-color: #163317;
+    color: #b7dfb8;
+}
+.sectie-title {
+    background-color: #163317;
+    color: #dbefdc;
+    min-height: 1.25em;
+    font-weight: bold;
+    text-align: center;
+}
+.sectie-sub-title {
+    color: #93cf95;
+    font-weight: normal;
+}
+.sectie.donker .sectie-title {
+    background-color: #b7dfb8;
+    color: #163317;
+}
+.sectie.donker .sectie-sub-title {
+    color: #265728;
+}
+.sectie-title > div {
+    padding: 0 .375em;
+}
+
+/* scroll areas */
+
+.scroll-container {
+    padding: 0 .25em .25em .25em;
+    overflow-y: hidden;
+}
+.scroll-sectie {
+    height: 100%;
+    overflow-y: scroll; 
+}
+
+/* lijsten */
+
+.lijst-header {
+    min-height: 2em; 
+    color: #2e6830;
+}
+.lijst-header .sortable {
+    font-weight: bold;
+    cursor: pointer;
+}
+.lijst-header .sortable .fas.fa-sort {
+    color: #459c48;
+}
+.lijst-header.with-scroll {
+    padding-right: 16px;
+}
+.lijst-row {
+    padding: 0 1em;
+    border-radius: .375em;
+    color: #163317;
+}
+.lijst-row.clickable:hover {
+    background-color: #dbefdc;
+}
+.lijst-row.hoverable:hover {
+    background-color: #dbefdc;
+}
+
+/* misc */
+
+.clickable {
+    cursor: pointer;
+}

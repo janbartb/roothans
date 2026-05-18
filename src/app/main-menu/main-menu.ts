@@ -61,7 +61,7 @@ export class MainMenu extends Base implements OnInit {
             .then(resp => {
                 this.alert.showSuccess(resp.message);
                 this.confirmNieuw.open = false;
-                this.gotoSeizoen(this.newSeiz?.value);
+                this.gotoSeizoenInstellingen(this.newSeiz?.value);
             })
             .catch(err => {
                 this.alert.showError(err);
@@ -148,6 +148,13 @@ export class MainMenu extends Base implements OnInit {
                 }
             }, 250);
         }, 250);
+    }
+
+    private gotoSeizoenInstellingen(seizoen: string) {
+        this.header.seizoen = seizoen;
+        sessionStorage.setItem('seizoen', this.header.seizoen);
+        this.addPageToHistory('main');
+        this.gotoPage('settings', 'seizoen');
     }
 
     private gotoSeizoen(seizoen: string) {

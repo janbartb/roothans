@@ -1,153 +1,181 @@
-<div class="fullheight flexbox flexcolumn" style="font-size: .625em;">
+<div class="fullheight flexbox flexcolumn" style="overflow-y: hidden;">
     <div class="flexgrow1 flexbox flexstretch" style="overflow-y: hidden;">
         <div class="flex70perc flexbox flexcolumn">
-            <div style="font-size: 1.2em; min-height: 2em; background-color: #b0b0b0; font-weight: bold; text-align: center; line-height: 2em;">
-                <span>Toe te voegen koppel</span>
-            </div>
-            <div class="flexbox flexcenter flexmiddle" style="min-height: 10em;">
-                @if (maxKoppelsBereikt) {
-                    <div style="font-size: 1.2em; color: blue;">
-                        <span>Het maximum aantal koppels is bereikt.</span>
-                    </div>
-                }
-                @else {
-                    <div>
-                        <div class="flexbox">
-                            <div style="width: 8em;"><label for="">Koppel<span class="req"> *</span></label></div>
-                            <div class="koppel-row">
-                                <app-koppel-row [koppel]="koppelToAdd" [view]="'extended-single'"></app-koppel-row>
-                            </div>
+            <div class="container">
+                <div class="sectie fullheight flexbox flexcolumn">
+                    <div class="sectie-title flexbox flexcenter flexmiddle">
+                        <div style="font-size: .75em; line-height: 1.2;">
+                            <span>Toe te voegen koppel</span>
                         </div>
-                        <div class="flexbox" style="padding-top: .5em;">
-                            <div style="width: 8em;"><label for="">Voorkeurdagen</label></div>
-                            <div>
-                                @for (speelDag of config.speelDagen; let idxSd = $index; track $index) {
-                                    @if (idxSd < 4) {
-                                        <div class="flexbox">
-                                            <div style="width: 2.5em;">
-                                                <label for="">
-                                                    <span>{{idxSd + 1}}</span>
-                                                    @if (idxSd == 0) {
-                                                        <span class="req"> *</span>
-                                                    }
-                                                </label>
-                                            </div>
-                                            <div style="padding-right: 1.5em;">
-                                                <div style="cursor: pointer;" (click)="voorkeurDagClicked(idxSd, -1)">
-                                                    <i style="padding-right: .25em;" 
-                                                            [ngClass]="koppelToAdd.voorkeurDagen[idxSd] == -1 ? 'fas fa-check-circle' : 'far fa-circle'"></i>
-                                                    <span style="color: green;">geen</span>
-                                                </div>
-                                            </div>
-                                            @for (dag of config.speelDagen; track $index) {
-                                                <div style="padding-right: 1.5em;">
-                                                    <div style="cursor: pointer;" (click)="voorkeurDagClicked(idxSd, dag.dagNr)">
-                                                        <i style="padding-right: .25em;" 
-                                                                [ngClass]="koppelToAdd.voorkeurDagen[idxSd] == dag.dagNr ? 'fas fa-check-circle' : 'far fa-circle'"></i>
-                                                        <span style="color: green;">{{dag.dagNaam.substring(0, 2)}}</span>
+                    </div>
+                    <div class="flexbox flexcenter flexmiddle" style="min-height: 6em;">
+                        @if (maxKoppelsBereikt) {
+                            <div style="font-size: .75em;">
+                                <span>Het maximum aantal koppels is bereikt.</span>
+                            </div>
+                        }
+                        @else {
+                            <div style="font-size: .625em;">
+                                <div class="flexbox">
+                                    <div style="width: 9em;"><label for=""><b>Koppel</b><span class="req"> *</span></label></div>
+                                    <div class="koppel-row">
+                                        <app-koppel-row [koppel]="koppelToAdd" [view]="'extended-single'"></app-koppel-row>
+                                    </div>
+                                </div>
+                                <div class="flexbox" style="padding-top: .5em;">
+                                    <div style="width: 9em;"><label for=""><b>Voorkeurdagen</b></label></div>
+                                    <div>
+                                        @for (speelDag of config.speelDagen; let idxSd = $index; track $index) {
+                                            @if (idxSd < 4) {
+                                                <div class="flexbox">
+                                                    <div style="width: 2.5em;">
+                                                        <label for="">
+                                                            <span><b>{{idxSd + 1}}</b></span>
+                                                            @if (idxSd < 2) {
+                                                                <span class="req"> *</span>
+                                                            }
+                                                        </label>
                                                     </div>
+                                                    <div style="padding-right: 1.5em;">
+                                                        <div style="cursor: pointer;" (click)="voorkeurDagClicked(idxSd, -1)">
+                                                            <i style="padding-right: .25em;" 
+                                                                    [ngClass]="koppelToAdd.voorkeurDagen[idxSd] == -1 ? 'fas fa-check-circle' : 'far fa-circle'"></i>
+                                                            <span style="color: green;">geen</span>
+                                                        </div>
+                                                    </div>
+                                                    @for (dag of config.speelDagen; track $index) {
+                                                        <div style="padding-right: 1.5em;">
+                                                            <div style="cursor: pointer;" (click)="voorkeurDagClicked(idxSd, dag.dagNr)">
+                                                                <i style="padding-right: .25em;" 
+                                                                        [ngClass]="koppelToAdd.voorkeurDagen[idxSd] == dag.dagNr ? 'fas fa-check-circle' : 'far fa-circle'"></i>
+                                                                <span style="color: green;">{{dag.dagNaam.substring(0, 2)}}</span>
+                                                            </div>
+                                                        </div>
+                                                    }
                                                 </div>
                                             }
-                                        </div>
-                                    }
-                                }
-                            </div>
-                            <div style="width: 22em;" class="flexbox flexright flexend">
-                                <div class="flexbox">
-                                    <div>
-                                        <app-button [button]="btnCancel" (btnClicked)="cancelClicked()"></app-button>
+                                        }
                                     </div>
-                                    <div>
-                                        <app-button [button]="btnOk" [disabled]="!koppelToAddValid" (btnClicked)="okClicked()"></app-button>
+                                    <div style="width: 22em;" class="flexbox flexright flexend">
+                                        <div class="flexbox">
+                                            <div>
+                                                <app-button [button]="btnReset" (btnClicked)="resetClicked()"></app-button>
+                                            </div>
+                                            <div>
+                                                <app-button [button]="btnOk" [disabled]="!koppelToAddValid" (btnClicked)="okClicked()"></app-button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        }
                     </div>
-                }
-            </div>
-            <div style="font-size: 1.2em; min-height: 2em; background-color: #b0b0b0; text-align: center; line-height: 2em;">
-                <span style="font-weight: bold;">Toegevoegde koppels </span>
-                <span> (nog niet opgeslagen)</span>
-            </div>
-            <div class="flexbox flexcenter flexmiddle" style="min-height: 2em; color: green; padding-right: 16px;">
-                <div class="flexbox">
-                    <div style="width: 4em;">
-                        <span>ID</span>
-                    </div>
-                    <div style="width: 15em;">
-                        <span>Speler 1</span>
-                    </div>
-                    <div style="width: 2em;"></div>
-                    <div style="width: 15em;">
-                        <span>Speler 2</span>
-                    </div>
-                    <div style="width: 2em;"></div>
-                    <div style="width: 8em;">
-                        <span>Moyenne</span>
-                    </div>
-                    <div style="width: 14em;">
-                        <span>Voorkeurdagen</span>
-                    </div>
-
                 </div>
             </div>
-            <div class="flexgrow1 flexbox flexcenter" style="overflow-y: scroll;">
-                <div>
-                    @for (kopAdded of koppelsAdded; track $index) {
-                        <div class="koppel-row">
-                            <app-koppel-row [koppel]="kopAdded" [speelDagen]="config.speelDagen" [selectable]="true" 
-                                            (clicked)="koppelAddedClicked($index)"></app-koppel-row>
+            <div class="flexgrow1 container" style="overflow-y: hidden;">
+                <div class="sectie fullheight flexbox flexcolumn">
+                    <div class="sectie-title flexbox flexcenter flexmiddle">
+                        <div style="font-size: .75em; line-height: 1.2;">
+                            <span>Toegevoegde koppels</span>
                         </div>
-                    }
+                        <div class="sectie-sub-title" style="font-size: .75em; line-height: 1.2;">
+                            <span>({{koppelsAdded.length}})</span>
+                        </div>
+                    </div>
+                    <div class="flexbox flexcenter flexmiddle lijst-header with-scroll" style="font-size: .625em;">
+                        <div style="width: 4em;">
+                            <span>ID</span>
+                        </div>
+                        <div style="width: 15em;">
+                            <span>Speler 1</span>
+                        </div>
+                        <div style="width: 2em;"></div>
+                        <div style="width: 15em;">
+                            <span>Speler 2</span>
+                        </div>
+                        <div style="width: 2em;"></div>
+                        <div style="width: 8em;">
+                            <span>Moyenne</span>
+                        </div>
+                        <div style="width: 10em;">
+                            <span>Voorkeurdagen</span>
+                        </div>
+                    </div>
+                    <div class="flexgrow1 scroll-container">
+                        <div class="flexbox flexcenter scroll-sectie">
+                            <div style="font-size: .625em;">
+                                @for (kopAdded of koppelsAdded; track $index) {
+                                    <div class="koppel-row lijst-row clickable" title="Verwijder dit koppel">
+                                        <app-koppel-row [koppel]="kopAdded" [speelDagen]="config.speelDagen" [selectable]="true" 
+                                                        (clicked)="koppelAddedClicked($index)"></app-koppel-row>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+            @if (koppelsAdded.length) {
+                <div class="flexbox flexcenter" style="font-size: .75em; min-height: 2.75em; padding-top: .5em;">
+                    <div>
+                        @if (koppelsAdded.length) {
+                            <app-button [button]="btnSave" (btnClicked)="opslaanClicked()"></app-button>
+                        }
+                    </div>
+                </div>
+            }
         </div>
-        <div class="flex30perc fullheight flexbox flexcolumn" style="border-left: .25em solid black;">
-            <div style="font-size: 1.2em; min-height: 2em; background-color: #b0b0b0; font-weight: bold; text-align: center; line-height: 2em;">
-                <span>Te kiezen spelers</span>
-            </div>
-            <div class="flexbox flexcenter flexmiddle list-header" style="min-height: 2em; padding-right: 16px;">
-                <div class="sortable" style="width: 14em;">
-                    <span (click)="sortClicked('nam')">Naam</span>
-                    @if (sortCol == 'nam') {
-                        <i class="fas" [ngClass]="sortDir == 1 ? 'fa-sort-up' : 'fa-sort-down'" style="padding-left: .25em;"></i>
-                    }
+        <div class="flex30perc container">
+            <div class="sectie fullheight flexbox flexcolumn">
+                <div class="sectie-title flexbox flexcenter flexmiddle">
+                    <div style="font-size: .75em; line-height: 1.2;">
+                        <span>Te kiezen spelers</span>
+                    </div>
+                    <div class="sectie-sub-title" style="font-size: .75em; line-height: 1.2;">
+                        <span>({{spelers.length}})</span>
+                    </div>
                 </div>
-                <div class="sortable" style="width: 4em;">
-                    <span (click)="sortClicked('moy')">Moy</span>
-                    @if (sortCol == 'moy') {
-                        <i class="fas" [ngClass]="sortDir == 1 ? 'fa-sort-up' : 'fa-sort-down'" style="padding-left: .25em;"></i>
-                    }
+                <div class="flexbox flexcenter flexmiddle lijst-header with-scroll" style="font-size: .625em;">
+                    <div class="sortable" style="width: 14em;">
+                        <span (click)="sortClicked('nam')">
+                            <span>Naam</span>
+                            @if (sortCol == 'nam') {
+                                <i class="fas" [ngClass]="sortDir == 1 ? 'fa-sort-up' : 'fa-sort-down'" style="padding-left: .25em;"></i>
+                            }
+                            @else {
+                                <i style="padding-left: .25em;" class="fas fa-sort"></i>
+                            }
+                        </span>
+                    </div>
+                    <div class="sortable" style="width: 4em;">
+                        <span (click)="sortClicked('moy')">
+                            <span>Moy</span>
+                            @if (sortCol == 'moy') {
+                                <i class="fas" [ngClass]="sortDir == 1 ? 'fa-sort-up' : 'fa-sort-down'" style="padding-left: .25em;"></i>
+                            }
+                            @else {
+                                <i style="padding-left: .25em;" class="fas fa-sort"></i>
+                            }
+                        </span>
+                    </div>
                 </div>
-            </div>
-            <div class="flexgrow1 flexbox flexcenter" style="overflow-y: scroll;">
-                <div>
-                    @for (spl of spelers; track $index) {
-                        <div class="flexbox list-row" (click)="spelerClicked($index)">
-                            <div style="width: 14em;">
-                                <span>{{helper.getSpelerNaam(spl)}}</span>
-                            </div>
-                            <div style="width: 4em;">
-                                <span>{{spl.moyenne | number:'1.3-3':'nl-NL'}}</span>
-                            </div>
+                <div class="flexgrow1 scroll-container">
+                    <div class="flexbox flexcenter scroll-sectie">
+                        <div style="font-size: .625em;">
+                            @for (spl of spelers; track $index) {
+                                <div class="flexbox lijst-row clickable" (click)="spelerClicked($index)">
+                                    <div style="width: 14em;">
+                                        <span>{{helper.getSpelerNaam(spl)}}</span>
+                                    </div>
+                                    <div style="width: 4em;">
+                                        <span>{{spl.moyenne | number:'1.3-3':'nl-NL'}}</span>
+                                    </div>
+                                </div>
+                            }
                         </div>
-                    }
+                    </div>
                 </div>
-            </div>
-            <div style="min-height: 2em; background-color: #b0b0b0; text-align: center; line-height: 2em;">
-                <span>Aantal over : <b>{{spelers.length}}</b></span>
             </div>
         </div>
     </div>
-    @if (koppelsAdded.length || btnCopyPrev.text != '') {
-        <div class="flexbox flexcenter flexmiddle" style="min-height: 3em; border-top: .125em solid black;">
-            @if (koppelsAdded.length) {
-                <app-button [button]="btnSave" (btnClicked)="opslaanClicked()"></app-button>
-            }
-            @if (btnCopyPrev.text != '') {
-                <app-button [button]="btnCopyPrev"></app-button>
-            }
-        </div>
-    }
 </div>

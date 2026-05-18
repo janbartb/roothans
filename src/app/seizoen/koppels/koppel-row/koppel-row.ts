@@ -3,7 +3,7 @@ import { Koppel } from '../../../model/koppel';
 import { KoppelSpeler } from '../../../model/speler';
 import { DecimalPipe, NgClass } from '@angular/common';
 import { SpeelDag } from '../../../model/seizoen';
-import { RondeKoppel, RondeKoppelSpeler } from '../../../model/ronde';
+import { PouleKoppel, PouleKoppelSpeler } from '../../../model/ronde';
 
 @Component({
     selector: 'app-koppel-row',
@@ -16,7 +16,7 @@ import { RondeKoppel, RondeKoppelSpeler } from '../../../model/ronde';
 })
 export class KoppelRow implements OnInit {
     @Input() koppel: Koppel = new Koppel();
-    @Input() pouleKoppel: RondeKoppel = new RondeKoppel(new Koppel());
+    @Input() pouleKoppel: PouleKoppel = new PouleKoppel(new Koppel());
     @Input() rang: number = 0;
     @Input() view: string = 'normal';
     @Input() speelDagen: SpeelDag[] = [];
@@ -55,7 +55,7 @@ export class KoppelRow implements OnInit {
             this.koppel.spelers[1] = temp;
         }
         if (this.pouleKoppel.spelers[0].speler.splMoy > this.pouleKoppel.spelers[1].speler.splMoy) {
-            const temp: RondeKoppelSpeler = JSON.parse(JSON.stringify(this.pouleKoppel.spelers[0]));
+            const temp: PouleKoppelSpeler = JSON.parse(JSON.stringify(this.pouleKoppel.spelers[0]));
             this.pouleKoppel.spelers[0] = this.pouleKoppel.spelers[1];
             this.pouleKoppel.spelers[1] = temp;
             const temp2: KoppelSpeler = JSON.parse(JSON.stringify(this.pouleKoppel.koppel.spelers[0]));

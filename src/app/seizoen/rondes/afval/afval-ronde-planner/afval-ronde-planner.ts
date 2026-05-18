@@ -1,14 +1,14 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Base } from '../../../../base/base';
-import { ActivatedRoute } from '@angular/router';
-import { Seizoen } from '../../../../model/seizoen';
 import { AfvalDag, AfvalKoppel, AfvalMatch, AfvalRonde, Poule, PouleRonde, Ronde, PouleKoppel } from '../../../../model/ronde';
-import { KoppelSpeler } from '../../../../model/speler';
-import { NgClass } from '@angular/common';
-import { Btn } from '../../../../model/misc';
-import { Button } from '../../../../shared/button/button';
-import { SpeeldagView } from '../speeldag-view/speeldag-view';
+import { ActivatedRoute } from '@angular/router';
 import { DateHelper } from '../../../../services/date-helper';
+import { Seizoen } from '../../../../model/seizoen';
+import { Btn } from '../../../../model/misc';
+import { KoppelSpeler } from '../../../../model/speler';
+import { SpeeldagView } from '../speeldag-view/speeldag-view';
+import { Button } from '../../../../shared/button/button';
+import { NgClass } from '@angular/common';
 
 class AfvalKoppelsPerDag {
     dagNr: number = 0;
@@ -34,16 +34,16 @@ class KoppelsPerRang {
 }
 
 @Component({
-    selector: 'app-afval-ronde-planning',
+    selector: 'app-afval-ronde-planner',
     imports: [
         SpeeldagView,
         Button,
         NgClass
     ],
-    templateUrl: './afval-ronde-planning.html',
-    styleUrl: './afval-ronde-planning.css',
+    templateUrl: './afval-ronde-planner.html',
+    styleUrl: './afval-ronde-planner.css',
 })
-export class AfvalRondePlanning extends Base implements OnInit {
+export class AfvalRondePlanner extends Base implements OnInit {
     route = inject(ActivatedRoute);
     dater = inject(DateHelper);
     config: Seizoen = new Seizoen();
@@ -63,6 +63,7 @@ export class AfvalRondePlanning extends Base implements OnInit {
     idxVkDag: number[] = [-1, -1];
     selKoppelIds: string[] = ['', ''];
     idxSpeelDag: number = -1;
+    idxMatch: number = -1;
     today: string = '';
     startDatum: string = '';
 
@@ -86,6 +87,7 @@ export class AfvalRondePlanning extends Base implements OnInit {
         this.ronde.speelDagen.unshift(dagToAdd);
         this.idxSpeelDag = 0;
         if (this.prevRondeIsPoule) {
+            this.idxMatch = 0;
             this.selectKoppelKeuze(1);
         }
     }
@@ -93,12 +95,31 @@ export class AfvalRondePlanning extends Base implements OnInit {
     speelDagClicked(idx: number) {
         if (idx != this.idxSpeelDag) {
             this.idxSpeelDag = idx;
+            this.setEersteVrijeMatchVanSpeeldag();
         }
     }
 
-    matchClicked(idxDag: number, idxMatch: number) {
-        this.idxSpeelDag = idxDag;
-        this.removeMatchFromSpeelDag(idxDag, idxMatch);
+    matchClicked(idxDag: number, idxM: number) {
+        const matchIngepland = this.ronde.speelDagen[idxDag].dagMatches[idxM].splKoppel.ingepland;
+        if (idxDag == this.idxSpeelDag) {
+            if (idxM == this.idxMatch) {
+                this.idxMatch = -1;
+            }
+            else {
+                this.idxMatch = idxM;
+                if (matchIngepland) {
+                    this.removeMatchFromSpeelDag(this.idxSpeelDag, this.idxMatch);
+                }
+            }
+        }
+        else {
+            this.idxSpeelDag = idxDag;
+            this.idxMatch = idxM;
+            if (matchIngepland) {
+                this.removeMatchFromSpeelDag(this.idxSpeelDag, this.idxMatch);
+            }
+        }
+        this.setSelectieKeuzeObvMatch();
     }
 
     koppelClicked(koppelId: string, idxR: number, idxD: number) {
@@ -150,12 +171,17 @@ export class AfvalRondePlanning extends Base implements OnInit {
     }
 
     speelDagVerwijderen(idx: number) {
+        this.ronde.speelDagen[idx].dagMatches.forEach((m, idxM) => {
+            if (m.splKoppel.ingepland) {
+                this.removeMatchFromSpeelDag(idx, idxM);
+            }
+        });
         this.ronde.speelDagen.splice(idx, 1);
     }
 
     override ngOnInit(): void {
         super.ngOnInit();
-        this.header.subtitle = `Seizoen ${this.header.seizoen} - Planning`;
+        this.header.subtitle = `Seizoen ${this.header.seizoen} - Plannen`;
 
         const rondeId: string | null = this.route.snapshot.paramMap.get('rondeId');
         if (!rondeId) {
@@ -180,7 +206,7 @@ export class AfvalRondePlanning extends Base implements OnInit {
             }
             const rnd = this.rondes[idx];
             const rndPrev = this.rondes[idx - 1];
-            this.header.subtitle = `Seizoen ${this.header.seizoen} - Planning ${rnd.rndNaam}`;
+            this.header.subtitle = `Seizoen ${this.header.seizoen} - Plannen ${rnd.rndNaam}`;
             this.today = new Date().toISOString().substring(0, 10);
             Promise.all([
                 this.dao.getAfvalRondeFile(this.header.seizoen, rnd.fileNaam),
@@ -252,17 +278,16 @@ export class AfvalRondePlanning extends Base implements OnInit {
     }
 
     private addMatchToSpeelDag() {
-        if (this.idxSpeelDag < 0) {
-            this.alert.showWarning('Kan match niet toevoegen. Er is geen speeldag geselecteerd.');
+        if (this.idxSpeelDag < 0 || this.idxMatch < 0) {
+            this.alert.showWarning('Kan match niet toevoegen. Er is geen lege match geselecteerd.');
             this.cancelKoppelSelections();
             return;
         }
-        if (this.ronde.speelDagen[this.idxSpeelDag].dagMatches.length >= this.ronde.maxMatchesPerDag) {
-            this.alert.showWarning('Kan match niet toevoegen. De geselecteerde speeldag zit al vol.');
-            this.cancelKoppelSelections();
-            return;
-        }
-        console.log(this.ronde.koppels);
+        // if (this.speelDagIsVol(this.idxSpeelDag)) {
+        //     this.alert.showWarning('Kan match niet toevoegen. De geselecteerde speeldag zit al vol.');
+        //     this.cancelKoppelSelections();
+        //     return;
+        // }
         const splKoppel = this.tePlannenKoppels.find(kpl => kpl.id == this.selKoppelIds[0]);
         if (!splKoppel) {
             this.alert.showWarning(`Kan match niet toevoegen. Eerste geselecteerde koppel ${this.selKoppelIds[0]} niet gevonden.`);
@@ -280,9 +305,10 @@ export class AfvalRondePlanning extends Base implements OnInit {
         matchToAdd.tegKoppel = tegKoppel;
         matchToAdd.splKoppelId = splKoppel.id;
         matchToAdd.tegKoppelId = tegKoppel.id;
-        this.ronde.speelDagen[this.idxSpeelDag].dagMatches.push(matchToAdd);
+        this.ronde.speelDagen[this.idxSpeelDag].dagMatches[this.idxMatch] = matchToAdd;
         //this.removeMatchKoppelsFromKoppelsPerDagen(matchToAdd);
         this.selKoppelIds = ['', ''];
+        this.setVolgendeVrijeMatch();
     }
 
     private removeMatchFromSpeelDag(idxDag: number, idxMatch: number) {
@@ -307,7 +333,7 @@ export class AfvalRondePlanning extends Base implements OnInit {
         //         }
         //     });
         // });
-        this.ronde.speelDagen[idxDag].dagMatches.splice(idxMatch, 1);
+        this.ronde.speelDagen[idxDag].dagMatches[idxMatch] = new AfvalMatch();
     }
 
     private removeMatchKoppelsFromKoppelsPerDagen(match: AfvalMatch) {
@@ -417,7 +443,44 @@ export class AfvalRondePlanning extends Base implements OnInit {
         return result;
     }
 
-    getAfvalKoppelsFromPoule(pl: Poule): AfvalKoppel[] {
+    private setEersteVrijeMatchVanSpeeldag() {
+        const idx = this.ronde.speelDagen[this.idxSpeelDag].dagMatches.findIndex(dm => !dm.splKoppel.ingepland);
+        if (idx >= 0) {
+            this.idxMatch = idx;
+            this.setSelectieKeuzeObvMatch();
+        }
+    }
+
+    private setVolgendeVrijeMatch() {
+        let idxSpd = this.idxSpeelDag;
+        let idxM = this.idxMatch;
+        let ready = false;
+        while (!ready) {
+            idxM++;
+            if (idxM >= this.ronde.maxMatchesPerDag) {
+                idxM = 0;
+                idxSpd++;
+                if (idxSpd >= this.ronde.speelDagen.length) {
+                    idxSpd = 0;
+                }
+            }
+            if (idxSpd == this.idxSpeelDag && idxM == this.idxMatch) {
+                ready = true;
+                this.idxSpeelDag = -1;
+                this.idxMatch = -1;
+            }
+            else {
+                if (!this.ronde.speelDagen[idxSpd].dagMatches[idxM].splKoppel.ingepland) {
+                    this.idxSpeelDag = idxSpd;
+                    this.idxMatch = idxM;
+                    this.setSelectieKeuzeObvMatch();
+                    ready = true;
+                }
+            }
+        }
+    }
+
+    private getAfvalKoppelsFromPoule(pl: Poule): AfvalKoppel[] {
         let result: AfvalKoppel[] = [];
         pl.pouleKoppels.sort(this.comparePouleKoppels);
         pl.pouleKoppels.forEach((kpl, idx) => {
@@ -437,6 +500,27 @@ export class AfvalRondePlanning extends Base implements OnInit {
             result.push(kop);
         });
         return result;
+    }
+
+    private setSelectieKeuzeObvMatch() {
+        if (this.idxMatch < 0) {
+            return;
+        }
+        if ((this.idxMatch == 0 || this.idxMatch == 3) && this.selectieKeuze == 0) {
+            this.selectKoppelKeuze(1);
+            return;
+        }
+        if ((this.idxMatch == 1 || this.idxMatch == 2) && this.selectieKeuze == 1) {
+            this.selectKoppelKeuze(0);
+            return;
+        }
+    }
+
+    private speelDagIsVol(idx: number): boolean {
+        if (idx < 0 || idx >= this.ronde.speelDagen.length) {
+            return true;
+        }
+        return this.ronde.speelDagen[idx].dagMatches.every(dm => dm.splKoppel.ingepland);
     }
 
     private compareSpeelDagen(a: AfvalDag, b: AfvalDag): number {

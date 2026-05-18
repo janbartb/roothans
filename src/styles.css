@@ -19,8 +19,9 @@ label {
     color: #2e6830;
 }
 label .req {
-    color: red;
+    color: #c00000;
     font-size: .75em;
+    font-weight: bold;
 }
 
 .ellipsis {

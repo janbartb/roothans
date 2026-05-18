@@ -21,7 +21,7 @@ export class Rondes extends Base implements OnInit {
 
     planningClicked(rondeId: number) {
         const rondeType = this.rondes[rondeId - 1].rndType;
-        this.gotoPage(`rondes/${rondeType}/${rondeId}`, 'rondes');
+        this.gotoPage(`rondes/${rondeType}/${rondeId}/planner`, 'rondes');
     }
 
     spelenClicked(rondeId: number) {
@@ -33,8 +33,9 @@ export class Rondes extends Base implements OnInit {
         super.ngOnInit();
         this.header.subtitle = 'Seizoen ' + this.header.seizoen + ' - Rondes';
 
-        this.dummy.rndGepland = true;
-        this.dummy.rndGespeeld = true;
+        this.dummy.status.gepland = true;
+        this.dummy.status.gestart = true;
+        this.dummy.status.gereed = true;
 
         Promise.all([
             this.dao.getRondes(this.header.seizoen),
@@ -66,11 +67,11 @@ export class Rondes extends Base implements OnInit {
         let rnds: Ronde[] = [];
         let rondeId = 1;
         rnds.push(new Ronde(rondeId, 'Voorronde', 'poule', 15, 'voorronde'));
-        let aantKoppels = this.config.maxKoppels / 2;
-        while(aantKoppels > 4) {
+        let aantMatches = this.config.maxKoppels / 2;
+        while(aantMatches > 4) {
             rondeId++;
-            rnds.push(new Ronde(rondeId, `${aantKoppels}e finales`, 'afval', 20, `finales-${aantKoppels}`));
-            aantKoppels = aantKoppels / 2;
+            rnds.push(new Ronde(rondeId, `${aantMatches}e finales`, 'afval', 20, `finales-${aantMatches}`));
+            aantMatches = aantMatches / 2;
         }
         rondeId++;
         rnds.push(new Ronde(rondeId, `Kwart finales`, 'afval', 20, 'kwart-finales'));

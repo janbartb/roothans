@@ -23,7 +23,7 @@
                         <div class="flex50perc container" [ngClass]="$index == 0 ? 'links' : 'rechts'"
                                     (mouseover)="clearHovered(rangKoppels)" (mouseout)="clearHovered(rangKoppels)">
                             <div class="sectie-rangkoppels fullheight flexbox flexcolumn" style="overflow: hidden;">
-                                <div class="sectie-rangkoppels-title flexbox flexcenter flexmiddle">
+                                <div class="sectie-rangkoppels-title flexbox flexcenter flexmiddle" [ngClass]="{'tweede-derde': selectieKeuze == 1}">
                                     <div style="font-size: .625em;">Koppels per dag</div>
                                     <div style="font-size: .625em; font-weight: normal;">{{rangenOpScherm[$index]}}e plaats</div>
                                 </div>
@@ -139,7 +139,7 @@
             <div style="min-height: 2em; max-height: 11em; overflow-y: auto;">
                 @for (dag of ronde.speelDagen; track $index) {
                     <div class="container" [ngClass]="{'boven': !$last, 'onder': !$first}">
-                        <app-speeldag-view [speelDag]="dag" [selected]="$index == idxSpeelDag" 
+                        <app-speeldag-view [speelDag]="dag" [selected]="$index == idxSpeelDag" [idxMatch]="idxMatch" 
                                 (select)="speelDagClicked($index)" (delete)="speelDagVerwijderen($index)"
                                 (dateChanged)="datumGewijzigd($index, $event)" 
                                 (matchClick)="matchClicked($index, $event)"></app-speeldag-view>

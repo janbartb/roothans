@@ -26,6 +26,7 @@
                         ],
                         "styles": [
                           "src/styles.css",
+                          "src/schermlayout.css",
                           "src/scorebord.css",
                           "src/flex.css",
                           "src/balls.css",

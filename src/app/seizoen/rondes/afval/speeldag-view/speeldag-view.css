@@ -1,0 +1,73 @@
+.sectie-speeldag {
+    border-radius: .5em;
+    padding: .125em .5em;
+    overflow-x: hidden;
+    background-color: #6ec071;
+    color: #163317;
+    border: .125em solid #6ec071;
+}
+.sectie-speeldag.selected {
+    border-color: red;
+}
+.sectie-speeldag > div {
+}
+.sectie-speeldag .dagnaam {
+    font-size: .75em; 
+    line-height: 1.2;
+    width: 6.25em; 
+    font-weight: bold;
+}
+.sectie-speeldag .dagnaam span:hover {
+    cursor: pointer;
+    color: darkred;
+}
+.sectie-speeldag .dagdatum {
+    font-size: .75em; 
+    line-height: 1.2;
+    width: 7.5em; 
+}
+.sectie-speeldag .trash {
+    font-size: .75em; 
+    line-height: 1.2;
+    cursor: pointer;
+}
+.sectie-speeldag .trash:hover {
+    color: darkred; 
+}
+
+.container-match {
+    padding-right: .375em;
+}
+.sectie-match {
+    overflow: hidden;
+    border-radius: .375em;
+    background-color: #1e461f;
+    padding: .125em;
+    cursor: pointer;
+    border: .125em solid #1e461f;
+}
+.sectie-match.selected {
+    border-color: red;
+}
+.sectie-match:hover {
+    background-color: darkred;
+    border-color: darkred;
+}
+.sectie-match.selected:hover {
+    background-color: darkred;
+    border-color: red;
+}
+.container-koppel {
+    padding: .0625em .125em;
+}
+.sectie-koppel {
+    overflow-x: hidden;
+    border-radius: .25em;
+    background-color: #dbefdc;
+    color: #163317;
+    padding: .0625em .125em;
+}
+.sectie-koppel > div {
+    font-size: .5em;
+    line-height: 1.1;
+}

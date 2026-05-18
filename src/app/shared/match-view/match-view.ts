@@ -1,10 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { RondeKoppel, RondeKoppelWedstrijd } from '../../model/ronde';
+import { PouleKoppel, PouleKoppelWedstrijd } from '../../model/ronde';
 import { DecimalPipe, NgClass } from '@angular/common';
 import { KoppelSpeler } from '../../model/speler';
 
 class Wedstrijd {
-    spelers: RondeKoppelWedstrijd[] = [];
+    spelers: PouleKoppelWedstrijd[] = [];
 }
 
 @Component({
@@ -17,7 +17,7 @@ class Wedstrijd {
     styleUrl: './match-view.css',
 })
 export class MatchView implements OnInit {
-    @Input() koppels: RondeKoppel[] = [];
+    @Input() koppels: PouleKoppel[] = [];
     @Input() idxSel: number = -1;
     @Input() idxWedBezig: number = -1;
     @Output() wedClicked: EventEmitter<number> = new EventEmitter();
@@ -50,8 +50,8 @@ export class MatchView implements OnInit {
             return;
         }
         let wedstrijd = new Wedstrijd();
-        wedstrijd.spelers.push(new RondeKoppelWedstrijd(new KoppelSpeler()));
-        wedstrijd.spelers.push(new RondeKoppelWedstrijd(new KoppelSpeler()));
+        wedstrijd.spelers.push(new PouleKoppelWedstrijd(new KoppelSpeler()));
+        wedstrijd.spelers.push(new PouleKoppelWedstrijd(new KoppelSpeler()));
         this.wedstrijden.forEach(wed => {
             wed.spelers.forEach((spl, idxSpl) => {
                 wedstrijd.spelers[idxSpl].uitslag.car += spl.uitslag.car;

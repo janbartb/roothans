@@ -1,5 +1,5 @@
 <div class="fullheight flexbox flexcolumn" style="font-size: .75em;">
-    <div class="flexgrow1">
+    <div class="flexgrow1" style="background-color: #b7dfb8;">
         <div style="min-height: 10em;" class="flexbox flexcenter flexmiddle">
             <div>
                 <app-koppel-row [koppel]="koppel" [view]="'combined'" [selectable]="false"></app-koppel-row>
@@ -15,7 +15,7 @@
                                 <div style="width: 2.5em;">
                                     <label for="">
                                         <span>{{idxSd + 1}}</span>
-                                        @if (idxSd == 0) {
+                                        @if (idxSd < 2) {
                                             <span class="req"> *</span>
                                         }
                                     </label>
@@ -43,9 +43,9 @@
             </div>
         </div>
     </div>
-    <div class="flexbox flexcenter flexmiddle" style="min-height: 3em; border-top: .125em solid black;">
+    <div class="flexbox flexcenter flexmiddle" style="min-height: 3em;">
         <div>
-            <app-button [button]="btnSave" [disabled]="!gewijzigd" (btnClicked)="opslaanClicked()"></app-button>
+            <app-button [button]="btnSave" [disabled]="!gewijzigd || !dagenValid" (btnClicked)="opslaanClicked()"></app-button>
         </div>
     </div>
 </div>

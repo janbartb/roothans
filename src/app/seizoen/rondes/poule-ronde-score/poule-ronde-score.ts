@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Scorebord } from '../../../shared/scorebord/scorebord';
 import { Base } from '../../../base/base';
-import { Poule, PouleRonde, Ronde, RondeKoppel, Uitslag } from '../../../model/ronde';
+import { Poule, PouleRonde, Ronde, PouleKoppel, Uitslag } from '../../../model/ronde';
 import { ActivatedRoute } from '@angular/router';
 import { Seizoen } from '../../../model/seizoen';
 import { WedSpeler, Wedstrijd } from '../../../model/wedstrijd';
@@ -24,7 +24,7 @@ export class PouleRondeScore extends Base implements OnInit {
     poule: Poule = new Poule();
     wedstrijd: Wedstrijd = new Wedstrijd();
     wedReady: boolean = false;
-    koppels: RondeKoppel[] = [];
+    koppels: PouleKoppel[] = [];
     idxWed: number = -1;
 
     handleKey(key: string) {
@@ -282,7 +282,7 @@ export class PouleRondeScore extends Base implements OnInit {
                 });
     }
 
-    private comparePouleKoppels(a: RondeKoppel, b: RondeKoppel): number {
+    private comparePouleKoppels(a: PouleKoppel, b: PouleKoppel): number {
         if (a.uitslag.pnt == b.uitslag.pnt) {
             return b.koppel.kopMoyenne - a.koppel.kopMoyenne;
         }

@@ -132,6 +132,9 @@ export class SeizoenMenu extends Base implements OnInit {
                 else if (btn.id == 'spl') {
                     this.spelersClicked();
                 }
+                else if (btn.id == 'set') {
+                    this.settingsClicked();
+                }
             }, 250);
         }, 250);
     }

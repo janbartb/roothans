@@ -1,5 +1,5 @@
-import { KoppelPreferences } from "../seizoen/koppels/koppel-preferences/koppel-preferences";
 import { Koppel } from "./koppel";
+import { Status } from "./misc";
 import { KoppelSpeler } from "./speler";
 
 export class Ronde {
@@ -8,8 +8,7 @@ export class Ronde {
     rndType: string = '';
     rndBeurten: number = 0;
     fileNaam: string = '';
-    rndGepland: boolean = false;
-    rndGespeeld: boolean = false;
+    status: Status = new Status();
 
     constructor(id: number, naam: string, type: string, brt: number, file: string) {
         this.rndId = id;
@@ -21,6 +20,7 @@ export class Ronde {
 }
 
 export class PouleRonde extends Ronde {
+    koppels: PouleKoppel[] = [];
     poules: Poule[] = [];
 
     constructor(id: number, naam: string, brt: number, file: string) {
@@ -34,35 +34,35 @@ export class Poule {
     pouleDagNr: number = -1;
     pouleDagNaam: string = '';
     pouleDatum: string = '';
-    pouleKoppels: RondeKoppel[] = [];
+    pouleKoppels: PouleKoppel[] = [];
     pouleGestart: boolean = false;
     pouleGespeeld: boolean = false;
 }
 
-export class RondeKoppel {
+export class PouleKoppel {
     id: string = '';
     koppel: Koppel = new Koppel();
     uitslag: Uitslag = new Uitslag();
-    spelers: RondeKoppelSpeler[] = [];
+    spelers: PouleKoppelSpeler[] = [];
 
     constructor(kpl: Koppel) {
         this.koppel = kpl;
-        this.spelers.push(new RondeKoppelSpeler(kpl.spelers[0]));
-        this.spelers.push(new RondeKoppelSpeler(kpl.spelers[1]));
+        this.spelers.push(new PouleKoppelSpeler(kpl.spelers[0]));
+        this.spelers.push(new PouleKoppelSpeler(kpl.spelers[1]));
     }
 }
 
-export class RondeKoppelSpeler {
+export class PouleKoppelSpeler {
     speler: KoppelSpeler = new KoppelSpeler();
     uitslag: Uitslag = new Uitslag();
-    wedstrijden: RondeKoppelWedstrijd[] = [];
+    wedstrijden: PouleKoppelWedstrijd[] = [];
 
     constructor(spl: KoppelSpeler) {
         this.speler = spl;
     }
 }
 
-export class RondeKoppelWedstrijd {
+export class PouleKoppelWedstrijd {
     volgNr: number = 0;
     tegPouleKoppelId: string = '';
     tegenstander: KoppelSpeler = new KoppelSpeler();
@@ -86,7 +86,9 @@ export class Uitslag {
 
 export class AfvalRonde extends Ronde {
     koppels: AfvalKoppel[] = [];
-    matches: AfvalMatch[] = [];
+    speelDagen: AfvalDag[] = [];
+    maxDagen: number = 0;
+    maxMatchesPerDag: number = 4;
 
     constructor(id: number, naam: string, brt: number, file: string) {
         super(id, naam, 'afval', brt, file);
@@ -99,6 +101,26 @@ export class AfvalKoppel {
     pouleId: string = '';
     pouleRang: number = 0;
     afgevallen: boolean = false;
+    ingepland: boolean = false;
+}
+
+export class AfvalDag {
+    dagNr: number = -1;
+    dagNaam: string = '';
+    dagDatum: string = '';
+    dagGepland: boolean = false;
+    dagGestart: boolean = false;
+    dagGereed: boolean = false;
+    mogelijkeData: string[] = [];
+    dagMatches: AfvalMatch[] = [];
+
+    constructor(matchesPerDag: number) {
+        let count = 0;
+        while (count < matchesPerDag) {
+            this.dagMatches.push(new AfvalMatch());
+            count++;
+        }
+    }
 }
 
 export class AfvalMatch {

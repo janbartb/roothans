@@ -26,6 +26,11 @@ export class Base implements OnInit {
         this.router.navigate(['home']);
     }
 
+    addPageToHistory(url: string) {
+        this.header.urlHistory.push(url);
+        sessionStorage.setItem('urls', JSON.stringify(this.header.urlHistory));
+    }
+
     gotoPage(url: string, prevUrl: string) {
         this.header.urlHistory.push(prevUrl);
         sessionStorage.setItem('urls', JSON.stringify(this.header.urlHistory));

@@ -18,8 +18,15 @@
     background-color: #b7dfb8;
 }
 .sectie-rangkoppels-title {
-    background-color: #265728;
+    background-color: #163317;
     color: #dbefdc;
+    min-height: 1.125em;
+    font-weight: bold;
+    text-align: center;
+}
+.sectie-rangkoppels-title.tweede-derde {
+    background-color: #6ec071;
+    color: #102511;
     min-height: 1.125em;
     font-weight: bold;
     text-align: center;
@@ -91,4 +98,3 @@
     background-color: #265728;
     color: #dbefdc;
 }
-

@@ -64,8 +64,8 @@ export class PouleRondePlanningData extends Base implements OnInit {
         this.dao.savePouleRondeFile(this.header.seizoen, this.ronde.fileNaam, this.pouleRonde)
         .then(resp => {
             this.touched = false;
-            if (this.poulesOk != this.ronde.rndGepland) {
-                this.ronde.rndGepland = this.poulesOk;
+            if (this.poulesOk != this.ronde.status.gepland) {
+                this.ronde.status.gepland = this.poulesOk;
                 this.dao.saveRondes(this.header.seizoen, this.rondes)
                 .then(resp2 => {
                     if (this.poulesOk) {

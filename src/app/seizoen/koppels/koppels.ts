@@ -18,14 +18,17 @@ import { Seizoen } from '../../model/seizoen';
     styleUrl: './koppels.css',
 })
 export class Koppels extends Base implements OnInit {
+    seizoenen: string[] = [];
     koppels: Koppel[] = [];
     markedForDelete: number[] = [];
     config: Seizoen = new Seizoen();
+    prevSeizoen: string = '';
     sortCol: string = 'moy';
     sortDir: number = -1;
 
     btnAdd: Btn = new Btn('add', 'Koppels toevoegen', 'enter');
     btnDel: Btn = new Btn('del', 'Verwijder gemarkeerde koppels', 'V', 1);
+    btnCopy: Btn = new Btn('copy', '', 'H', 1);
 
     markForDeleteClicked(event: MouseEvent, idx: number) {
         event.stopPropagation();
@@ -43,6 +46,33 @@ export class Koppels extends Base implements OnInit {
 
     toevoegenClicked() {
         this.gotoPage('koppels/toevoegen', 'koppels');
+    }
+
+    trashClicked() {
+        if (this.markedForDelete.length) {
+            this.markedForDelete = [];
+        }
+        else {
+            this.koppels.forEach((kpl, idx) => this.markedForDelete.push(idx));
+        }
+    }
+
+    ophalenClicked() {
+        this.dao.getKoppels(this.prevSeizoen)
+        .then(data => {
+            this.dao.saveKoppels(this.header.seizoen, data)
+            .then(resp => {
+                this.alert.showSuccess(`Koppels van seizoen ${this.prevSeizoen} succesvoll gekopieerd en opgeslagen.`);
+                this.koppels = data;
+                this.header.subtitle = 'Seizoen ' + this.header.seizoen + ` - Koppels (${this.koppels.length})`;
+            })
+            .catch(err => {
+                this.alert.showError(err);
+            });
+        })
+        .catch(err => {
+            this.alert.showError(err);
+        });
     }
 
     deleteClicked() {
@@ -84,6 +114,13 @@ export class Koppels extends Base implements OnInit {
             this.escapePressed();
             return false;
         }
+        if (event.code === 'KeyH') {
+            if (this.prevSeizoen != '' && this.koppels.length == 0) {
+                this.buttonPressed(this.btnCopy);
+                return false;
+            }
+            return true;
+        }
         if (event.code === 'KeyV') {
             if (this.markedForDelete.length) {
                 this.buttonPressed(this.btnDel);
@@ -103,12 +140,20 @@ export class Koppels extends Base implements OnInit {
         this.header.subtitle = 'Seizoen ' + this.header.seizoen + ' - Koppels';
 
         Promise.all([
+            this.dao.getSeizoenen(),
             this.dao.getKoppels(this.header.seizoen),
             this.dao.getSeizoenFile(this.header.seizoen)
         ])
         .then(results => {
-            this.koppels = results[0];
-            this.config = results[1];
+            this.seizoenen = results[0];
+            this.koppels = results[1];
+            this.config = results[2];
+            this.seizoenen.sort(this.compareSeizoenen);
+            const idx = this.seizoenen.findIndex(sz => sz == this.header.seizoen);
+            if (idx > 0) {
+                this.prevSeizoen = this.seizoenen[idx - 1];
+                this.btnCopy.text = `Haal koppels op uit seizoen ${this.prevSeizoen}`;
+            }
             this.header.subtitle = 'Seizoen ' + this.header.seizoen + ` - Koppels (${this.koppels.length})`;
             this.sortKoppels('moy');
         })
@@ -127,6 +172,9 @@ export class Koppels extends Base implements OnInit {
                 }
                 else if (btn.id == 'del') {
                     this.deleteClicked();
+                }
+                else if (btn.id == 'copy') {
+                    this.ophalenClicked();
                 }
             }, 250);
         }, 250);
@@ -154,6 +202,10 @@ export class Koppels extends Base implements OnInit {
     
     private compareMoyennes = (a: Koppel, b: Koppel): number => {
         return this.sortDir * (a.kopMoyenne - b.kopMoyenne);
+    }
+    
+    private compareSeizoenen = (a: string, b: string): number => {
+        return a > b ? 1 : -1;
     }
     
 }

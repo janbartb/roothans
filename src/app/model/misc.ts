@@ -1,3 +1,9 @@
+export class Status {
+    gepland: boolean = false;
+    gestart: boolean = false;
+    gereed: boolean = false;
+}
+
 export class Alert {
     text: string = '';
     type: string = '';
