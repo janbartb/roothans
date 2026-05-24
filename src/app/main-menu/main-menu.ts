@@ -118,7 +118,7 @@ export class MainMenu extends Base implements OnInit {
         this.dao.getSeizoenen()
         .then(result => {
             console.log(result);
-            this.seizoenen = result.map(x => Number(x));
+            this.seizoenen = result.filter(x => Number(x)).map(x => Number(x));
             if (this.seizoenen.length) {
                 this.seizoenen.sort(this.compareSeizoenen);
                 this.selSeizoen = this.seizoenen[0];

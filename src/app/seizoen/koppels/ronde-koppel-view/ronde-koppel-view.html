@@ -1,0 +1,88 @@
+@if (view == 'short') {
+    <div (click)="koppelClicked()" (dblclick)="koppelDblClicked()" (mouseover)="hover()">
+        <span>{{koppel.spelers[0].splNaam}} - {{koppel.spelers[1].splNaam}} </span>
+        <i class="fas fa-long-arrow-alt-right"></i>
+        <span> ({{koppel.kopMoyenne | number:'1.3-3':'nl-NL'}})</span>
+    </div>
+}
+@else if (view == 'poule-header') {
+    <div class="flexbox" style="font-weight: bold;">
+        <div class="ellipsis" style="width: 10em;"><span>Speler B</span></div>
+        <div style="width: 1.5em; text-align: center;"> </div>
+        <div class="ellipsis" style="width: 10em;"><span>Speler A</span></div>
+        <div style="width: 2em; text-align: center;">
+            <span>&nbsp;</span>
+        </div>
+        <div style="width: 2.5em;"><span>&nbsp;</span></div>
+    </div>
+}
+@else if (view == 'poule') {
+    <div class="flexbox">
+        <div class="ellipsis" style="width: 10em;"><span>{{koppel.spelers[0].splNaam}}</span></div>
+        <div style="width: 1.5em; text-align: center;">-</div>
+        <div class="ellipsis" style="width: 10em;"><span>{{koppel.spelers[1].splNaam}}</span></div>
+        <div style="width: 2em; text-align: center;">
+            <i class="fas fa-long-arrow-alt-right"></i>
+        </div>
+        <div style="width: 2.5em;"><span>{{koppel.kopMoyenne | number:'1.3-3':'nl-NL'}}</span></div>
+    </div>
+}
+@else if (view == 'poule-uitslag-header') {
+    <div class="flexbox">
+        <div style="width: 2.5em;"></div>
+        <div style="width: 1.5em;"></div>
+        <div class="ellipsis" style="width: 10em;"><span><b>Speler B</b></span></div>
+        <div style="width: 1.5em; text-align: center;"></div>
+        <div class="ellipsis" style="width: 10em;"><span><b>Speler A</b></span></div>
+        <div style="width: 2em; text-align: center;"></div>
+        <div style="width: 2em;"></div>
+        <div class="flexbox" style="padding-left: 3.25em;">
+            <div>
+                <span title="Gespeelde wedstrijden">GW</span>
+            </div>
+            <div style="width: 3em;"></div>
+            <div>
+                <span>Punten</span>
+            </div>
+        </div>
+    </div>
+}
+@else if (view == 'poule-uitslag') {
+    <div class="flexbox">
+        <div style="width: 2.5em; color: red; font-weight: bold;">{{rang}}</div>
+        <div style="width: 1.5em; font-weight: bold;">{{koppel.pouleKplId}}</div>
+        <div class="ellipsis" style="width: 10em;"><span>{{koppel.spelers[0].splNaam}}</span></div>
+        <div style="width: 1.5em; text-align: center;">-</div>
+        <div class="ellipsis" style="width: 10em;"><span>{{koppel.spelers[1].splNaam}}</span></div>
+        <div style="width: 2em; text-align: center;">
+            <i class="fas fa-long-arrow-alt-right"></i>
+        </div>
+        <div style="width: 2.5em;"><span>{{koppel.kopMoyenne | number:'1.3-3':'nl-NL'}}</span></div>
+        <div class="flexbox poule-uitslag" [ngClass]="{'gespeeld': aantGespeeld > 0}">
+            <div>
+                @if (aantGespeeld < 6) {
+                    <span>{{aantGespeeld}}</span>
+                }
+                @else {
+                    <i style="color: green;" class="fas fa-check"></i>
+                }
+            </div>
+            <div style="width: 2.5em;"></div>
+            <div>
+                <span>{{punten[0]}}</span>
+            </div>
+            <div>
+                <span>+</span>
+            </div>
+            <div>
+                <span>{{punten[1]}}</span>
+            </div>
+            <div>
+                <span>=</span>
+            </div>
+            <div style="width: 1.5em;">
+                <span>{{punten[0] + punten[1]}} </span>
+            </div>
+        </div>
+    </div>
+}

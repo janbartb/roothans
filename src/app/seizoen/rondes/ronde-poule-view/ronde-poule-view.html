@@ -1,66 +1,83 @@
-<div class="poule" [ngClass]="{'selectable': !koppelClick, 'selected': selected}">
-    <div class="flexbox flexbetween poule-header">
-        <div>
-            <span>Poule </span>
-            @if (poule.pouleVolgNr > 0) {
-                <span> <b>{{poule.pouleVolgNr}}</b></span>
-            }
-            @else {
-                <span> <b>{{poule.pouleId}}</b></span>
-            }
+@if (type == 'only-content') {
+    <div>
+        <div class="poule-koppel" style="padding: .0625em .5em;">
+            <app-ronde-koppel-view [view]="'poule-uitslag-header'"></app-ronde-koppel-view>
         </div>
-        <div>
-            <span>{{poule.pouleDagNaam}} </span>
-            <span style="color: lightgreen;"> {{dateReverse(poule.pouleDatum)}}</span>
-        </div>
-        @if (pouleCheck) {
-            <div style="font-size: 1.25em; padding-right: .5em;">
-                @if (poule.pouleKoppels.length == maxKoppels) {
-                    <i style="color: lightgreen;" class="fas fa-check"></i>
+        @for (koppel of poule.koppels; track $index) {
+            <div class="poule-koppel" style="padding: .0625em .5em;">
+                <app-ronde-koppel-view [koppel]="koppel" [view]="koppelView" [rang]="$index + 1"></app-ronde-koppel-view>
+            </div>
+        }
+    </div>
+}
+@else {
+    <div class="poule" [ngClass]="{'selectable': !koppelClick, 'selected': selected}">
+        <div class="flexbox flexbetween poule-header">
+            <div>
+                <span>Poule </span>
+                @if (poule.volgNr > 0) {
+                    <span> <b>{{poule.volgNr}}</b></span>
+                }
+                @else {
+                    <span> <b>{{poule.id}}</b></span>
+                }
+            </div>
+            <div>
+                <span>{{poule.dagNaam}} </span>
+                <span style="color: lightgreen;"> {{dateReverse(poule.datum)}}</span>
+            </div>
+            @if (pouleCheck) {
+                <div style="padding-right: .5em;">
+                    @if (poule.koppels.every(k => k.kopId != '')) {
+                        <i style="color: lightgreen;" class="fas fa-check"></i>
+                    }
+                    @else {
+                        <span>&nbsp;</span>
+                    }
+                </div>
+            }
+            <div style="padding-right: .25em;">
+                @if (allowDelete) {
+                    <i class="fas fa-trash-alt btn-delete" (click)="deleteClicked($event)"></i>
                 }
                 @else {
                     <span>&nbsp;</span>
                 }
             </div>
-        }
-        <div style="padding-right: .5em;">
-            @if (allowDelete) {
-                <i class="fas fa-trash-alt btn-delete" (click)="deleteClicked($event)"></i>
-            }
-            @else {
-                <span>&nbsp;</span>
-            }
         </div>
-    </div>
-    <div class="poule-body">
-        <div>
-            <div class="flexbox" style="color: #1e461f;">
+        <div class="poule-body">
+            <div>            
                 @if (koppelView == 'poule-uitslag') {
-                    <div style="width: 4.5em;"></div>
-                    <div class="ellipsis" style="width: 10em;"><span><b>Speler B</b></span></div>
-                    <div style="width: 1.5em;"></div>
-                    <div class="ellipsis" style="width: 10em;"><span><b>Speler A</b></span></div>
-                    <div style="width: 2em;"></div>
-                    <div style="width: 5.25em;"></div>
-                    @if (pouleGestart) {
-                        <div><span><b>GW</b></span></div>
-                        <div style="width: 3em;"></div>
-                        <div><span><b>Score</b></span></div>
-                    }
+                    <div class="flexbox" style="color: #1e461f;">
+                        <div style="width: 4.5em;"></div>
+                        <div class="ellipsis" style="width: 10em;"><span><b>Speler B</b></span></div>
+                        <div style="width: 1.5em;"></div>
+                        <div class="ellipsis" style="width: 10em;"><span><b>Speler A</b></span></div>
+                        <div style="width: 2em;"></div>
+                        <div style="width: 5.25em;"></div>
+                        @if (pouleGestart) {
+                            <div><span><b>GW</b></span></div>
+                            <div style="width: 3em;"></div>
+                            <div><span><b>Score</b></span></div>
+                        }
+                    </div>
                 }
                 @else {
-                    <div style="width: .5em;"></div>
+                    <div class="poule-koppel">
+                        <app-ronde-koppel-view [view]="'poule-header'"></app-ronde-koppel-view>
+                    </div>
+                    <!-- <div style="width: .5em;"></div>
                     <div class="ellipsis" style="width: 10em;"><span><b>Speler B</b></span></div>
                     <div style="width: 1.5em;"></div>
-                    <div class="ellipsis" style="width: 10em;"><span><b>Speler A</b></span></div>
+                    <div class="ellipsis" style="width: 10em;"><span><b>Speler A</b></span></div> -->
+                }
+                @for (koppel of poule.koppels; track $index) {
+                    <div class="poule-koppel" [ngClass]="{'list-row': koppelClick, 'selected': $index == idxKoppel}" 
+                                (click)="kplClicked($index)">
+                        <app-ronde-koppel-view [koppel]="koppel" [view]="koppelView" [rang]="$index + 1"></app-ronde-koppel-view>
+                    </div>
                 }
             </div>
-            @for (koppel of poule.pouleKoppels; track $index) {
-                <div class="poule-koppel" [ngClass]="{'list-row': koppelClick, 'selected': $index == idxKoppel}" 
-                            (click)="kplClicked($index)">
-                    <app-koppel-row [pouleKoppel]="koppel" [view]="koppelView" [rang]="$index + 1"></app-koppel-row>
-                </div>
-            }
         </div>
     </div>
-</div>
+}

@@ -1,14 +1,15 @@
 import { Component, HostListener, inject, OnInit } from '@angular/core';
-import { Base } from '../../../../base/base';
-import { ActivatedRoute } from '@angular/router';
-import { Seizoen } from '../../../../model/seizoen';
-import { Poule, PouleRonde, Ronde } from '../../../../model/ronde';
-import { RondePouleView } from '../../ronde-poule-view/ronde-poule-view';
-import { Button } from '../../../../shared/button/button';
-import { Btn } from '../../../../model/misc';
-import { NgClass } from '@angular/common';
-import { DateHelper } from '../../../../services/date-helper';
+import { Poule, Ronde, SpeelRonde } from '../../../../../model/ronde';
+import { Base } from '../../../../../base/base';
 import { FormsModule } from '@angular/forms';
+import { RondePouleView } from '../../../ronde-poule-view/ronde-poule-view';
+import { Button } from '../../../../../shared/button/button';
+import { NgClass } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
+import { DateHelper } from '../../../../../services/date-helper';
+import { Seizoen } from '../../../../../model/seizoen';
+import { Btn } from '../../../../../model/misc';
+import { RondeKoppel } from '../../../../../model/koppel';
 
 class PoulesPerDag {
     dagNr: number = 0;
@@ -21,26 +22,26 @@ class SelectData {
 }
 
 @Component({
-    selector: 'app-poule-ronde-planning-data',
+    selector: 'app-poules-speeldata',
     imports: [
         FormsModule,
         RondePouleView,
         Button,
         NgClass
     ],
-    templateUrl: './poule-ronde-planning-data.html',
-    styleUrl: './poule-ronde-planning-data.css',
+    templateUrl: './poules-speeldata.html',
+    styleUrl: './poules-speeldata.css',
 })
-export class PouleRondePlanningData extends Base implements OnInit {
+export class PoulesSpeeldata extends Base implements OnInit {
     route = inject(ActivatedRoute);
     dater = inject(DateHelper);
     config: Seizoen = new Seizoen();
     rondes: Ronde[] = [];
     ronde: Ronde = new Ronde(0, '', '', 0, '');
-    pouleRonde: PouleRonde = new PouleRonde(0, '', 0, '');
+    pouleRonde: SpeelRonde = new SpeelRonde(0, '', '', 0, '');
     poulesPerDagen: PoulesPerDag[] = [];
     idxPoule: number = -1;
-    poule: Poule = new Poule();
+    poule: Poule = new Poule(0);
     mogelijkeSpeelData: SelectData[] = [];
     mogelijkePouleSpeelData: string[] = [];
     maxPoules: number = 0;
@@ -61,7 +62,12 @@ export class PouleRondePlanningData extends Base implements OnInit {
             // this.renamePoules();
             this.fillAllPouleKoppelIds();
         }
-        this.dao.savePouleRondeFile(this.header.seizoen, this.ronde.fileNaam, this.pouleRonde)
+        const rondeToSave: SpeelRonde = JSON.parse(JSON.stringify(this.pouleRonde));
+        rondeToSave.poules.forEach(p => {
+            p.koppelIds = p.koppels.map(k => k.kopId);
+            p.koppels = [];
+        });
+        this.dao.saveSpeelRondeFile(this.header.seizoen, this.ronde.fileNaam, rondeToSave)
         .then(resp => {
             this.touched = false;
             if (this.poulesOk != this.ronde.status.gepland) {
@@ -96,7 +102,7 @@ export class PouleRondePlanningData extends Base implements OnInit {
     }
 
     pouleClicked(nr: number) {
-        const idx = this.pouleRonde.poules.findIndex(pl => pl.pouleVolgNr == nr);
+        const idx = this.pouleRonde.poules.findIndex(pl => pl.volgNr == nr);
         if (idx >= 0) {
             this.pouleButtonClicked(idx);
         }
@@ -105,21 +111,21 @@ export class PouleRondePlanningData extends Base implements OnInit {
     pouleButtonClicked(idx: number) {
         if (idx == this.idxPoule) {
             this.idxPoule = -1;
-            this.poule = new Poule();
+            this.poule = new Poule(0);
             return;
         }
         this.idxPoule = idx;
         this.poule = this.pouleRonde.poules[idx];
-        this.mogelijkePouleSpeelData = this.getMogelijkePouleSpeelData(this.poule.pouleDagNr);
+        this.mogelijkePouleSpeelData = this.getMogelijkePouleSpeelData(this.poule.dagNr);
         // console.log(this.mogelijkePouleSpeelData);
     }
 
     pouleDatumSelected() {
         this.touched = true;
-        if (this.poule.pouleDatum != '') {
+        if (this.poule.datum != '') {
             this.pouleRonde.poules.forEach(pl => {
-                if (pl.pouleVolgNr != this.poule.pouleVolgNr && pl.pouleDatum == this.poule.pouleDatum) {
-                    pl.pouleDatum = '';
+                if (pl.volgNr != this.poule.volgNr && pl.datum == this.poule.datum) {
+                    pl.datum = '';
                 }
             });
         }
@@ -192,20 +198,28 @@ export class PouleRondePlanningData extends Base implements OnInit {
             }
             this.ronde = this.rondes[idx];
             this.header.subtitle = `Seizoen ${this.header.seizoen} - Planning ${this.ronde.rndNaam} - Speeldata`;
-            this.dao.getPouleRondeFile(this.header.seizoen, this.ronde.fileNaam)
+            this.dao.getSpeelRondeFile(this.header.seizoen, this.ronde.fileNaam)
             .then(data => {
                 this.pouleRonde = data;
-                if (!this.pouleRonde.poules) {
-                    this.pouleRonde.poules = [];
-                }
                 this.maxPoules = this.config.maxKoppels / this.config.maxKoppelsPerPoule;
                 if (this.pouleRonde.poules.length < this.maxPoules) {
                     this.gotoPrevPage();
                     return;
                 }
-                this.pouleRonde.poules.forEach((pl, idx) => {
-                    pl.pouleId = '';
-                    pl.pouleVolgNr = idx + 1;
+                this.pouleRonde.poules.forEach((poule, idx) => {
+                    poule.id = '';
+                    poule.volgNr = idx + 1;
+                    poule.koppels = [];
+                    let aantKoppels = poule.koppelIds.length;
+                    while (aantKoppels--) poule.koppels.push(new RondeKoppel()); 
+                    poule.koppelIds.forEach((kplId, idx) => {
+                        if (kplId != '') {
+                            const foundKoppel = this.pouleRonde.koppels.find(kpl => kpl.kopId == kplId);
+                            if (foundKoppel) {
+                                poule.koppels[idx] = foundKoppel;
+                            }
+                        }
+                    });
                 });
                 if (this.pouleRonde.poules.length > 0) {
                     this.firstDigit = 'Digit1';
@@ -256,7 +270,7 @@ export class PouleRondePlanningData extends Base implements OnInit {
             ppd.dagNr = sdag.dagNr;
             ppd.dagNaam = sdag.dagNaam;
             this.pouleRonde.poules.forEach(poule => {
-                if (poule.pouleDagNr == ppd.dagNr) {
+                if (poule.dagNr == ppd.dagNr) {
                     ppd.poules.push(poule);
                 }
             });
@@ -274,23 +288,23 @@ export class PouleRondePlanningData extends Base implements OnInit {
     }
 
     private allDatesFilledOk(): boolean {
-        return this.pouleRonde.poules.every(poule => poule.pouleDatum != '');
+        return this.pouleRonde.poules.every(poule => poule.datum != '');
     }
 
     private comparePoules(a: Poule, b: Poule): number {
-        return a.pouleDatum < b.pouleDatum ? -1 : 1;
+        return a.datum < b.datum ? -1 : 1;
     }
     
-    private renamePoules() {
-        this.pouleRonde.poules.forEach((pl, idx) => {
-            pl.pouleId = String.fromCharCode(65 + idx);
-        });
-    }
+    // private renamePoules() {
+    //     this.pouleRonde.poules.forEach((pl, idx) => {
+    //         pl.pouleId = String.fromCharCode(65 + idx);
+    //     });
+    // }
 
     private fillAllPouleKoppelIds() {
         this.pouleRonde.poules.forEach((pl) => {
-            pl.pouleKoppels.forEach((pk, idx) => {
-                pk.id = String.fromCharCode(65 + idx);
+            pl.koppels.forEach((pk, idx) => {
+                pk.pouleKplId = String.fromCharCode(65 + idx);
             });
         });
     }

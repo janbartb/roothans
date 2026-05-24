@@ -1,4 +1,52 @@
 @if (type == 'row') {
+    <div class="flexbox flexmiddle">
+        <div class="flexgrow1 flexbox flexstretch ronde-container">
+            <div class="ronde-nummer flexbox flexcenter flexmiddle">
+                <div>{{ronde.rndId}}</div>
+            </div>
+            <div class="flexgrow1 flexbox flexmiddle" style="padding-left: 1em;">
+                <div style="width: 8em;">
+                    <span><b>{{ronde.rndNaam}}</b></span>
+                </div>
+                <div style="width: 8em; color: #6ec071;">
+                    <span>({{ronde.rndType}}-ronde)</span>
+                </div>
+                <div style="width: 7em;">
+                    <span><b>{{ronde.rndBeurten}}</b> </span>
+                    <span> beurten</span>
+                </div>
+                <div style="width: 2.5em;">
+                    @if (ronde.moyBepalen) {
+                        <i class="fas fa-calculator" title="Moyenne spelers is opnieuw bepaald"></i>
+                    }
+                </div>
+                <div style="padding-right: .75em; color: #93cf95;">status</div>
+                <div style="width: 4em;" class="ronde-status">
+                    <div [ngClass]="{'bereikt': ronde.status.gepland}">
+                        <span>Gepland</span>
+                    </div>
+                    <div [ngClass]="{'bereikt': ronde.status.gestart}">
+                        <span>Gestart</span>
+                    </div>
+                    <div [ngClass]="{'bereikt': ronde.status.gereed}">
+                        <span>Afgerond</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="padding-left: 1em;">
+            <div style="font-size: .75em; padding-top: .375em;">
+                <app-button [button]="btnPlan" [disabled]="ronde.status.gestart || !prevRonde.status.gestart" (btnClicked)="btnPlanClicked()"></app-button>
+            </div>
+        </div>
+        <div style="padding-left: 1em;">
+            <div style="font-size: .75em; padding-top: .375em;">
+                <app-button [button]="btnSpel" [disabled]="!ronde.status.gepland || ronde.status.gereed" (btnClicked)="btnSpelClicked()"></app-button>
+            </div>
+        </div>
+    </div>
+}
+@else if (type == 'rowtext') {
     <div class="flexbox flexmiddle" style="min-height: 3em;">
         <div style="width: 6em;">
             <span>Ronde {{ronde.rndId}}</span>

@@ -1,0 +1,112 @@
+<div class="fullheight flexbox flexcolumn" style="overflow-y: hidden;">
+    <div class="flexgrow1 container" style="overflow-y: hidden;">
+        <div class="sectie fullheight flexbox flexcolumn" style="overflow-y: hidden;">
+            <div class="sectie-title flexbox flexcenter flexmiddle">
+                <div style="font-size: .75em; line-height: 1.2;">
+                    <span>Koppels per voorkeurdag</span>
+                </div>
+            </div>
+            <div class="flexgrow1 flexbox flexstretch" style="overflow: hidden;" (mouseout)="clearHovered()">
+                @for (kpd of koppelsPerDagen; track $index) {
+                    <div class="flex25perc container" [ngClass]="{'links': !$last, 'rechts': !$first}" style="overflow-y: hidden;">
+                        <div class="fullheight flexbox flexcolumn sectie" style="overflow-y: hidden;">
+                            <div class="sectie-title flexbox flexcenter flexmiddle">
+                                <div style="font-size: .75em; line-height: 1.2;">
+                                    <span>{{kpd.dagNaam}}</span>
+                                </div>
+                            </div>
+                            <div class="flexgrow1 scroll-container no-header sectie-content met-rand" style="background-color: #f4faf4;">
+                                <div class="scroll-sectie">
+                                    <div style="font-size: .5em; line-height: 1.3;">
+                                        <div>
+                                            @if (kpd.koppelsFirst.length) {
+                                                <div class="voorkeur-header" (mouseover)="clearHovered()">
+                                                    <span>{{kpd.dagNaam}} als 1e voorkeur</span>
+                                                </div>
+                                            }
+                                            @for (koppel of kpd.koppelsFirst; track $index) {
+                                                <div class="koppel-row" [ngClass]="{'selected': $index == kpd.idxFirst}">
+                                                    <app-ronde-koppel-view [koppel]="koppel" [view]="'short'" 
+                                                            (clicked)="koppelClicked($event, kpd)" (hovered)="koppelHovered($event)"></app-ronde-koppel-view>
+                                                </div>
+                                            }
+                                        </div>
+                                        <div>
+                                            @if (kpd.koppelsSecond.length) {
+                                                <div class="voorkeur-header" (mouseover)="clearHovered()">
+                                                    <span>{{kpd.dagNaam}} als 2e voorkeur</span>
+                                                </div>
+                                            }
+                                            @for (koppel of kpd.koppelsSecond; track $index) {
+                                                <div class="koppel-row" [ngClass]="{'selected': $index == kpd.idxSecond}">
+                                                    <app-ronde-koppel-view [koppel]="koppel" [view]="'short'" 
+                                                            (clicked)="koppelClicked($event, kpd)" (hovered)="koppelHovered($event)"></app-ronde-koppel-view>
+                                                </div>
+                                            }
+                                        </div>
+                                        <div>
+                                            @if (kpd.koppelsRest.length) {
+                                                <div class="voorkeur-header" (mouseover)="clearHovered()">
+                                                    <span>{{kpd.dagNaam}} als 3e of 4e voorkeur</span>
+                                                </div>
+                                            }
+                                            @for (koppel of kpd.koppelsRest; track $index) {
+                                                <div class="koppel-row" [ngClass]="{'selected': $index == kpd.idxRest}">
+                                                    <app-ronde-koppel-view [koppel]="koppel" [view]="'short'" 
+                                                            (clicked)="koppelClicked($event, kpd)" (hovered)="koppelHovered($event)"></app-ronde-koppel-view>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="container onder">
+        <div class="sectie">
+            <div class="sectie-title flexbox flexcenter flexmiddle">
+                <div style="font-size: .75em; line-height: 1.2;">
+                    <span>Aangemaakte poules</span>
+                </div>
+            </div>
+            <div class="flexbox flexstart wrap" style="min-height: 4em;">
+                @for (poule of pouleRonde.poules; track $index) {
+                    <div style="width: 14.9375em; padding: .125em .25em;">
+                        <div style="font-size: .5em;">
+                            <app-ronde-poule-view [poule]="poule" [idxKoppel]="-1" [koppelClick]="true" 
+                                        [pouleCheck]="true" [maxKoppels]="config.maxKoppelsPerPoule"
+                                        (koppelClicked)="removeKoppelFromPoule($index, $event)"
+                                        (deletePouleClicked)="removePoule($index)"></app-ronde-poule-view>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="flexbox flexcenter flexmiddle" style="font-size: .75em; min-height: 3em;">
+        @if (poulesOk) {
+            @if (touched) {
+                <div>
+                    <app-button [button]="btnSave" (btnClicked)="opslaanClicked()"></app-button>
+                </div>
+                <div>
+                    <app-button [button]="btnSaveNext" (btnClicked)="opslaanClicked(true)"></app-button>
+                </div>
+            }
+            @else {
+                <div>
+                    <app-button [button]="btnNext" (btnClicked)="nextClicked()"></app-button>
+                </div>
+            }
+        }
+        @else {
+            <div>
+                <app-button [button]="btnSaveDef" [disabled]="!touched" (btnClicked)="opslaanClicked()"></app-button>
+            </div>
+        }
+    </div>
+</div>

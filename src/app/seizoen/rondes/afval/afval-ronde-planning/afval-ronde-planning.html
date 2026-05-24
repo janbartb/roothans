@@ -51,13 +51,13 @@
                                                             <div class="koppel-container">
                                                                 <div class="dagkoppel flexbox" 
                                                                         [ngClass]="{'hovered': $index == dagKoppels.idxHovFirst, 
-                                                                            'selected': idxSD == idxVkDag[idxR] && koppel.id == selKoppelIds[idxR],
+                                                                            'selected': idxSD == idxVkDag[idxR] && koppel.kopId == selKoppelIds[idxR],
                                                                             'gepland': koppel.ingepland
                                                                         }"
-                                                                        (click)="koppelClicked(koppel.id, idxR, idxSD)" (mouseover)="koppelHovered($event, koppel, rangKoppels)">
+                                                                        (click)="koppelClicked(koppel.kopId, idxR, idxSD)" (mouseover)="koppelHovered($event, koppel, rangKoppels)">
                                                                     <div class="flexgrow1" style="padding-left: .375em; overflow: hidden;">
-                                                                        <div>{{koppel.koppel.spelers[0].splNaam}}</div>
-                                                                        <div>{{koppel.koppel.spelers[1].splNaam}}</div>
+                                                                        <div>{{koppel.spelers[0].splNaam}}</div>
+                                                                        <div>{{koppel.spelers[1].splNaam}}</div>
                                                                     </div>
                                                                     <div class="flexbox flexcenter flexmiddle" style="width: 2.25em;">
                                                                         <div><span style="font-size: 1.25em;">{{koppel.pouleId}}</span></div>
@@ -76,13 +76,13 @@
                                                             <div class="koppel-container">
                                                                 <div class="dagkoppel flexbox" 
                                                                         [ngClass]="{'hovered': $index == dagKoppels.idxHovSecond,
-                                                                            'selected': idxSD == idxVkDag[idxR] && koppel.id == selKoppelIds[idxR],
+                                                                            'selected': idxSD == idxVkDag[idxR] && koppel.kopId == selKoppelIds[idxR],
                                                                             'gepland': koppel.ingepland
                                                                         }"
-                                                                        (click)="koppelClicked(koppel.id, idxR, idxSD)" (mouseover)="koppelHovered($event, koppel, rangKoppels)">
+                                                                        (click)="koppelClicked(koppel.kopId, idxR, idxSD)" (mouseover)="koppelHovered($event, koppel, rangKoppels)">
                                                                     <div class="flexgrow1" style="padding-left: .375em; overflow: hidden;">
-                                                                        <div>{{koppel.koppel.spelers[0].splNaam}}</div>
-                                                                        <div>{{koppel.koppel.spelers[1].splNaam}}</div>
+                                                                        <div>{{koppel.spelers[0].splNaam}}</div>
+                                                                        <div>{{koppel.spelers[1].splNaam}}</div>
                                                                     </div>
                                                                     <div class="flexbox flexcenter flexmiddle" style="width: 2.25em;">
                                                                         <div><span style="font-size: 1.25em;">{{koppel.pouleId}}</span></div>
@@ -101,13 +101,13 @@
                                                             <div class="koppel-container">
                                                                 <div class="dagkoppel flexbox" 
                                                                         [ngClass]="{'hovered': $index == dagKoppels.idxHovRest,
-                                                                            'selected': idxSD == idxVkDag[idxR] && koppel.id == selKoppelIds[idxR],
+                                                                            'selected': idxSD == idxVkDag[idxR] && koppel.kopId == selKoppelIds[idxR],
                                                                             'gepland': koppel.ingepland
                                                                         }"
-                                                                        (click)="koppelClicked(koppel.id, idxR, idxSD)" (mouseover)="koppelHovered($event, koppel, rangKoppels)">
+                                                                        (click)="koppelClicked(koppel.kopId, idxR, idxSD)" (mouseover)="koppelHovered($event, koppel, rangKoppels)">
                                                                     <div class="flexgrow1" style="padding-left: .375em; overflow: hidden;">
-                                                                        <div>{{koppel.koppel.spelers[0].splNaam}}</div>
-                                                                        <div>{{koppel.koppel.spelers[1].splNaam}}</div>
+                                                                        <div>{{koppel.spelers[0].splNaam}}</div>
+                                                                        <div>{{koppel.spelers[1].splNaam}}</div>
                                                                     </div>
                                                                     <div class="flexbox flexcenter flexmiddle" style="width: 2.25em;">
                                                                         <div><span style="font-size: 1.25em;">{{koppel.pouleId}}</span></div>

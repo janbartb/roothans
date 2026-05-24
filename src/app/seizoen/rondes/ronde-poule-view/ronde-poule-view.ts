@@ -1,19 +1,20 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { KoppelRow } from '../../koppels/koppel-row/koppel-row';
 import { NgClass } from '@angular/common';
 import { Poule } from '../../../model/ronde';
+import { RondeKoppelView } from '../../koppels/ronde-koppel-view/ronde-koppel-view';
 
 @Component({
     selector: 'app-ronde-poule-view',
     imports: [
-        KoppelRow,
+        RondeKoppelView,
         NgClass
     ],
     templateUrl: './ronde-poule-view.html',
     styleUrl: './ronde-poule-view.css',
 })
 export class RondePouleView implements OnInit {
-    @Input() poule: Poule = new Poule();
+    @Input() poule: Poule = new Poule(0);
+    @Input() type: string = '';
     @Input() selected: boolean = false;
     @Input() idxKoppel: number = -1;
     @Input() maxKoppels: number = 4;
@@ -35,7 +36,7 @@ export class RondePouleView implements OnInit {
 
     deleteClicked(event: MouseEvent) {
         event.stopPropagation();
-        this.deletePouleClicked.emit(this.poule.pouleId);
+        this.deletePouleClicked.emit(this.poule.id);
     }
 
     dateReverse(dat: string): string {
@@ -46,7 +47,7 @@ export class RondePouleView implements OnInit {
     }
 
     ngOnInit(): void {
-        this.pouleGestart = this.poule.pouleKoppels.some(pk => pk.uitslag.brt > 0);
+        this.pouleGestart = this.poule.koppels.some(pk => pk.uitslag.brt > 0);
     }
 
 }

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ApiResponse } from '../model/api-response';
 import { Speler } from '../model/speler';
 import { Koppel } from '../model/koppel';
-import { AfvalRonde, Poule, PouleRonde, Ronde } from '../model/ronde';
+import { Ronde, SpeelRonde } from '../model/ronde';
 import { Seizoen } from '../model/seizoen';
 import { Wedstrijd, WedstrijdLeesResultaat } from '../model/wedstrijd';
 
@@ -67,30 +67,12 @@ export class Dao {
         return result;
     }
 
-    async getPouleRondeFile(seizoen: string, filenaam: string): Promise<PouleRonde> {
-        const result: PouleRonde = await this.getResource(this.apiUrl + `/seizoenen/${seizoen}/rondes/file/${filenaam}`);
+    async getSpeelRondeFile(seizoen: string, filenaam: string): Promise<SpeelRonde> {
+        const result: SpeelRonde = await this.getResource(this.apiUrl + `/seizoenen/${seizoen}/rondes/file/${filenaam}`);
         return result;
     }
 
-    async getAfvalRondeFile(seizoen: string, filenaam: string): Promise<AfvalRonde> {
-        const result: AfvalRonde = await this.getResource(this.apiUrl + `/seizoenen/${seizoen}/rondes/file/${filenaam}`);
-        return result;
-    }
-
-    async savePouleRondeFile(seizoen: string, filenaam: string, data: PouleRonde): Promise<ApiResponse> {
-        const response: Response = await fetch(this.apiUrl + `/seizoenen/${seizoen}/rondes/file/${filenaam}`, {
-            method: 'POST',
-            body: JSON.stringify(data),
-            headers: this.myHeaders
-        });
-        const json: ApiResponse = await response.json();
-        if (!response.ok) {
-            throw new Error(json.message);
-        }
-        return json;
-    }
-
-    async saveAfvalRondeFile(seizoen: string, filenaam: string, data: AfvalRonde): Promise<ApiResponse> {
+    async saveSpeelRondeFile(seizoen: string, filenaam: string, data: SpeelRonde): Promise<ApiResponse> {
         const response: Response = await fetch(this.apiUrl + `/seizoenen/${seizoen}/rondes/file/${filenaam}`, {
             method: 'POST',
             body: JSON.stringify(data),

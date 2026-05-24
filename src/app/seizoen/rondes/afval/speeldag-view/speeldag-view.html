@@ -1,4 +1,4 @@
-@if (viewType == 'row') {
+<!-- @if (viewType == 'row') {
     <div class="sectie-speeldag" [ngClass]="{'selected': selected}">
         <div class="flexbox flexmiddle">
             <div class="dagnaam" (click)="dagClicked()">
@@ -6,7 +6,7 @@
             </div>
             <div class="dagdatum">
                 @if (speelDag.mogelijkeData.length) {
-                    <select [(ngModel)]="speelDag.dagDatum" (change)="datumGewijzigd()">
+                    <select [(ngModel)]="speelDag.datum" (change)="datumGewijzigd()">
                         <option value=""></option>
                         @for (opt of speelDag.mogelijkeData; track $index) {
                             <option [ngValue]="opt">{{opt}}</option>
@@ -14,11 +14,11 @@
                     </select>
                 }
                 @else {
-                    <span>{{dater.dateReverse(speelDag.dagDatum)}}</span>
+                    <span>{{dater.dateReverse(speelDag.datum)}}</span>
                 }
             </div>
             <div class="flexgrow1 flexbox">
-                @for (match of speelDag.dagMatches; track $index) {
+                @for (match of speelDag.matches; track $index) {
                     <div class="flex25perc container-match">
                         <div class="sectie-match flexbox" [ngClass]="{'selected': selected && $index == idxMatch}"
                                     [title]="match.splKoppelId == '' ? '' : 'Match verwijderen'" (click)="matchClicked($index)">
@@ -48,4 +48,4 @@
             </div>
         </div>
     </div>
-}
+} -->

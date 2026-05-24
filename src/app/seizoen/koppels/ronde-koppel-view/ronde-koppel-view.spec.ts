@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PouleRondePlanningData } from './poule-ronde-planning-data';
+import { RondeKoppelView } from './ronde-koppel-view';
 
-describe('PouleRondePlanningData', () => {
-  let component: PouleRondePlanningData;
-  let fixture: ComponentFixture<PouleRondePlanningData>;
+describe('RondeKoppelView', () => {
+  let component: RondeKoppelView;
+  let fixture: ComponentFixture<RondeKoppelView>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PouleRondePlanningData]
+      imports: [RondeKoppelView]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(PouleRondePlanningData);
+    fixture = TestBed.createComponent(RondeKoppelView);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

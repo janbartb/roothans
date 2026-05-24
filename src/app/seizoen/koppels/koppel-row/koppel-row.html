@@ -65,59 +65,6 @@
         </div>
     </div>
 }
-@else if (view == 'poule') {
-    <div class="flexbox">
-        <div class="ellipsis" style="width: 10em;"><span>{{pouleKoppel.koppel.spelers[0].splNaam}}</span></div>
-        <div style="width: 1.5em; text-align: center;">-</div>
-        <div class="ellipsis" style="width: 10em;"><span>{{pouleKoppel.koppel.spelers[1].splNaam}}</span></div>
-        <div style="width: 2em; text-align: center;">
-            <i class="fas fa-long-arrow-alt-right"></i>
-        </div>
-        <div><span>{{pouleKoppel.koppel.kopMoyenne | number:'1.3-3':'nl-NL'}}</span></div>
-    </div>
-}
-@else if (view == 'poule-uitslag') {
-    <div class="flexbox">
-        <div style="width: 2.5em; color: red; font-weight: bold;">{{rang}}</div>
-        <div style="width: 1.5em; font-weight: bold;">{{pouleKoppel.id}}</div>
-        <div class="ellipsis" style="width: 10em;"><span>{{pouleKoppel.koppel.spelers[0].splNaam}}</span></div>
-        <div style="width: 1.5em; text-align: center;">-</div>
-        <div class="ellipsis" style="width: 10em;"><span>{{pouleKoppel.koppel.spelers[1].splNaam}}</span></div>
-        <div style="width: 2em; text-align: center;">
-            <i class="fas fa-long-arrow-alt-right"></i>
-        </div>
-        <div><span>{{pouleKoppel.koppel.kopMoyenne | number:'1.3-3':'nl-NL'}}</span></div>
-        @if (pouleKoppel.uitslag.brt > 0) {
-            <div class="flexbox poule-uitslag">
-                <div>
-                    @if (aantGespeeld < 6) {
-                        <span>{{aantGespeeld}}</span>
-                    }
-                    @else {
-                        <i style="color: green;" class="fas fa-check"></i>
-                    }
-                </div>
-                <div style="width: 2.5em;"></div>
-                <div>
-                    <span>{{pouleKoppel.spelers[0].uitslag.pnt}}</span>
-                </div>
-                <div>
-                    <span>+</span>
-                </div>
-                <div>
-                    <span>{{pouleKoppel.spelers[1].uitslag.pnt}}</span>
-                </div>
-                <div>
-                    <span>=</span>
-                </div>
-                <div style="width: 6.5em;">
-                    <span>{{pouleKoppel.uitslag.pnt}} </span>
-                    <span style="font-weight: normal; padding-left: 1em; color: gray;">punten</span>
-                </div>
-            </div>
-        }
-    </div>
-}
 @else if (view == 'names') {
     <div class="list-row" (click)="koppelClicked()">
         <span>{{koppel.spelers[0].splNaam}} - {{koppel.spelers[1].splNaam}} </span>

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
-import { AfvalDag } from '../../../../model/ronde';
+import { RondeSpeelDag } from '../../../../model/ronde';
 import { DateHelper } from '../../../../services/date-helper';
 import { FormsModule } from '@angular/forms';
 import { NgClass } from '@angular/common';
@@ -15,7 +15,7 @@ import { NgClass } from '@angular/common';
 })
 export class SpeeldagView {
     dater = inject(DateHelper);
-    @Input() speelDag: AfvalDag = new AfvalDag(0);
+    @Input() speelDag: RondeSpeelDag = new RondeSpeelDag(0);
     @Input() viewType: string = 'row';
     @Input() selected: boolean = false;
     @Input() idxMatch: number = -1;
@@ -26,7 +26,7 @@ export class SpeeldagView {
     nbs = String.fromCharCode(160);
 
     datumGewijzigd() {
-        this.dateChanged.emit(this.speelDag.dagDatum);
+        this.dateChanged.emit(this.speelDag.datum);
     }
 
     dagClicked() {

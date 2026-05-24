@@ -15,13 +15,12 @@
 .poule-header {
     background-color: #163317;
     color: #dbefdc;
+    font-size: 1.25em;
+    line-height: 1.2;
     padding: .125em .5em;
 }
 .poule.selected .poule-header {
     background-color: #ac0000;
-}
-.poule-header span {
-    font-size: 1.25em;
 }
 .poule-header .btn-delete {
     cursor: pointer;

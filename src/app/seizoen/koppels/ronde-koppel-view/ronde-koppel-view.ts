@@ -1,27 +1,29 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Koppel } from '../../../model/koppel';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { RondeKoppel } from '../../../model/koppel';
 import { KoppelSpeler } from '../../../model/speler';
 import { DecimalPipe, NgClass } from '@angular/common';
 import { SpeelDag } from '../../../model/seizoen';
 
 @Component({
-    selector: 'app-koppel-row',
+    selector: 'app-ronde-koppel-view',
     imports: [
         DecimalPipe,
         NgClass
     ],
-    templateUrl: './koppel-row.html',
-    styleUrl: './koppel-row.css',
+    templateUrl: './ronde-koppel-view.html',
+    styleUrl: './ronde-koppel-view.css',
 })
-export class KoppelRow implements OnInit {
-    @Input() koppel: Koppel = new Koppel();
+export class RondeKoppelView {
+    @Input() koppel: RondeKoppel = new RondeKoppel();
     @Input() rang: number = 0;
     @Input() view: string = 'normal';
     @Input() speelDagen: SpeelDag[] = [];
     @Input() selectable: boolean = true;
-    @Output() hovered: EventEmitter<Koppel> = new EventEmitter<Koppel>();
-    @Output() clicked: EventEmitter<Koppel> = new EventEmitter<Koppel>();
-    @Output() dblClicked: EventEmitter<Koppel> = new EventEmitter<Koppel>();
+    @Output() hovered: EventEmitter<RondeKoppel> = new EventEmitter();
+    @Output() clicked: EventEmitter<RondeKoppel> = new EventEmitter();
+    @Output() dblClicked: EventEmitter<RondeKoppel> = new EventEmitter();
+    aantGespeeld: number = 0;
+    punten: number[] = [0, 0];
 
     koppelClicked() {
         this.clicked.emit(this.koppel);
@@ -51,5 +53,15 @@ export class KoppelRow implements OnInit {
             this.koppel.spelers[0] = this.koppel.spelers[1];
             this.koppel.spelers[1] = temp;
         }
+        this.aantGespeeld = 0;
+        this.koppel.matchUitslagen.forEach(match => {
+            match.wedUitslagen.forEach((wed, idx) => {
+                if (wed.uitslag.brt > 0) {
+                    this.aantGespeeld++;
+                    this.punten[idx] += wed.uitslag.pnt;
+                }
+            });
+        });
     }
+
 }

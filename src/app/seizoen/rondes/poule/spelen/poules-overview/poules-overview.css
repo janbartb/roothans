@@ -1,0 +1,12 @@
+.poule-view {
+    width: 100%;
+    cursor: pointer;
+}
+.poule-view.selected .sectie-title, .poule-view:hover .sectie-title {
+    background-color: darkred;
+}
+.poule-view.selected .sectie-content.met-rand, .poule-view:hover .sectie-content.met-rand {
+    border-left: .0625em solid darkred;
+    border-right: .0625em solid darkred;
+    border-bottom: .0625em solid darkred;
+}

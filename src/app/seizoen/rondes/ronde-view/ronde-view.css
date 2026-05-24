@@ -1,0 +1,36 @@
+.ronde-container {
+    background-color: #1e461f;
+    color: #dbefdc;
+    border: .125em solid #1e461f;
+    border-radius: .5em;
+    padding: .125em;
+    margin: .125em 0;
+    cursor: pointer;
+}
+.ronde-container:hover {
+    border-color: red;
+}
+
+.ronde-nummer {
+    width: 2.5em;
+    height: 2.5em;
+    background-color: #b7dfb8;
+    color: #1e461f;
+    border-radius: 50%;
+}
+.ronde-nummer > div {
+    font-size: 1.25em;
+    line-height: 1;
+}
+
+.ronde-status {
+    color: #3d8b40;
+}
+.ronde-status > div {
+    font-size: .625em;
+    line-height: 1.2;
+}
+.ronde-status > div.bereikt {
+    color: #dbefdc;
+    font-weight: bold;
+}

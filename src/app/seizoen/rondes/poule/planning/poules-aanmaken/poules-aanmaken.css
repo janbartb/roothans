@@ -1,0 +1,17 @@
+.voorkeur-header {
+    padding-left: 3em;
+    margin-right: .25em;
+    font-weight: bold;
+    background-color: #265728;
+    color: #dbefdc;
+}
+
+.koppel-row {
+    padding: 0 .5em;
+    margin-right: .25em;
+    cursor: pointer;
+}
+.koppel-row.selected {
+    background-color: darkred;
+    color: #f4faf4;
+}

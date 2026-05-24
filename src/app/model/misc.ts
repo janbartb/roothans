@@ -4,6 +4,15 @@ export class Status {
     gereed: boolean = false;
 }
 
+export class Uitslag {
+    car: number = 0;
+    brt: number = 0;
+    ser: number = 0;
+    moy: number = 0;
+    pnt: number = 0;
+    sco: number[] = [];
+}
+
 export class Alert {
     text: string = '';
     type: string = '';

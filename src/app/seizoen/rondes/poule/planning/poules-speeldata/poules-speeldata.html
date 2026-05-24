@@ -1,0 +1,81 @@
+<div class="fullheight flexbox flexcolumn" style="overflow-y: hidden;">
+    <div class="flexgrow1 container" style="overflow-y: hidden;">
+        <div class="sectie fullheight flexbox flexcolumn" style="overflow: hidden;">
+            <div class="sectie-title flexbox flexcenter flexmiddle">
+                <div style="font-size: .75em; line-height: 1.2;">
+                    <span>Poules per voorkeurdag</span>
+                </div>
+            </div>
+            <div class="flexgrow1 flexbox flexstretch" style="overflow: hidden;">
+                @for (ppd of poulesPerDagen; track $index) {
+                    <div class="flex25perc container" style="overflow-y: hidden;">
+                        <div class="fullheight flexbox flexcolumn sectie" style="overflow-y: hidden;">
+                            <div class="sectie-title flexbox flexcenter flexmiddle">
+                                <div style="font-size: .75em; line-height: 1.2;">
+                                    <span>{{ppd.dagNaam}}</span>
+                                </div>
+                            </div>
+                            <div class="flexgrow1 scroll-container no-header sectie-content met-rand">
+                                <div class="scroll-sectie">
+                                    @for (poul of ppd.poules; track $index) {
+                                        <div style="font-size: .5em; padding: .25em .25em 0 .25em;">
+                                            <div class="poule-view"(click)="pouleClicked(poul.volgNr)">
+                                                <app-ronde-poule-view [poule]="poul" [allowDelete]="false" 
+                                                                    [selected]="poul.volgNr == poule.volgNr"
+                                                                    [koppelClick]="false"></app-ronde-poule-view>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="container onder" style="height: 3.5em; min-height: 3.5em;">
+        <div class="sectie fullheight">
+            <div class="fullheight flexbox flexcenter flexmiddle" style="font-size: .75em;">
+                <div style="padding-right: .5em; font-weight: bold;"><label for="">Speeldatum poule </label></div>
+                @for (poule of pouleRonde.poules; track $index) {
+                    <div class="poule-button flexbox flexcenter flexmiddle" [ngClass]="{'selected': $index == idxPoule}"
+                                    (click)="pouleButtonClicked($index)">
+                        <div>{{poule.volgNr}}</div>
+                    </div>
+                }
+                <div style="padding: 0 .5em; font-weight: bold;"><label for="">:</label></div>
+                <div>
+                    <select style="width: 7em;" [(ngModel)]="poule.datum" (change)="pouleDatumSelected()">
+                        <option value=""></option>
+                        @for (dat of mogelijkePouleSpeelData; track $index) {
+                            <option [value]="dat">{{dat}}</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="flexbox flexcenter flexmiddle" style="font-size: .75em; min-height: 3em;">
+        @if (poulesOk) {
+            @if (touched) {
+                <div>
+                    <app-button [button]="btnSave" (btnClicked)="opslaanClicked()"></app-button>
+                </div>
+                <div>
+                    <app-button [button]="btnSaveNext" (btnClicked)="opslaanClicked(true)"></app-button>
+                </div>
+            }
+            @else {
+                <div>
+                    <app-button [button]="btnNext" (btnClicked)="exitClicked()"></app-button>
+                </div>
+            }
+        }
+        @else {
+            <div>
+                <app-button [button]="btnSaveDef" [disabled]="!touched" (btnClicked)="opslaanClicked()"></app-button>
+            </div>
+        }
+    </div>
+</div>

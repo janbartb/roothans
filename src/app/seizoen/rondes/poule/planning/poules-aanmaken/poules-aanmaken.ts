@@ -1,49 +1,50 @@
 import { Component, HostListener, inject, OnInit } from '@angular/core';
-import { Base } from '../../../base/base';
-import { Poule, PouleRonde, Ronde, PouleKoppel, PouleKoppelWedstrijd } from '../../../model/ronde';
-import { ActivatedRoute } from '@angular/router';
-import { Seizoen } from '../../../model/seizoen';
-import { Koppel } from '../../../model/koppel';
-import { KoppelRow } from '../../koppels/koppel-row/koppel-row';
+import { Koppel, MatchUitslag, RondeKoppel } from '../../../../../model/koppel';
+import { RondePouleView } from '../../../ronde-poule-view/ronde-poule-view';
+import { Button } from '../../../../../shared/button/button';
 import { NgClass } from '@angular/common';
-import { RondePouleView } from '../ronde-poule-view/ronde-poule-view';
-import { Button } from '../../../shared/button/button';
-import { Btn } from '../../../model/misc';
+import { ActivatedRoute } from '@angular/router';
+import { Seizoen } from '../../../../../model/seizoen';
+import { Poule, Ronde, SpeelRonde } from '../../../../../model/ronde';
+import { Btn } from '../../../../../model/misc';
+import { Base } from '../../../../../base/base';
+import { RondeKoppelView } from '../../../../koppels/ronde-koppel-view/ronde-koppel-view';
 
 class KoppelsPerDag {
     dagNr: number = 0;
     dagNaam: string = '';
-    koppelsFirst: Koppel[] = [];
-    koppelsSecond: Koppel[] = [];
-    koppelsRest: Koppel[] = [];
+    koppelsFirst: RondeKoppel[] = [];
+    koppelsSecond: RondeKoppel[] = [];
+    koppelsRest: RondeKoppel[] = [];
     idxFirst: number = -1;
     idxSecond: number = -1;
     idxRest: number = -1;
 }
 
 interface IData {
-	[ key: string ]: any;
+    [ key: string ]: any;
 }
 
 @Component({
-    selector: 'app-poule-ronde-planning',
+    selector: 'app-poules-aanmaken',
     imports: [
-        KoppelRow,
+        RondeKoppelView,
         RondePouleView,
         Button,
         NgClass
     ],
-    templateUrl: './poule-ronde-planning.html',
-    styleUrl: './poule-ronde-planning.css',
+    templateUrl: './poules-aanmaken.html',
+    styleUrl: './poules-aanmaken.css',
 })
-export class PouleRondePlanning extends Base implements OnInit {
+export class PoulesAanmaken extends Base implements OnInit {
     route = inject(ActivatedRoute);
     config: Seizoen = new Seizoen();
     rondes: Ronde[] = [];
     ronde: Ronde = new Ronde(0, '', '', 0, '');
     koppels: Koppel[] = [];
     koppelsPerDagen: KoppelsPerDag[] = [];
-    pouleRonde: PouleRonde = new PouleRonde(0, '', 0, '');
+    pouleRonde: SpeelRonde = new SpeelRonde(0, '', '', 0, '');
+    existingKoppelIds: string[] = [];
     maxPoules: number = 0;
     maxWeekdagen: number = 4;  // geeft aan hoeveel maandagen, dinsdagen enz beschikbaar zijn voor de poule ronde
     touched: boolean = false;
@@ -69,8 +70,12 @@ export class PouleRondePlanning extends Base implements OnInit {
     btnNext: Btn = new Btn('next', 'Naar speeldata', 'enter');
 
     opslaanClicked(andNext?: boolean) {
-        console.log(this.pouleRonde);
-        this.dao.savePouleRondeFile(this.header.seizoen, this.ronde.fileNaam, this.pouleRonde)
+        const rondeToSave: SpeelRonde = JSON.parse(JSON.stringify(this.pouleRonde));
+        rondeToSave.poules.forEach(p => {
+            p.koppelIds = p.koppels.map(k => k.kopId);
+            p.koppels = [];
+        });
+        this.dao.saveSpeelRondeFile(this.header.seizoen, this.ronde.fileNaam, rondeToSave)
         .then(resp => {
             this.alert.showSuccess(resp.message);
             this.touched = false;
@@ -84,7 +89,7 @@ export class PouleRondePlanning extends Base implements OnInit {
     }
 
     nextClicked() {
-        this.gotoPage(`rondes/poule/${this.ronde.rndId}/data`, `rondes/poule/${this.ronde.rndId}`);
+        this.gotoPage(`rondes/poule/${this.ronde.rndId}/data`, this.router.url);
     }
 
     clearHovered() {
@@ -93,7 +98,7 @@ export class PouleRondePlanning extends Base implements OnInit {
         });
     }
 
-    koppelHovered(koppel: Koppel) {
+    koppelHovered(koppel: RondeKoppel) {
         this.koppelsPerDagen.forEach(kpd => {
             kpd.idxFirst = kpd.koppelsFirst.findIndex(kop => kop.kopId == koppel.kopId);
             kpd.idxSecond = kpd.koppelsSecond.findIndex(kop => kop.kopId == koppel.kopId);
@@ -101,9 +106,9 @@ export class PouleRondePlanning extends Base implements OnInit {
         });
     }
 
-    koppelClicked(koppel: Koppel, kpd: KoppelsPerDag) {
-        let allDagPoules = this.pouleRonde.poules.filter(pl => pl.pouleDagNr == -1 || pl.pouleDagNr == kpd.dagNr);
-        let availDagPoule = allDagPoules.find(pl => pl.pouleKoppels.length < this.config.maxKoppelsPerPoule);
+    koppelClicked(koppel: RondeKoppel, kpd: KoppelsPerDag) {
+        let allDagPoules = this.pouleRonde.poules.filter(pl => pl.dagNr == -1 || pl.dagNr == kpd.dagNr);
+        let availDagPoule = allDagPoules.find(pl => this.pouleIsAvailable(pl));
         if (availDagPoule) {
             this.addKoppelToPoule(availDagPoule, koppel, kpd);
         }
@@ -112,7 +117,7 @@ export class PouleRondePlanning extends Base implements OnInit {
                 this.alert.showWarning(`Er kan geen nieuwe poule voor ${kpd.dagNaam} worden aangemaakt`);
                 return;
             }
-            availDagPoule = new Poule();
+            availDagPoule = new Poule(this.config.maxKoppelsPerPoule);
             //availDagPoule.pouleId = String.fromCharCode(65 + this.pouleRonde.poules.length);
             this.pouleRonde.poules.push(availDagPoule);
             this.addKoppelToPoule(availDagPoule, koppel, kpd);
@@ -121,20 +126,25 @@ export class PouleRondePlanning extends Base implements OnInit {
 
     removeKoppelFromPoule(idxPoule: number, idxKoppel: number) {
         const poule = this.pouleRonde.poules[idxPoule];
-        const koppelToRemove = poule.pouleKoppels[idxKoppel];
-        this.pouleKoppelBackToKoppelsPerDagen(koppelToRemove.koppel);
-        poule.pouleKoppels.splice(idxKoppel, 1);
-        if (!poule.pouleKoppels.length) {
-            poule.pouleDagNr = -1;
-            poule.pouleDagNaam = '';
+        const koppelToRemove = poule.koppels[idxKoppel];
+        if (koppelToRemove.kopId == '') {
+            return;
+        }
+        this.pouleKoppelBackToKoppelsPerDagen(koppelToRemove);
+        poule.koppels[idxKoppel] = new RondeKoppel();
+        poule.koppelIds[idxKoppel] = '';
+        if (this.pouleIsEmpty(poule)) {
+            this.pouleRonde.poules.splice(idxPoule, 1);
         }
         this.touched = true;
         this.poulesOk = false;
     }
 
     removePoule(idx: number) {
-        this.pouleRonde.poules[idx].pouleKoppels.forEach((kpl) => {
-            this.pouleKoppelBackToKoppelsPerDagen(kpl.koppel);
+        this.pouleRonde.poules[idx].koppels.forEach((kpl) => {
+            if (kpl.kopId != '') {
+                this.pouleKoppelBackToKoppelsPerDagen(kpl);
+            }
         });
         this.pouleRonde.poules.splice(idx, 1);
         //this.renamePoules();
@@ -203,19 +213,30 @@ export class PouleRondePlanning extends Base implements OnInit {
             }
             this.ronde = this.rondes[idx];
             this.header.subtitle = `Seizoen ${this.header.seizoen} - Planning ${this.ronde.rndNaam} - Poules aanmaken`;
-            this.dao.getPouleRondeFile(this.header.seizoen, this.ronde.fileNaam)
+            this.dao.getSpeelRondeFile(this.header.seizoen, this.ronde.fileNaam)
             .then(data => {
                 console.log(data);
                 this.pouleRonde = data;
-                this.fillKoppelsPerDagen();
-                if (!this.pouleRonde.poules) {
-                    this.pouleRonde.poules = [];
+                if (this.pouleRonde.koppels.length < this.koppels.length) {
+                    this.existingKoppelIds = this.pouleRonde.koppels.map(kpl => kpl.kopId);
+                    this.aanvullenRondeKoppels();
                 }
+                this.fillKoppelsPerDagen();
+                console.log(this.koppelsPerDagen);
                 this.pouleRonde.poules.forEach(poule => {
-                    poule.pouleVolgNr = 0;
-                    poule.pouleId = '';
-                    poule.pouleKoppels.forEach(pkop => {
-                        this.removeKoppelFromKoppelsPerDagen(pkop.koppel);
+                    poule.volgNr = 0;
+                    poule.id = '';
+                    poule.koppels = [];
+                    let maxKoppels = poule.koppelIds.length;
+                    while (maxKoppels--) poule.koppels.push(new RondeKoppel()); 
+                    poule.koppelIds.forEach((kplId, idx) => {
+                        if (kplId != '') {
+                            const foundKoppel = this.pouleRonde.koppels.find(kpl => kpl.kopId == kplId);
+                            if (foundKoppel) {
+                                poule.koppels[idx] = foundKoppel;
+                                this.removeKoppelFromKoppelsPerDagen(foundKoppel);
+                            }
+                        }
                     });
                 });
                 this.maxPoules = this.config.maxKoppels / this.config.maxKoppelsPerPoule;
@@ -248,14 +269,27 @@ export class PouleRondePlanning extends Base implements OnInit {
         }, 250);
     }
 
-    private addKoppelToPoule(poule: Poule, koppel: Koppel, kpd: KoppelsPerDag) {
-        if (!poule.pouleKoppels.length) {
-            poule.pouleDagNr = kpd.dagNr;
-            poule.pouleDagNaam = kpd.dagNaam;
+    private aanvullenRondeKoppels() {
+        this.koppels.forEach(kpl => {
+            if (!this.existingKoppelIds.includes(kpl.kopId)) {
+                const rndKoppel: RondeKoppel = new RondeKoppel();
+                Object.assign(rndKoppel, kpl);
+                this.pouleRonde.koppels.push(rndKoppel);
+                this.existingKoppelIds.push(kpl.kopId);
+            }
+        });
+    }
+
+    private addKoppelToPoule(poule: Poule, koppel: RondeKoppel, kpd: KoppelsPerDag) {
+        const idxToAdd = this.getFirstAvailable(poule);
+        if (this.pouleIsEmpty(poule)) {
+            poule.dagNr = kpd.dagNr;
+            poule.dagNaam = kpd.dagNaam;
         }
-        poule.pouleKoppels.push(new PouleKoppel(koppel));
-        poule.pouleKoppels.sort(this.comparePoulKoppels);
-        if (poule.pouleKoppels.length == this.config.maxKoppelsPerPoule) {
+        poule.koppels[idxToAdd] = koppel;
+        poule.koppelIds[idxToAdd] = koppel.kopId;
+        //poule.koppels.sort(this.compareRondeKoppels);
+        if (this.pouleIsFilled(poule)) {
             this.setWedstrijdenEnVolgorde(poule);
         }
         this.removeKoppelFromKoppelsPerDagen(koppel);
@@ -264,22 +298,16 @@ export class PouleRondePlanning extends Base implements OnInit {
     }
 
     private setWedstrijdenEnVolgorde(poule: Poule) {
-        poule.pouleKoppels.forEach((kop, idx) => {
-            kop.id = String.fromCharCode(65 + idx);
-            kop.spelers.forEach(spl => {
-                spl.wedstrijden = [];
-            });
+        poule.koppels.forEach((kop, idx) => {
+            //kop.id = String.fromCharCode(65 + idx);
+            kop.matchUitslagen = [];
         });
-        poule.pouleKoppels.forEach((splKop, idxSK) => {
-            poule.pouleKoppels.forEach((tegKop, idxTK) => {
+        poule.koppels.forEach((splKop, idxSK) => {
+            poule.koppels.forEach((tegKop, idxTK) => {
                 if (idxSK != idxTK) {
-                    const wedVolgNr = this.matchToNrs['m' + idxSK + idxTK];
-                    splKop.spelers.forEach((spl, idxS) => {
-                        const wed = new PouleKoppelWedstrijd(tegKop.koppel.spelers[idxS]);
-                        wed.volgNr = wedVolgNr;
-                        wed.tegPouleKoppelId = tegKop.id;
-                        spl.wedstrijden.push(wed);
-                    });
+                    const match = new MatchUitslag(splKop, tegKop);
+                    match.volgNr = this.matchToNrs['m' + idxSK + idxTK];
+                    splKop.matchUitslagen.push(match);
                 }
             });
         });
@@ -287,7 +315,7 @@ export class PouleRondePlanning extends Base implements OnInit {
 
     private allPoulesFilled(): boolean {
         return this.pouleRonde.poules.length == this.maxPoules &&
-                this.pouleRonde.poules.every(pl => pl.pouleKoppels.length == this.config.maxKoppelsPerPoule);
+                this.pouleRonde.poules.every(pl => pl.koppels.length == this.config.maxKoppelsPerPoule);
     }
 
     private removeKoppelFromKoppelsPerDagen(koppel: Koppel) {
@@ -306,7 +334,7 @@ export class PouleRondePlanning extends Base implements OnInit {
             let kpd = new KoppelsPerDag();
             kpd.dagNr = sdag.dagNr;
             kpd.dagNaam = sdag.dagNaam;
-            this.koppels.forEach(koppel => {
+            this.pouleRonde.koppels.forEach(koppel => {
                 if (koppel.voorkeurDagen.includes(kpd.dagNr)) {
                     if (koppel.voorkeurDagen[0] == kpd.dagNr) {
                         kpd.koppelsFirst.push(koppel);
@@ -323,7 +351,7 @@ export class PouleRondePlanning extends Base implements OnInit {
         });
     }
 
-    private pouleKoppelBackToKoppelsPerDagen(koppel: Koppel) {
+    private pouleKoppelBackToKoppelsPerDagen(koppel: RondeKoppel) {
         this.koppelsPerDagen.forEach(kpd => {
             if (koppel.voorkeurDagen.includes(kpd.dagNr)) {
                 if (koppel.voorkeurDagen[0] == kpd.dagNr) {
@@ -342,9 +370,25 @@ export class PouleRondePlanning extends Base implements OnInit {
         });
     }
 
+    private pouleIsEmpty(poule: Poule): boolean {
+        return poule.koppels.every(kpl => kpl.kopId == '');
+    }
+
+    private pouleIsFilled(poule: Poule): boolean {
+        return !poule.koppels.some(kpl => kpl.kopId == '');
+    }
+
+    private pouleIsAvailable(poule: Poule): boolean {
+        return poule.koppels.some(kpl => kpl.kopId == '');
+    }
+
+    private getFirstAvailable(poule: Poule): number {
+        return poule.koppels.findIndex(kpl => kpl.kopId == '');
+    }
+
     private renamePoules() {
         this.pouleRonde.poules.forEach((poule, idx) => {
-            poule.pouleId = String.fromCharCode(65 + idx);
+            poule.id = String.fromCharCode(65 + idx);
         });
     }
 
@@ -352,8 +396,8 @@ export class PouleRondePlanning extends Base implements OnInit {
         return b.kopMoyenne - a.kopMoyenne;
     }
 
-    private comparePoulKoppels(a: PouleKoppel, b: PouleKoppel): number {
-        return b.koppel.kopMoyenne - a.koppel.kopMoyenne;
+    private compareRondeKoppels(a: RondeKoppel, b: RondeKoppel): number {
+        return b.kopMoyenne - a.kopMoyenne;
     }
 
 }

@@ -53,6 +53,9 @@
 .flexbox.wrap {
     flex-wrap: wrap;
 }
+.flexbox.wrap.around {
+    align-items: stretch;
+}
 
 .flexgrow1 {
     flex-grow: 1;

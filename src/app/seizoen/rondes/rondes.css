@@ -1,0 +1,12 @@
+.ronde-container {
+    background-color: #1e461f;
+    color: #dbefdc;
+    border: .125em solid #1e461f;
+    border-radius: .5em;
+    padding: .125em;
+    margin: .125em 0;
+    cursor: pointer;
+}
+.ronde-container:hover {
+    border-color: red;
+}

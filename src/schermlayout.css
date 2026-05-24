@@ -46,7 +46,7 @@
     font-weight: normal;
 }
 .sectie.donker .sectie-title {
-    background-color: #b7dfb8;
+    background-color: #6ec071;
     color: #163317;
 }
 .sectie.donker .sectie-sub-title {
@@ -56,15 +56,31 @@
     padding: 0 .375em;
 }
 
+.sectie-content.met-rand {
+    border-left: .0625em solid #163317;
+    border-right: .0625em solid #163317;
+    border-bottom: .0625em solid #163317;
+    border-bottom-left-radius: .5em;
+    border-bottom-right-radius: .5em;
+}
+
 /* scroll areas */
 
 .scroll-container {
     padding: 0 .25em .25em .25em;
     overflow-y: hidden;
 }
+.scroll-container.no-header {
+    padding-top: .25em;
+}
 .scroll-sectie {
     height: 100%;
+}
+.scroll-container .scroll-sectie {
     overflow-y: scroll; 
+}
+.scroll-container.no-header .scroll-sectie {
+    overflow-y: auto; 
 }
 
 /* lijsten */

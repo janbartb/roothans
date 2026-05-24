@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { Ronde } from '../../model/ronde';
 import { Base } from '../../base/base';
 import { Koppel } from '../../model/koppel';
@@ -18,15 +18,47 @@ export class Rondes extends Base implements OnInit {
     rondes: Ronde[] = [];
     dummy: Ronde = new Ronde(0, '', '', 0, '');
     koppels: Koppel[] = [];
+    rondeButtonPressedIds: string[] = [];
 
-    planningClicked(rondeId: number) {
+    enterPressed() {
+        this.rondes.some((rnd, idx) => {
+            if (rnd.status.gepland) {
+                return false;
+            }
+            else {
+                this.rondeButtonPressedIds[idx] = 'plan';
+                return true;
+            }
+        });
+    }
+
+    plannenClicked(rondeId: number) {
         const rondeType = this.rondes[rondeId - 1].rndType;
+        console.log(`rondes/${rondeType}/${rondeId}/planner`)
         this.gotoPage(`rondes/${rondeType}/${rondeId}/planner`, 'rondes');
     }
 
     spelenClicked(rondeId: number) {
         const rondeType = this.rondes[rondeId - 1].rndType;
         this.gotoPage(`rondes/${rondeType}/${rondeId}/spel`, 'rondes');        
+    }
+
+    @HostListener('document:keyup', ['$event'])
+    handleKeyboardEvent(event: KeyboardEvent): boolean {
+        console.log(event.code + ' : ' + event.key);
+        if (event.key === 'Enter') {
+            this.enterPressed();
+            return false;
+        }
+        if (event.key === 'Escape') {
+            this.escapePressed();
+            return false;
+        }
+        if (event.key === 'Home') {
+            this.gotoHome();
+            return false;
+        }
+        return true;
     }
 
     override ngOnInit(): void {
@@ -57,6 +89,8 @@ export class Rondes extends Base implements OnInit {
                     this.alert.showError(err);
                 });
             }
+            let size = this.rondes.length;
+            while(size--) this.rondeButtonPressedIds.push('');
         })
         .catch(err => {
             this.alert.showError(err);
@@ -70,13 +104,13 @@ export class Rondes extends Base implements OnInit {
         let aantMatches = this.config.maxKoppels / 2;
         while(aantMatches > 4) {
             rondeId++;
-            rnds.push(new Ronde(rondeId, `${aantMatches}e finales`, 'afval', 20, `finales-${aantMatches}`));
+            rnds.push(new Ronde(rondeId, `${aantMatches}e finales`, 'afval', 20, `finales-${aantMatches}`, rondeId == 2));
             aantMatches = aantMatches / 2;
         }
         rondeId++;
         rnds.push(new Ronde(rondeId, `Kwart finales`, 'afval', 20, 'kwart-finales'));
         rondeId++;
-        rnds.push(new Ronde(rondeId, `Halve finales`, 'afval', 20, 'halve-finales'));
+        rnds.push(new Ronde(rondeId, `Halve finales`, 'afval', 20, 'halve-finales', true));
         rondeId++;
         rnds.push(new Ronde(rondeId, `Finale`, 'afval', 20, 'finale'));
         return rnds;
