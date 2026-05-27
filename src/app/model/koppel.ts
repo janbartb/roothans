@@ -3,7 +3,7 @@ import { KoppelSpeler } from "./speler";
 
 export class Koppel {
     kopId: string = '';
-    uigeschakeld: boolean = false;
+    uitgeschakeld: boolean = false;
     spelers: KoppelSpeler[] = [];
     kopMoyenne: number = 0;
     voorkeurDagen: number[] = [];
@@ -21,36 +21,52 @@ export class RondeKoppel extends Koppel {
     pouleKplId: string = '';
     afgevallen: boolean = false;
     ingepland: boolean = false;
+    splUitslagen: KoppelSpelerUitslagen[] = [];
     uitslag: Uitslag = new Uitslag();
     totNuToe: Uitslag = new Uitslag(); 
-    matchUitslagen: MatchUitslag[] = [];
+    matches: KoppelMatch[] = [];
+
+    constructor() {
+        super();
+        this.splUitslagen.push(new KoppelSpelerUitslagen());
+        this.splUitslagen.push(new KoppelSpelerUitslagen());
+    }
 }
 
-export class MatchUitslag {
+export class KoppelSpelerUitslagen {
+    uitslag: Uitslag = new Uitslag();
+    totNuToe: Uitslag = new Uitslag(); 
+}
+
+export class KoppelMatch {
     splKoppelId: string = '';
     tegKoppelId: string = '';
     volgNr: number = 0;
     datum: string = '';
     barrageWinst: boolean = false;
     uitslag: Uitslag = new Uitslag();
-    wedUitslagen: WedstrijdUitslag[] = [];
+    wedstrijden: KoppelWedstrijd[] = [];
 
     constructor(splKoppel: RondeKoppel, tegKoppel: RondeKoppel) {
         this.splKoppelId = splKoppel.kopId;
         this.tegKoppelId = tegKoppel.kopId;
-        this.wedUitslagen.push(new WedstrijdUitslag(splKoppel.spelers[0].splId, tegKoppel.spelers[0].splId));
-        this.wedUitslagen.push(new WedstrijdUitslag(splKoppel.spelers[1].splId, tegKoppel.spelers[1].splId));
+        this.wedstrijden.push(new KoppelWedstrijd(splKoppel, tegKoppel, 0));
+        this.wedstrijden.push(new KoppelWedstrijd(splKoppel, tegKoppel, 1));
     }
 }
 
-export class WedstrijdUitslag {
+export class KoppelWedstrijd {
+    splKoppelId: string = '';
+    tegKoppelId: string = '';
     splId: string = '';
     tegId: string = '';
     metWit: boolean = false;
-    uitslag: Uitslag = new Uitslag;
+    uitslag: Uitslag = new Uitslag();
 
-    constructor(sid: string, tid: string) {
-        this.splId = sid;
-        this.tegId = tid;
+    constructor(splKoppel: RondeKoppel, tegKoppel: RondeKoppel, idxSpeler: number) {
+        this.splKoppelId = splKoppel.kopId;
+        this.tegKoppelId = tegKoppel.kopId;
+        this.splId = splKoppel.spelers[idxSpeler].splId;
+        this.tegId = tegKoppel.spelers[idxSpeler].splId;
     }
 }

@@ -1,9 +1,142 @@
 <div class="fullheight flexbox flexcolumn" style="overflow: hidden;">
     <div class="flexgrow1 container" style="overflow: hidden;">
-        <div class="sectie flexbox flexcolumn">
-            <div>
-
+        <div class="sectie fullheight flexbox flexcolumn">
+            <div class="sectie-title flexbox flexcenter flexmiddle" style="height: 2em;">
+                <div style="font-size: 1.25em; line-height: 1.2; font-weight: normal;">
+                    <span><b>Overzicht poule {{poule.id}}</b></span>
+                </div>
             </div>
+            <div class="flexgrow1 scroll-container no-header">
+                <div class="scroll-sectie">
+                    <div class="container flexbox flexmiddle" style="height: 2em;">
+                        <div style="width: 2.5em;"></div>
+                        <div class="flexgrow1 flexbox flexmiddle" style="padding: 0 .5625em;">
+                            <div style="width: 3em;"></div>
+                            <div class="flexgrow1">
+                                <div class="poule-header flexbox">
+                                    <div style="width: 11em;"><b>Koppel</b></div>
+                                    <div style="width: 5.25em; padding-left: 1.5em;"><b>Car</b></div>
+                                    <div class="num" style="width: 4.5em;"><b>Moy</b></div>
+                                    <div class="num" style="width: 4.5em;">Rend</div>
+                                    <div class="num" style="width: 3.25em;"><b>Ser</b></div>
+                                    <div class="num" style="width: 3.875em;">#<b>Wed</b></div>
+                                    <div class="num" style="width: 1.75em;">W</div>
+                                    <div class="num" style="width: .875em;">G</div>
+                                    <div class="num" style="width: 1em;">V</div>
+                                    <div class="num" style="width: 2.625em;"><b>Pnt</b></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="width: 4em;"></div>
+                    </div>
+                    @for (koppel of poule.koppels; track $index) {
+                        <div class="container flexbox flexmiddle">
+                            <div style="width: 2.5em; padding-left: .25em;">
+                                <span style="font-size: 2em; font-weight: bold; color: darkred;">{{$index + 1}}</span>
+                            </div>
+                            <div class="sectie flexgrow1 flexbox flexmiddle" 
+                                    style="background-color: #f4faf4; border: .0625em solid #163317; min-height: 2em; padding: .125em .5em;">
+                                <div style="width: 3em; padding-left: .5em;">
+                                    <span style="font-size: 2em; font-weight: bold;">{{koppel.pouleKplId}}</span>
+                                </div>
+                                <div class="flexgrow1">
+                                    @for (idxSpl of [0, 1]; track $index) {
+                                        <div class="flexbox" style="font-size: 1.25em; line-height: 1.2;">
+                                            <div class="ellipsis" style="width: 11em;">
+                                                <span><b>{{koppel.spelers[idxSpl].splNaam}}</b></span>
+                                            </div>
+                                            <div class="num" style="width: 2.25em; overflow: hidden;">
+                                                <span><b>{{koppel.splUitslagen[idxSpl].uitslag.car}}</b></span>
+                                            </div>
+                                            <div class="num" style="width: 1.25em; overflow: hidden;">
+                                                <span>in</span>
+                                            </div>
+                                            <div class="num" style="width: 1.75em; overflow: hidden;">
+                                                <span>{{koppel.splUitslagen[idxSpl].uitslag.brt}}</span>
+                                            </div>
+                                            <div class="num" style="width: 4.5em; overflow: hidden;">
+                                                <span><b>{{koppel.splUitslagen[idxSpl].uitslag.moy | number:'1.3-3':'nl-NL'}}</b></span>
+                                            </div>
+                                            <div class="num" style="width: 5.5em; overflow: hidden;">
+                                                <span>({{koppel.splUitslagen[idxSpl].uitslag.moy / koppel.spelers[idxSpl].splMoy | number:'1.2-2':'nl-NL'}}</span>
+                                                <span style="font-size: .75em;">%</span>
+                                                <span>)</span>
+                                            </div>
+                                            <div class="num" style="width: 2.25em; overflow: hidden;">
+                                                <span><b>{{koppel.splUitslagen[idxSpl].uitslag.ser}}</b></span>
+                                            </div>
+                                            <div class="num" style="width: 3.5em; overflow: hidden;">
+                                                <span><b>{{koppel.splUitslagen[idxSpl].uitslag.weds}}</b></span>
+                                            </div>
+                                            <div class="num" style="width: 2em; overflow: hidden;">
+                                                <span>{{koppel.splUitslagen[idxSpl].uitslag.winst}}</span>
+                                            </div>
+                                            <div class="num" style="width: 1em; overflow: hidden;">
+                                                <span>{{koppel.splUitslagen[idxSpl].uitslag.gelijk}}</span>
+                                            </div>
+                                            <div class="num" style="width: 1em; overflow: hidden;">
+                                                <span>{{koppel.splUitslagen[idxSpl].uitslag.verlies}}</span>
+                                            </div>
+                                            <div class="num" style="width: 2.5em; overflow: hidden;">
+                                                <span style="color: darkred;"><b>{{koppel.splUitslagen[idxSpl].uitslag.pnt}}</b></span>
+                                            </div>
+                                        </div>
+                                    }
+                                    <div style="height: .0625em; background-color: #6ec071; margin: .125em 0;"></div>
+                                    <div class="flexbox" style="font-size: 1.25em; line-height: 1.2; color: #459c48;">
+                                        <div style="width: 11em;">
+                                            <span><b>Totaal</b></span>
+                                        </div>
+                                        <div class="num" style="width: 2.25em; overflow: hidden;">
+                                            <span><b>{{koppel.uitslag.car}}</b></span>
+                                        </div>
+                                        <div class="num" style="width: 1.25em; overflow: hidden;">
+                                            <span>in</span>
+                                        </div>
+                                        <div class="num" style="width: 1.75em; overflow: hidden;">
+                                            <span>{{koppel.uitslag.brt}}</span>
+                                        </div>
+                                        <div class="num" style="width: 4.5em; overflow: hidden;">
+                                            <span><b>{{koppel.uitslag.moy | number:'1.3-3':'nl-NL'}}</b></span>
+                                        </div>
+                                        <div class="num" style="width: 5.5em; overflow: hidden;">
+                                            <span>({{koppel.uitslag.moy / koppel.kopMoyenne | number:'1.2-2':'nl-NL'}}</span>
+                                            <span style="font-size: .75em;">%</span>
+                                            <span>)</span>
+                                        </div>
+                                        <div class="num" style="width: 2.25em; overflow: hidden;">
+                                            <span><b>{{koppel.uitslag.ser}}</b></span>
+                                        </div>
+                                        <div class="num" style="width: 3.5em; overflow: hidden;">
+                                            <span><b>{{koppel.uitslag.weds}}</b></span>
+                                        </div>
+                                        <div class="num" style="width: 2em; overflow: hidden;">
+                                            <span>{{koppel.uitslag.winst}}</span>
+                                        </div>
+                                        <div class="num" style="width: 1em; overflow: hidden;">
+                                            <span>{{koppel.uitslag.gelijk}}</span>
+                                        </div>
+                                        <div class="num" style="width: 1em; overflow: hidden;">
+                                            <span>{{koppel.uitslag.verlies}}</span>
+                                        </div>
+                                        <div class="num" style="width: 2.5em; overflow: hidden;">
+                                            <span style="color: darkred;"><b>{{koppel.uitslag.pnt}}</b></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="num" style="width: 4em; padding-right: .625em;">
+                                <span style="font-size: 2.25em; color: darkred;"><b>{{koppel.uitslag.pnt}}</b></span>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="flexbox flexcenter flexmiddle" style="min-height: 3em;">
+        <div>
+            <app-button [button]="btnSchema" (btnClicked)="wedstrijdschemaClicked()"></app-button>
         </div>
     </div>
 </div>

@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PouleRondePouleschema } from './poule-ronde-pouleschema';
+import { PouleSchema } from './poule-schema';
 
-describe('PouleRondePouleschema', () => {
-  let component: PouleRondePouleschema;
-  let fixture: ComponentFixture<PouleRondePouleschema>;
+describe('PouleSchema', () => {
+  let component: PouleSchema;
+  let fixture: ComponentFixture<PouleSchema>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PouleRondePouleschema]
+      imports: [PouleSchema]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(PouleRondePouleschema);
+    fixture = TestBed.createComponent(PouleSchema);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

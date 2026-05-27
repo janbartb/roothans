@@ -1,5 +1,5 @@
 import { Component, HostListener, inject, OnInit } from '@angular/core';
-import { Koppel, MatchUitslag, RondeKoppel } from '../../../../../model/koppel';
+import { Koppel, KoppelMatch, RondeKoppel } from '../../../../../model/koppel';
 import { RondePouleView } from '../../../ronde-poule-view/ronde-poule-view';
 import { Button } from '../../../../../shared/button/button';
 import { NgClass } from '@angular/common';
@@ -300,14 +300,14 @@ export class PoulesAanmaken extends Base implements OnInit {
     private setWedstrijdenEnVolgorde(poule: Poule) {
         poule.koppels.forEach((kop, idx) => {
             //kop.id = String.fromCharCode(65 + idx);
-            kop.matchUitslagen = [];
+            kop.matches = [];
         });
         poule.koppels.forEach((splKop, idxSK) => {
             poule.koppels.forEach((tegKop, idxTK) => {
                 if (idxSK != idxTK) {
-                    const match = new MatchUitslag(splKop, tegKop);
+                    const match = new KoppelMatch(splKop, tegKop);
                     match.volgNr = this.matchToNrs['m' + idxSK + idxTK];
-                    splKop.matchUitslagen.push(match);
+                    splKop.matches.push(match);
                 }
             });
         });

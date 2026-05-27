@@ -5,12 +5,18 @@ export class Status {
 }
 
 export class Uitslag {
+    handicap: number = 0;
     car: number = 0;
     brt: number = 0;
     ser: number = 0;
     moy: number = 0;
     pnt: number = 0;
     sco: number[] = [];
+    weds: number = 0;
+    winst: number = 0;
+    gelijk: number = 0;
+    verlies: number = 0;
+    barrage: number = 0;
 }
 
 export class Alert {

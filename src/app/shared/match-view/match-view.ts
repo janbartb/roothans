@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { DecimalPipe, NgClass } from '@angular/common';
 import { RondeKoppel } from '../../model/koppel';
 

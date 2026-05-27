@@ -30,6 +30,11 @@ label .req {
     text-overflow: ellipsis;
 }
 
+.num { 
+    text-align: right; 
+    padding-right: .125em;
+}
+
 input,select,textarea{ font: inherit; margin: 0; }
 
 .fullviewheight { height: 100vh; }

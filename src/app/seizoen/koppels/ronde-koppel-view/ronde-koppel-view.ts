@@ -54,8 +54,8 @@ export class RondeKoppelView {
             this.koppel.spelers[1] = temp;
         }
         this.aantGespeeld = 0;
-        this.koppel.matchUitslagen.forEach(match => {
-            match.wedUitslagen.forEach((wed, idx) => {
+        this.koppel.matches.forEach(match => {
+            match.wedstrijden.forEach((wed, idx) => {
                 if (wed.uitslag.brt > 0) {
                     this.aantGespeeld++;
                     this.punten[idx] += wed.uitslag.pnt;

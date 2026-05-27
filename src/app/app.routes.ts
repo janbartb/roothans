@@ -19,6 +19,7 @@ import { PoulesAanmaken } from './seizoen/rondes/poule/planning/poules-aanmaken/
 import { PoulesSpeeldata } from './seizoen/rondes/poule/planning/poules-speeldata/poules-speeldata';
 import { PoulesOverview } from './seizoen/rondes/poule/spelen/poules-overview/poules-overview';
 import { PouleOverview } from './seizoen/rondes/poule/spelen/poule-overview/poule-overview';
+import { PouleSchema } from './seizoen/rondes/poule/spelen/poule-schema/poule-schema';
 
 export const routes: Routes = [
     { path: 'home', component: Home },
@@ -31,6 +32,7 @@ export const routes: Routes = [
     { path: 'rondes/poule/:rondeId/spel/:pouleIdx/match/:splKopId/:tegKopId/:wedIdx/score', component: PouleRondeScore },
     { path: 'rondes/poule/:rondeId/spel/:pouleIdx/match/:splKopId/:tegKopId/:wedIdx', component: PouleRondeWedstrijd },
     { path: 'rondes/poule/:rondeId/spel/:pouleIdx/match/:splKopId/:tegKopId', component: PouleRondeMatch },
+    { path: 'rondes/poule/:rondeId/spel/:pouleIdx/schema', component: PouleSchema },
     { path: 'rondes/poule/:rondeId/spel/:pouleIdx', component: PouleOverview },
     { path: 'rondes/poule/:rondeId/spel', component: PoulesOverview },
     { path: 'rondes/poule/:rondeId/data', component: PoulesSpeeldata },

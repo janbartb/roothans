@@ -58,6 +58,7 @@ export class PoulesSpeeldata extends Base implements OnInit {
     opslaanClicked(andExit?: boolean) {
         this.poulesOk = this.allDatesFilledOk();
         if (this.poulesOk) {
+            this.pouleRonde.status.gepland = true;
             this.pouleRonde.poules.sort(this.comparePoules);
             // this.renamePoules();
             this.fillAllPouleKoppelIds();

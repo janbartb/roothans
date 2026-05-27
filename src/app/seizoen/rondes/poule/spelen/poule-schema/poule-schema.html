@@ -1,17 +1,17 @@
-<!-- <div>
+<div>
     <div class="row-koppel flexbox flexstretch">
         <div class="col-koppel flexbox flexmiddle">
             <div style="line-height: 1.25; padding-left: .25em;">
                 <span style="font-size: 1.75em;">Poule </span>
-                <span style="font-size: 1.75em; font-weight: bold;"> {{poule.pouleId}}</span>
+                <span style="font-size: 1.75em; font-weight: bold;"> {{poule.id}}</span>
             </div>
         </div>
-        @for (plKop of poule.pouleKoppels; let icol = $index; track $index) {
+        @for (plKop of poule.koppels; let icol = $index; track $index) {
             <div class="col-weds">
                 <div class="fullheight flexbox flexcenter flexmiddle">
                     <div>
-                        <div class="naam-container">{{plKop.koppel.spelers[0].splNaam}}</div>
-                        <div class="naam-container">{{plKop.koppel.spelers[1].splNaam}}</div>
+                        <div class="naam-container">{{plKop.spelers[0].splNaam}}</div>
+                        <div class="naam-container">{{plKop.spelers[1].splNaam}}</div>
                     </div>
                 </div>
             </div>
@@ -22,11 +22,11 @@
             </div>
         </div>
     </div>
-    @for (splPlKop of poule.pouleKoppels; let irow = $index; track $index) {
+    @for (splPlKop of poule.koppels; let irow = $index; track $index) {
         <div class="row-weds flexbox flexstretch">
             <div class="col-koppel-id flexbox flexcenter flexmiddle">
                 <div style="font-size: 2em; font-weight: bold; color: darkred;">
-                    <span>{{splPlKop.id}}</span>
+                    <span>{{splPlKop.pouleKplId}}</span>
                 </div>
             </div>
             <div class="col-koppel">
@@ -34,22 +34,22 @@
                     <div class="flex50perc flexbox flexmiddle row-kplspeler border-btm">
                         <div style="width: 100%;">
                             <div class="speler-moy" style="font-size: .75em; line-height: 1; font-weight: normal; color: #2e6830;">
-                                <span>{{splPlKop.spelers[0].speler.splMoy | number:'1.3-3':'nl-NL'}}</span>
+                                <span>{{splPlKop.spelers[0].splMoy | number:'1.3-3':'nl-NL'}}</span>
                             </div>
-                            <div class="naam-container large">{{splPlKop.spelers[0].speler.splBNaam}}</div>
+                            <div class="naam-container large">{{splPlKop.spelers[0].splBNaam}}</div>
                         </div>
                     </div>
                     <div class="flex50perc flexbox flexmiddle row-kplspeler border-top">
                         <div style="width: 100%;">
-                            <div class="naam-container large">{{splPlKop.spelers[1].speler.splBNaam}}</div>
+                            <div class="naam-container large">{{splPlKop.spelers[1].splBNaam}}</div>
                             <div class="speler-moy" style="font-size: .75em; line-height: 1; font-weight: normal; color: #2e6830;">
-                                <span>{{splPlKop.spelers[1].speler.splMoy | number:'1.3-3':'nl-NL'}}</span>
+                                <span>{{splPlKop.spelers[1].splMoy | number:'1.3-3':'nl-NL'}}</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            @for (tegPlKop of poule.pouleKoppels; let icol = $index; track $index) {
+            @for (tegPlKop of poule.koppels; let icol = $index; track $index) {
                 <div class="col-weds">
                     <div class="fullheight" [ngClass]="{'filler': irow == icol, 'selected': irow == idxRow && icol == idxCol}">
                         @if (irow != icol) {
@@ -61,16 +61,16 @@
                                 </div>
                             }
                             @else {
-                                <div class="fullheight flexbox flexcolumn" (click)="matchClicked(irow, icol)">
-                                    @for (idx of [0, 1]; track $index) {
-                                        <div class="flex50perc row-speler arial"
-                                                    [ngClass]="{'border-btm': idx == 0, 'border-top': idx == 1}">
-                                            @for (wed of splPlKop.spelers[idx].wedstrijden; track $index) {
-                                                @if (wed.tegPouleKoppelId == tegPlKop.id) {
+                                @for (match of splPlKop.matches; track $index) {
+                                    @if (match.tegKoppelId == tegPlKop.kopId) {
+                                        <div class="fullheight flexbox flexcolumn" (click)="matchClicked(irow, icol)">
+                                            @for (wed of match.wedstrijden; let idxWed = $index; track $index) {
+                                                <div class="flex50perc row-speler arial"
+                                                            [ngClass]="{'border-btm': idxWed == 0, 'border-top': idxWed == 1}">
                                                     @if (wed.uitslag.brt > 0) {
                                                         <div class="fullheight flexbox flexstretch">
                                                             <div class="flex70perc flexbox flexmiddle wed-uitslag">
-                                                                <div class="flexbox flexcolumn" [ngClass]="{'reverse': idx == 0}">
+                                                                <div class="flexbox flexcolumn" [ngClass]="{'reverse': idxWed == 0}">
                                                                     <div>
                                                                         <span style="font-size: 1.5em;">
                                                                             <b>{{wed.uitslag.car}}</b> 
@@ -95,11 +95,11 @@
                                                             </div>
                                                         </div>
                                                     }
-                                                }
+                                                </div>
                                             }
                                         </div>
                                     }
-                                </div>
+                                }
                             }
                         }
                     </div>
@@ -108,27 +108,27 @@
             <div class="col-totaal arial" style="color: darkred;">
                 <div class="flexbox flexstretch">
                     <div class="flex60perc flexbox flexcolumn">
-                        @for (idx of [0, 1]; track $index) {
-                            <div class="flex50perc row-speler arial" [ngClass]="{'border-btm': idx == 0, 'border-top': idx == 1}">
+                        @for (uitslagen of splPlKop.splUitslagen; let idxUit = $index; track $index) {
+                            <div class="flex50perc row-speler arial" [ngClass]="{'border-btm': idxUit == 0, 'border-top': idxUit == 1}">
                                 <div class="fullheight flexbox flexstretch">
                                     <div class="flex70perc flexbox flexmiddle spl-uitslag">
-                                        @if (splPlKop.spelers[idx].uitslag.brt > 0) {
-                                            <div class="flexbox flexcolumn" [ngClass]="{'reverse': idx == 0}">
+                                        @if (uitslagen.uitslag.brt > 0) {
+                                            <div class="flexbox flexcolumn" [ngClass]="{'reverse': idxUit == 0}">
                                                 <div>
                                                     <span style="font-size: 1.5em;">
-                                                        <b>{{splPlKop.spelers[idx].uitslag.car}}</b> 
+                                                        <b>{{uitslagen.uitslag.car}}</b> 
                                                         <span style="font-size: .7em; padding: 0 .5em;">in</span>
-                                                        <span style="font-size: .7em;">{{splPlKop.spelers[idx].uitslag.brt}}</span>
+                                                        <span style="font-size: .7em;">{{uitslagen.uitslag.brt}}</span>
                                                     </span>
                                                 </div>
                                                 <div>
-                                                    <span>{{splPlKop.spelers[idx].uitslag.moy | number:'1.3-3':'nl-NL'}}</span>
+                                                    <span>{{uitslagen.uitslag.moy | number:'1.3-3':'nl-NL'}}</span>
                                                 </div>
                                             </div>
                                         }
                                     </div>
                                     <div class="flex30perc flexbox flexcenter flexmiddle">
-                                        <div class="spl-punten">{{splPlKop.spelers[idx].uitslag.pnt}}</div>
+                                        <div class="spl-punten">{{uitslagen.uitslag.pnt}}</div>
                                     </div>
                                 </div>
                             </div>
@@ -154,4 +154,4 @@
             }
         </div>
     </div>
-</div> -->
+</div>

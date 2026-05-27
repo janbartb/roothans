@@ -1,14 +1,20 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, HostListener, inject, OnInit } from '@angular/core';
 import { Base } from '../../../../../base/base';
 import { ActivatedRoute } from '@angular/router';
 import { DateHelper } from '../../../../../services/date-helper';
 import { Seizoen } from '../../../../../model/seizoen';
 import { Poule, Ronde, SpeelRonde } from '../../../../../model/ronde';
 import { RondeKoppel } from '../../../../../model/koppel';
+import { DecimalPipe } from '@angular/common';
+import { Button } from '../../../../../shared/button/button';
+import { Btn } from '../../../../../model/misc';
 
 @Component({
     selector: 'app-poule-overview',
-    imports: [],
+    imports: [
+        Button,
+        DecimalPipe
+    ],
     templateUrl: './poule-overview.html',
     styleUrl: './poule-overview.css',
 })
@@ -22,6 +28,30 @@ export class PouleOverview extends Base implements OnInit {
     poule: Poule = new Poule(0);
     today: string = '';
     allesGespeeld: boolean = false;
+
+    btnSchema: Btn = new Btn('schema', 'Wedstrijd schema', 'enter');
+
+    wedstrijdschemaClicked() {
+        this.gotoPage(this.router.url + '/schema', this.router.url);
+    }
+
+    @HostListener('document:keyup', ['$event'])
+    handleKeyboardEvent(event: KeyboardEvent): boolean {
+        console.log(event.code + ' : ' + event.key);
+        if (event.key === 'Enter') {
+            this.buttonPressed(this.btnSchema);
+            return false;
+        }
+        if (event.key === 'Escape') {
+            this.escapePressed();
+            return false;
+        }
+        if (event.key === 'Home') {
+            this.gotoHome();
+            return false;
+        }
+        return true;
+    }
 
     override ngOnInit(): void {
         super.ngOnInit();
@@ -83,6 +113,18 @@ export class PouleOverview extends Base implements OnInit {
         .catch(err => {
             this.alert.showError(err);
         });
+    }
+
+    private buttonPressed(btn: Btn) {
+        btn.clicked = true;
+        setTimeout(() => {
+            btn.clicked = false;
+            setTimeout(() => {
+                if (btn.key.key == 'enter') {
+                    this.wedstrijdschemaClicked();
+                }
+            }, 250);
+        }, 250);
     }
 
     private pouleIsGestart(): boolean {
