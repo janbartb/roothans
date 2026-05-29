@@ -1,14 +1,14 @@
-<!-- @if (dataReady) {
+@if (dataReady) {
     <div style="line-height: 1.2;">
         <div class="row-header flexbox flexmiddle">
             <div style="padding-left: 1em;">
-                <span>Poule <b>{{poule.pouleId}}</b></span>
+                <span>Poule <b>{{poule.id}}</b></span>
             </div>
             <div style="padding-left: 3em;">
                 <span>match <b>{{matchVolgNr}}</b> - wedstrijd <b>{{idxWed + 1}}</b></span>
             </div>
             <div style="padding-left: 3em;">
-                <span>koppels <b>{{koppels[0].id}}</b> - <b>{{koppels[1].id}}</b></span>
+                <span>koppels <b>{{koppels[0].pouleKplId}}</b> - <b>{{koppels[1].pouleKplId}}</b></span>
             </div>
             <div class="flexgrow1" style="padding-right: 1em; text-align: right;">
                 <span><b>{{ronde.rndBeurten}}</b> beurten</span>
@@ -25,7 +25,7 @@
                                 </div>
                                 <div>
                                     @if (viewMode) {
-                                        <span class="data" style="font-size: 1.5em;">{{dater.dateReverse(splWed.wedDatum)}}</span>
+                                        <span class="data" style="font-size: 1.5em;">{{dater.dateReverse(splMatch.datum)}}</span>
                                     }
                                     @else {
                                         <span style="font-size: 1.5em;">
@@ -41,10 +41,10 @@
                                 <div class="speler-content">
                                     <div class="spl-naam flexbox">
                                         <div class="flexgrow1">
-                                            <span style="font-size: 1.5em;"><b>{{splSpl.speler.splNaam}}</b> (<b>{{koppels[0].id}}</b>)</span>
+                                            <span style="font-size: 1.5em;"><b>{{splSpl.splNaam}}</b> (<b>{{koppels[0].pouleKplId}}</b>)</span>
                                         </div>
                                         <div>
-                                            <span style="font-size: 1.5em;">{{splSpl.speler.splMoy | number:'1.3-3':'nl-NL'}}</span>
+                                            <span style="font-size: 1.5em;">{{splSpl.splMoy | number:'1.3-3':'nl-NL'}}</span>
                                         </div>
                                     </div>
                                     <div class="flexbox">
@@ -56,12 +56,11 @@
                                             }
                                             @else {
                                                 <div class="flexbox flexcolumn flexmiddle" style="padding-top: 1em;">
-                                                    <div style="font-size: 1em; cursor: pointer;" 
-                                                                (click)="kleurClicked(0)">
+                                                    <div style="font-size: 1em; cursor: pointer;" (click)="kleurClicked(0)">
                                                         <i style="color: #b7dfb8;" [ngClass]="splWit?.value ? 'fas fa-check-square' : 'far fa-square'"></i>
                                                         <span style="color: #6ec071;"> met wit</span>
                                                     </div>
-                                                    <div style="padding-top: .5em;">
+                                                    <div style="padding-top: .5em; cursor: pointer;" (click)="kleurClicked(0)">
                                                         <div class="spl-bal biljartbal" [ngClass]="splWit?.value ? 'wit' : 'geel'" data-kleur=""></div>
                                                     </div>
                                                 </div>
@@ -127,10 +126,10 @@
                                 <div class="speler-content">
                                     <div class="spl-naam flexbox">
                                         <div class="flexgrow1">
-                                            <span style="font-size: 1.5em;"><b>{{tegSpl.speler.splNaam}}</b> (<b>{{koppels[1].id}}</b>)</span>
+                                            <span style="font-size: 1.5em;"><b>{{tegSpl.splNaam}}</b> (<b>{{koppels[1].pouleKplId}}</b>)</span>
                                         </div>
                                         <div>
-                                            <span style="font-size: 1.5em;">{{tegSpl.speler.splMoy | number:'1.3-3':'nl-NL'}}</span>
+                                            <span style="font-size: 1.5em;">{{tegSpl.splMoy | number:'1.3-3':'nl-NL'}}</span>
                                         </div>
                                     </div>
                                     <div class="flexbox">
@@ -142,12 +141,11 @@
                                             }
                                             @else {
                                                 <div class="flexbox flexcolumn flexmiddle" style="padding-top: 1em;">
-                                                    <div style="font-size: 1em; cursor: pointer;" 
-                                                                (click)="kleurClicked(1)">
+                                                    <div style="font-size: 1em; cursor: pointer;" (click)="kleurClicked(1)">
                                                         <i style="color: #b7dfb8;" [ngClass]="tegWit?.value ? 'fas fa-check-square' : 'far fa-square'"></i>
                                                         <span style="color: #6ec071;"> met wit</span>
                                                     </div>
-                                                    <div style="padding-top: .5em;">
+                                                    <div style="padding-top: .5em; cursor: pointer;" (click)="kleurClicked(1)">
                                                         <div class="spl-bal biljartbal" [ngClass]="tegWit?.value ? 'wit' : 'geel'" data-kleur=""></div>
                                                     </div>
                                                 </div>
@@ -259,4 +257,4 @@
             </div>
         </div>
     </div>
-} -->
+}

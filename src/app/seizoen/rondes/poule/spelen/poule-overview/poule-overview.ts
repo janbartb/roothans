@@ -133,11 +133,16 @@ export class PouleOverview extends Base implements OnInit {
 
     private comparePouleKoppels(a: RondeKoppel, b: RondeKoppel): number {
         if (a.uitslag.pnt == b.uitslag.pnt) {
-            if ((b.uitslag.moy / b.kopMoyenne) == (a.uitslag.moy / a.kopMoyenne)) {
-                return b.kopMoyenne - a.kopMoyenne;
+            if (a.uitslag.weds == b.uitslag.weds) {
+                if ((b.uitslag.moy / b.kopMoyenne) == (a.uitslag.moy / a.kopMoyenne)) {
+                    return b.kopMoyenne - a.kopMoyenne;
+                }
+                else {
+                    return (b.uitslag.moy / b.kopMoyenne) - (a.uitslag.moy / a.kopMoyenne);
+                }
             }
             else {
-                return (b.uitslag.moy / b.kopMoyenne) - (a.uitslag.moy / a.kopMoyenne);
+                return a.uitslag.weds - b.uitslag.weds;
             }
         }
         else {

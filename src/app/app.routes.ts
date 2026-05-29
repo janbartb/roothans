@@ -9,8 +9,6 @@ import { KoppelPreferences } from './seizoen/koppels/koppel-preferences/koppel-p
 import { Settings } from './seizoen/settings/settings';
 import { Rondes } from './seizoen/rondes/rondes';
 import { Probeer } from './probeer/probeer';
-import { PouleRondeMatch } from './seizoen/rondes/poule-ronde-match/poule-ronde-match';
-import { PouleRondeWedstrijd } from './seizoen/rondes/poule-ronde-wedstrijd/poule-ronde-wedstrijd';
 import { PouleRondeScore } from './seizoen/rondes/poule-ronde-score/poule-ronde-score';
 import { SeizoenMenu } from './seizoen/seizoen-menu/seizoen-menu';
 import { AfvalRondePlanning } from './seizoen/rondes/afval/afval-ronde-planning/afval-ronde-planning';
@@ -20,6 +18,8 @@ import { PoulesSpeeldata } from './seizoen/rondes/poule/planning/poules-speeldat
 import { PoulesOverview } from './seizoen/rondes/poule/spelen/poules-overview/poules-overview';
 import { PouleOverview } from './seizoen/rondes/poule/spelen/poule-overview/poule-overview';
 import { PouleSchema } from './seizoen/rondes/poule/spelen/poule-schema/poule-schema';
+import { PouleMatch } from './seizoen/rondes/poule/spelen/poule-match/poule-match';
+import { PouleWedstrijd } from './seizoen/rondes/poule/spelen/poule-wedstrijd/poule-wedstrijd';
 
 export const routes: Routes = [
     { path: 'home', component: Home },
@@ -30,8 +30,8 @@ export const routes: Routes = [
     { path: 'koppels/:koppelId', component: KoppelPreferences },
     { path: 'koppels', component: Koppels },
     { path: 'rondes/poule/:rondeId/spel/:pouleIdx/match/:splKopId/:tegKopId/:wedIdx/score', component: PouleRondeScore },
-    { path: 'rondes/poule/:rondeId/spel/:pouleIdx/match/:splKopId/:tegKopId/:wedIdx', component: PouleRondeWedstrijd },
-    { path: 'rondes/poule/:rondeId/spel/:pouleIdx/match/:splKopId/:tegKopId', component: PouleRondeMatch },
+    { path: 'rondes/poule/:rondeId/spel/:pouleIdx/match/:splKopId/:tegKopId/:wedIdx', component: PouleWedstrijd },
+    { path: 'rondes/poule/:rondeId/spel/:pouleIdx/match/:splKopId/:tegKopId', component: PouleMatch },
     { path: 'rondes/poule/:rondeId/spel/:pouleIdx/schema', component: PouleSchema },
     { path: 'rondes/poule/:rondeId/spel/:pouleIdx', component: PouleOverview },
     { path: 'rondes/poule/:rondeId/spel', component: PoulesOverview },

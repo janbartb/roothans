@@ -1,4 +1,4 @@
-<!-- @if (dataReady) {
+@if (dataReady) {
     <div>
         <div class="row-header flexbox flexmiddle">
             <div style="padding-left: 1em;">
@@ -8,14 +8,14 @@
                 <span style="font-size: 2.25em;">match <b>{{matchVolgNr}}</b></span>
             </div>
             <div style="padding-left: 3em;">
-                <span style="font-size: 2.25em;">koppels <b>{{koppels[0].kopId}}</b> - <b>{{koppels[1].kopId}}</b></span>
+                <span style="font-size: 2.25em;">koppels <b>{{koppels[0].pouleKplId}}</b> - <b>{{koppels[1].pouleKplId}}</b></span>
             </div>
             <div class="flexgrow1" style="padding-right: 1em; text-align: right;">
                 <span style="font-size: 2.25em;"><b>{{ronde.rndBeurten}}</b> beurten</span>
             </div>
         </div>
         <div class="row-match">
-            <app-match-view [koppels]="koppels" [idxSel]="idxWed" [idxWedBezig]="idxWedBezig"
+            <app-match-view [koppels]="koppels" [isPouleMatch]="true" [idxSel]="idxWed" [idxWedBezig]="idxWedBezig"
                         (wedClicked)="wedstrijdClicked($event)" (error)="showMatchViewError($event)"></app-match-view>
         </div>
         <div class="row-footer flexbox flexcenter flexmiddle">
@@ -59,4 +59,4 @@
             </div>
         </div>
     </div>
-} -->
+}

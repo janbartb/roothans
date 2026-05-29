@@ -1,5 +1,5 @@
-<!-- <div class="fullheight">
-    @for (wed of wedstrijden; let idxW = $index; track $index) {
+<div class="fullheight">
+    @for (idxW of [0, 1]; track $index) {
         <div class="row-wedstrijd">
             <div class="wedstrijd flexbox flexstretch" [ngClass]="{'selected': idxSel == idxW}" (click)="wedstrijdClicked(idxW)">
                 <div class="col-header flexbox flexcenter flexmiddle">
@@ -12,26 +12,26 @@
                         <div class="row-naam" style="text-align: right;">
                             <span style="font-size: 1.75em;">{{koppels[0].spelers[idxW].splNaam}}</span>
                         </div>
-                        @if (wed.uitslag.brt > 0) {
+                        @if (matches[0].wedstrijden[idxW].uitslag.brt > 0) {
                             <div class="fullheight flexbox flexstretch">
                                 <div style="width: 6em; height: 5em;" class="wed-punten flexbox flexcenter flexmiddle">
                                     <div style="width: 3em; height: 3em;" class="biljartbal" data-kleur
-                                                [ngClass]="wed.metWit ? 'wit' : 'geel'">
+                                                [ngClass]="matches[0].wedstrijden[idxW].metWit ? 'wit' : 'geel'">
                                     </div>
                                 </div>
                                 <div style="width: 5em; height: 5em;" class="wed-punten flexbox flexcenter flexmiddle arial">
-                                    <div style="font-size: 3em; color: #c40000;"><b>{{wed.uitslag.pnt}}</b></div>
+                                    <div style="font-size: 3em; color: #c40000;"><b>{{matches[0].wedstrijden[idxW].uitslag.pnt}}</b></div>
                                 </div>
                                 <div class="wed-score flexgrow1 flexbox flexcolumn flexend arial">
                                     <div>
-                                        <span style="font-size: 1.75em;"><b>{{wed.uitslag.car}}</b></span>
+                                        <span style="font-size: 1.75em;"><b>{{matches[0].wedstrijden[idxW].uitslag.car}}</b></span>
                                     </div>
                                     <div>
                                         <span style="font-size: 1.25em; padding-right: .75em;">{{koppels[0].spelers[idxW].splMoy | number:'1.3-3':'nl-NL'}}</span>
-                                        <span style="font-size: 1.75em;"><b>{{wed.uitslag.moy | number:'1.3-3':'nl-NL'}}</b></span>
+                                        <span style="font-size: 1.75em;"><b>{{matches[0].wedstrijden[idxW].uitslag.moy | number:'1.3-3':'nl-NL'}}</b></span>
                                     </div>
                                     <div>
-                                        <span style="font-size: 1.75em;"><b>{{wed.uitslag.ser}}</b></span>
+                                        <span style="font-size: 1.75em;"><b>{{matches[0].wedstrijden[idxW].uitslag.ser}}</b></span>
                                     </div>
                                 </div>
                             </div>
@@ -49,7 +49,7 @@
                     <div style="padding-top: .25em;">
                         <i style="font-size: 2em;" class="fas fa-arrows-alt-h"></i>
                     </div>
-                    @if (wed.uitslag.brt > 0) {
+                    @if (matches[0].wedstrijden[idxW].uitslag.brt > 0) {
                         <div style="padding-top: 0;">
                             <span style="font-size: 1.25em;">CAR</span>
                         </div>
@@ -66,26 +66,26 @@
                         <div class="row-naam">
                             <span style="font-size: 1.75em;">{{koppels[1].spelers[idxW].splNaam}}</span>
                         </div>
-                        @if (wed.uitslag.brt > 0) {
+                        @if (matches[1].wedstrijden[idxW].uitslag.brt > 0) {
                             <div class="fullheight flexbox flexstretch">
                                 <div class="wed-score flexgrow1 flexbox flexcolumn arial">
                                     <div>
-                                        <span style="font-size: 1.75em;"><b>{{wed.uitslag.car}}</b></span>
+                                        <span style="font-size: 1.75em;"><b>{{matches[1].wedstrijden[idxW].uitslag.car}}</b></span>
                                     </div>
                                     <div>
-                                        <span style="font-size: 1.75em;"><b>{{wed.uitslag.moy | number:'1.3-3':'nl-NL'}}</b></span>
+                                        <span style="font-size: 1.75em;"><b>{{matches[1].wedstrijden[idxW].uitslag.moy | number:'1.3-3':'nl-NL'}}</b></span>
                                         <span style="font-size: 1.25em; padding-left: .75em;">{{koppels[1].spelers[idxW].splMoy | number:'1.3-3':'nl-NL'}}</span>
                                     </div>
                                     <div>
-                                        <span style="font-size: 1.75em;"><b>{{wed.uitslag.ser}}</b></span>
+                                        <span style="font-size: 1.75em;"><b>{{matches[1].wedstrijden[idxW].uitslag.ser}}</b></span>
                                     </div>
                                 </div>
                                 <div style="width: 5em; height: 5em;" class="wed-punten flexbox flexcenter flexmiddle arial">
-                                    <div style="font-size: 3em; color: #c40000;"><b>{{wed.uitslag.pnt}}</b></div>
+                                    <div style="font-size: 3em; color: #c40000;"><b>{{matches[1].wedstrijden[idxW].uitslag.pnt}}</b></div>
                                 </div>
                                 <div style="width: 6em; height: 5em;" class="wed-punten flexbox flexcenter flexmiddle">
                                     <div style="width: 3em; height: 3em;" class="biljartbal" data-kleur 
-                                                [ngClass]="wed.metWit ? 'wit' : 'geel'">
+                                                [ngClass]="matches[1].wedstrijden[idxW].metWit ? 'wit' : 'geel'">
                                     </div>
                                 </div>
                             </div>
@@ -112,24 +112,24 @@
             <div class="col-speler">
                 <div class="wed-speler totaal">
                     <div class="row-naam" style="text-align: right;">
-                        <span style="font-size: 1.75em;">Koppel {{koppels[0].kopId}}</span>
+                        <span style="font-size: 1.75em;">Koppel {{isPouleMatch ? koppels[0].pouleKplId : koppels[0].kopId}}</span>
                     </div>
-                    @if (match.uitslag.brt > 0) {
+                    @if (matches[0].uitslag.brt > 0) {
                         <div class="fullheight flexbox flexstretch">
                             <div style="width: 6em; height: 5em;" class="wed-punten flexbox flexcenter flexmiddle"></div>
                             <div style="width: 5em; height: 5em;" class="wed-punten flexbox flexcenter flexmiddle arial">
-                                <div style="font-size: 3em; color: darkred;"><b>{{match.uitslag.pnt}}</b></div>
+                                <div style="font-size: 3em; color: darkred;"><b>{{matches[0].uitslag.pnt}}</b></div>
                             </div>
                             <div class="wed-score flexgrow1 flexbox flexcolumn flexend arial">
                                 <div>
-                                    <span style="font-size: 1.75em;"><b>{{match.uitslag.car}}</b></span>
+                                    <span style="font-size: 1.75em;"><b>{{matches[0].uitslag.car}}</b></span>
                                 </div>
                                 <div>
                                     <span style="font-size: 1.25em; padding-right: .75em;">{{koppels[0].kopMoyenne | number:'1.3-3':'nl-NL'}}</span>
-                                    <span style="font-size: 1.75em;"><b>{{match.uitslag.moy | number:'1.3-3':'nl-NL'}}</b></span>
+                                    <span style="font-size: 1.75em;"><b>{{matches[0].uitslag.moy | number:'1.3-3':'nl-NL'}}</b></span>
                                 </div>
                                 <div>
-                                    <span style="font-size: 1.75em;"><b>{{match.uitslag.ser}}</b></span>
+                                    <span style="font-size: 1.75em;"><b>{{matches[0].uitslag.ser}}</b></span>
                                 </div>
                             </div>
                         </div>
@@ -140,7 +140,7 @@
                 <div style="padding-top: .25em;">
                     <i style="font-size: 2em;" class="fas fa-arrows-alt-h"></i>
                 </div>
-                @if (match.uitslag.brt > 0) {
+                @if (matches[0].uitslag.brt > 0) {
                     <div style="padding-top: 0;">
                         <span style="font-size: 1.25em;">CAR</span>
                     </div>
@@ -155,24 +155,24 @@
             <div class="col-speler">
                 <div class="wed-speler totaal">
                     <div class="row-naam">
-                        <span style="font-size: 1.75em;">Koppel {{koppels[1].kopId}}</span>
+                        <span style="font-size: 1.75em;">Koppel {{isPouleMatch ? koppels[1].pouleKplId : koppels[1].kopId}}</span>
                     </div>
-                    @if (match.uitslag.brt > 0) {
+                    @if (matches[1].uitslag.brt > 0) {
                         <div class="fullheight flexbox flexstretch">
                             <div class="wed-score flexgrow1 flexbox flexcolumn arial">
                                 <div>
-                                    <span style="font-size: 1.75em;"><b>{{match.uitslag.car}}</b></span>
+                                    <span style="font-size: 1.75em;"><b>{{matches[1].uitslag.car}}</b></span>
                                 </div>
                                 <div>
-                                    <span style="font-size: 1.75em;"><b>{{match.uitslag.moy | number:'1.3-3':'nl-NL'}}</b></span>
+                                    <span style="font-size: 1.75em;"><b>{{matches[1].uitslag.moy | number:'1.3-3':'nl-NL'}}</b></span>
                                     <span style="font-size: 1.25em; padding-left: .75em;">{{koppels[1].kopMoyenne | number:'1.3-3':'nl-NL'}}</span>
                                 </div>
                                 <div>
-                                    <span style="font-size: 1.75em;"><b>{{match.uitslag.ser}}</b></span>
+                                    <span style="font-size: 1.75em;"><b>{{matches[1].uitslag.ser}}</b></span>
                                 </div>
                             </div>
                             <div style="width: 5em; height: 5em;" class="wed-punten flexbox flexcenter flexmiddle arial">
-                                <div style="font-size: 3em; color: darkred;"><b>{{match.uitslag.pnt}}</b></div>
+                                <div style="font-size: 3em; color: darkred;"><b>{{matches[1].uitslag.pnt}}</b></div>
                             </div>
                             <div style="width: 6em; height: 5em;" class="wed-punten flexbox flexcenter flexmiddle">
                                 
@@ -183,4 +183,4 @@
             </div>
         </div>
     </div>
-</div> -->
+</div>

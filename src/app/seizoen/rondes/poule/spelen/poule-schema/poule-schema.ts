@@ -56,9 +56,10 @@ export class PouleSchema extends Base implements OnInit {
         if (idxR == idxC) {
             return;
         }
-        const kopSplId = this.poule.koppels[idxR].kopId;
-        const kopTegId = this.poule.koppels[idxC].kopId;
-        this.gotoPage(`${this.router.url}/match/${kopSplId}/${kopTegId}`, this.router.url);
+        const kopSplId = this.poule.koppels[idxR].pouleKplId;
+        const kopTegId = this.poule.koppels[idxC].pouleKplId;
+        const url = this.router.url.replace('schema', 'match');
+        this.gotoPage(`${url}/${kopSplId}/${kopTegId}`, this.router.url);
     }
 
     getWedstrijdNrMatch(idxSpl: number, idxTeg: number): number {
@@ -226,11 +227,16 @@ export class PouleSchema extends Base implements OnInit {
 
     private comparePouleKoppels(a: RondeKoppel, b: RondeKoppel): number {
         if (a.uitslag.pnt == b.uitslag.pnt) {
-            if ((b.uitslag.moy / b.kopMoyenne) == (a.uitslag.moy / a.kopMoyenne)) {
-                return b.kopMoyenne - a.kopMoyenne;
+            if (a.uitslag.weds == b.uitslag.weds) {
+                if ((b.uitslag.moy / b.kopMoyenne) == (a.uitslag.moy / a.kopMoyenne)) {
+                    return b.kopMoyenne - a.kopMoyenne;
+                }
+                else {
+                    return (b.uitslag.moy / b.kopMoyenne) - (a.uitslag.moy / a.kopMoyenne);
+                }
             }
             else {
-                return (b.uitslag.moy / b.kopMoyenne) - (a.uitslag.moy / a.kopMoyenne);
+                return a.uitslag.weds - b.uitslag.weds;
             }
         }
         else {

@@ -58,7 +58,7 @@
                                                 <span><b>{{koppel.splUitslagen[idxSpl].uitslag.moy | number:'1.3-3':'nl-NL'}}</b></span>
                                             </div>
                                             <div class="num" style="width: 5.5em; overflow: hidden;">
-                                                <span>({{koppel.splUitslagen[idxSpl].uitslag.moy / koppel.spelers[idxSpl].splMoy | number:'1.2-2':'nl-NL'}}</span>
+                                                <span>({{100 * koppel.splUitslagen[idxSpl].uitslag.moy / koppel.spelers[idxSpl].splMoy | number:'1.2-2':'nl-NL'}}</span>
                                                 <span style="font-size: .75em;">%</span>
                                                 <span>)</span>
                                             </div>
@@ -100,7 +100,7 @@
                                             <span><b>{{koppel.uitslag.moy | number:'1.3-3':'nl-NL'}}</b></span>
                                         </div>
                                         <div class="num" style="width: 5.5em; overflow: hidden;">
-                                            <span>({{koppel.uitslag.moy / koppel.kopMoyenne | number:'1.2-2':'nl-NL'}}</span>
+                                            <span>({{100 * koppel.uitslag.moy / koppel.kopMoyenne | number:'1.2-2':'nl-NL'}}</span>
                                             <span style="font-size: .75em;">%</span>
                                             <span>)</span>
                                         </div>
