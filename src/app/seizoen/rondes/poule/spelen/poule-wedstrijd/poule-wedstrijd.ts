@@ -37,6 +37,7 @@ export class PouleWedstrijd extends Base implements OnInit {
     ronde: Ronde = new Ronde(0, '', '', 0, '');
     pouleRonde: SpeelRonde = new SpeelRonde(0, '', '', 0, '');
     poule: Poule = new Poule(0);
+    idxPoule: number = -1;
     koppels: RondeKoppel[] = [];
     splSpl: KoppelSpeler = new KoppelSpeler();
     tegSpl: KoppelSpeler = new KoppelSpeler();
@@ -174,7 +175,8 @@ export class PouleWedstrijd extends Base implements OnInit {
             this.dao.getSpeelRondeFile(this.header.seizoen, this.ronde.fileNaam)
             .then(data => {
                 this.pouleRonde = data;
-                this.poule = this.pouleRonde.poules[pouleIdx];
+                this.idxPoule = pouleIdx;
+                this.poule = this.pouleRonde.poules[this.idxPoule];
                 this.poule.koppels = [];
                 let aantKoppels = this.poule.koppelIds.length;
                 while (aantKoppels--) this.poule.koppels.push(new RondeKoppel()); 
@@ -335,10 +337,9 @@ export class PouleWedstrijd extends Base implements OnInit {
         });
         // opslaan
         const rondeToSave: SpeelRonde = JSON.parse(JSON.stringify(this.pouleRonde));
-        rondeToSave.poules.forEach(p => {
-            p.koppelIds = p.koppels.map(k => k.kopId);
-            p.koppels = [];
-        });
+        const pouleToSave: Poule = rondeToSave.poules[this.idxPoule];
+        pouleToSave.koppelIds = pouleToSave.koppels.map(k => k.kopId);
+        pouleToSave.koppels = [];
         this.dao.saveSpeelRondeFile(this.header.seizoen, this.ronde.fileNaam, rondeToSave)
         .then(resp => {
             this.alert.showSuccess('Uitslag succesvol opgeslagen.');
@@ -399,10 +400,9 @@ export class PouleWedstrijd extends Base implements OnInit {
         });
         // opslaan
         const rondeToSave: SpeelRonde = JSON.parse(JSON.stringify(this.pouleRonde));
-        rondeToSave.poules.forEach(p => {
-            p.koppelIds = p.koppels.map(k => k.kopId);
-            p.koppels = [];
-        });
+        const pouleToSave: Poule = rondeToSave.poules[this.idxPoule];
+        pouleToSave.koppelIds = pouleToSave.koppels.map(k => k.kopId);
+        pouleToSave.koppels = [];
         this.dao.saveSpeelRondeFile(this.header.seizoen, this.ronde.fileNaam, rondeToSave)
         .then(resp => {
             this.alert.showSuccess('Wedstrijd succesvol verwijderd.');

@@ -9,7 +9,6 @@ import { KoppelPreferences } from './seizoen/koppels/koppel-preferences/koppel-p
 import { Settings } from './seizoen/settings/settings';
 import { Rondes } from './seizoen/rondes/rondes';
 import { Probeer } from './probeer/probeer';
-import { PouleRondeScore } from './seizoen/rondes/poule-ronde-score/poule-ronde-score';
 import { SeizoenMenu } from './seizoen/seizoen-menu/seizoen-menu';
 import { AfvalRondePlanning } from './seizoen/rondes/afval/afval-ronde-planning/afval-ronde-planning';
 import { AfvalRondePlanner } from './seizoen/rondes/afval/afval-ronde-planner/afval-ronde-planner';
@@ -20,6 +19,7 @@ import { PouleOverview } from './seizoen/rondes/poule/spelen/poule-overview/poul
 import { PouleSchema } from './seizoen/rondes/poule/spelen/poule-schema/poule-schema';
 import { PouleMatch } from './seizoen/rondes/poule/spelen/poule-match/poule-match';
 import { PouleWedstrijd } from './seizoen/rondes/poule/spelen/poule-wedstrijd/poule-wedstrijd';
+import { PouleScorebord } from './seizoen/rondes/poule/spelen/poule-scorebord/poule-scorebord';
 
 export const routes: Routes = [
     { path: 'home', component: Home },
@@ -29,7 +29,7 @@ export const routes: Routes = [
     { path: 'koppels/toevoegen', component: KoppelsToevoegen },
     { path: 'koppels/:koppelId', component: KoppelPreferences },
     { path: 'koppels', component: Koppels },
-    { path: 'rondes/poule/:rondeId/spel/:pouleIdx/match/:splKopId/:tegKopId/:wedIdx/score', component: PouleRondeScore },
+    { path: 'rondes/poule/:rondeId/spel/:pouleIdx/match/:splKopId/:tegKopId/:wedIdx/score', component: PouleScorebord },
     { path: 'rondes/poule/:rondeId/spel/:pouleIdx/match/:splKopId/:tegKopId/:wedIdx', component: PouleWedstrijd },
     { path: 'rondes/poule/:rondeId/spel/:pouleIdx/match/:splKopId/:tegKopId', component: PouleMatch },
     { path: 'rondes/poule/:rondeId/spel/:pouleIdx/schema', component: PouleSchema },
