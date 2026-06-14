@@ -245,7 +245,14 @@ export class PouleScorebord extends Base implements OnInit {
         tegKoppel.matches.forEach(match => {
             this.addUitslagToOtherUitslag(match.uitslag, tegKoppel.uitslag);
         });
-
+        this.poule.status.gestart = true;
+        this.poule.status.gereed = this.poule.koppels.every(kp => {
+            return kp.matches.every(mat => {
+                return mat.wedstrijden.every(wed => wed.uitslag.brt > 0);
+            });
+        });
+        this.pouleRonde.status.gestart = true;
+        this.pouleRonde.status.gereed = this.pouleRonde.poules.every(pl => pl.status.gereed);
         // opslaan
         const rondeToSave: SpeelRonde = JSON.parse(JSON.stringify(this.pouleRonde));
         const pouleToSave: Poule = rondeToSave.poules[this.idxPoule];
@@ -253,12 +260,28 @@ export class PouleScorebord extends Base implements OnInit {
         pouleToSave.koppels = [];
         this.dao.saveSpeelRondeFile(this.header.seizoen, this.ronde.fileNaam, rondeToSave)
         .then(resp => {
-            this.alert.showSuccess('Uitslag succesvol opgeslagen.');
             this.wedstrijd.wedOpgeslagen = true;
             this.dao.saveWedstrijd(wed)
             .then(resp => {
-                if (andGoBack) {
-                    super.escapePressed();
+                if (this.ronde.status.gereed != this.pouleRonde.status.gereed || this.ronde.status.gestart != this.pouleRonde.status.gestart) {
+                    this.ronde.status.gereed = this.pouleRonde.status.gereed;
+                    this.ronde.status.gestart = this.pouleRonde.status.gestart;
+                    this.dao.saveRondes(this.header.seizoen, this.rondes)
+                    .then(resp2 => {
+                        this.alert.showSuccess('Uitslag succesvol opgeslagen.');
+                        if (andGoBack) {
+                            super.escapePressed();
+                        }
+                    })
+                    .catch(err => {
+                        this.alert.showError(err);
+                    });
+                }
+                else {
+                    this.alert.showSuccess('Uitslag succesvol opgeslagen.');
+                    if (andGoBack) {
+                        super.escapePressed();
+                    }
                 }
             })
             .catch(err => {

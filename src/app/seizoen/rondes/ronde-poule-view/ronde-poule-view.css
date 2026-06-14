@@ -4,7 +4,7 @@
     overflow: hidden;
 }
 .poule.selected {
-    border-color: #ac0000;
+    border-color: darkred;
 }
 .poule.selectable {
     cursor: pointer;
@@ -20,7 +20,7 @@
     padding: .125em .5em;
 }
 .poule.selected .poule-header {
-    background-color: #ac0000;
+    background-color: darkred;
 }
 .poule-header .btn-delete {
     cursor: pointer;

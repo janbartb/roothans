@@ -1,5 +1,5 @@
 import { RondeKoppel } from "./koppel";
-import { Status } from "./misc";
+import { Periode, Status } from "./misc";
 
 export class Ronde {
     rndId: number = 0;
@@ -9,6 +9,7 @@ export class Ronde {
     fileNaam: string = '';
     status: Status = new Status();
     moyBepalen: boolean = false;
+    periode: Periode = new Periode();
 
     constructor(id: number, naam: string, type: string, brt: number, file: string, moy?: boolean) {
         this.rndId = id;

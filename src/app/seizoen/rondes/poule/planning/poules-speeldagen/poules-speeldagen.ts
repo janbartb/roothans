@@ -1,14 +1,13 @@
-import { Component, HostListener, inject, OnInit } from '@angular/core';
-import { Poule, Ronde, SpeelRonde } from '../../../../../model/ronde';
+import { Component, inject, OnInit } from '@angular/core';
 import { Base } from '../../../../../base/base';
-import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { DateHelper } from '../../../../../services/date-helper';
+import { Seizoen, SpeelWeek, SpeelWeekDag } from '../../../../../model/seizoen';
+import { Poule, Ronde, SpeelRonde } from '../../../../../model/ronde';
+import { Btn, Status } from '../../../../../model/misc';
 import { RondePouleView } from '../../../ronde-poule-view/ronde-poule-view';
 import { Button } from '../../../../../shared/button/button';
 import { NgClass } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
-import { DateHelper } from '../../../../../services/date-helper';
-import { Seizoen } from '../../../../../model/seizoen';
-import { Btn } from '../../../../../model/misc';
 import { RondeKoppel } from '../../../../../model/koppel';
 
 class PoulesPerDag {
@@ -16,23 +15,18 @@ class PoulesPerDag {
     dagNaam: string = '';
     poules: Poule[] = [];
 }
-class SelectData {
-    dagNr: number = 0;
-    data: string[] = [];
-}
 
 @Component({
-    selector: 'app-poules-speeldata',
+    selector: 'app-poules-speeldagen',
     imports: [
-        FormsModule,
         RondePouleView,
         Button,
         NgClass
     ],
-    templateUrl: './poules-speeldata.html',
-    styleUrl: './poules-speeldata.css',
+    templateUrl: './poules-speeldagen.html',
+    styleUrl: './poules-speeldagen.css',
 })
-export class PoulesSpeeldata extends Base implements OnInit {
+export class PoulesSpeeldagen extends Base implements OnInit {
     route = inject(ActivatedRoute);
     dater = inject(DateHelper);
     config: Seizoen = new Seizoen();
@@ -42,13 +36,12 @@ export class PoulesSpeeldata extends Base implements OnInit {
     poulesPerDagen: PoulesPerDag[] = [];
     idxPoule: number = -1;
     poule: Poule = new Poule(0);
-    mogelijkeSpeelData: SelectData[] = [];
-    mogelijkePouleSpeelData: string[] = [];
     maxPoules: number = 0;
+    speelWeken: SpeelWeek[] = [];
     touched: boolean = false;
     poulesOk: boolean = false;
-    firstDigit: string = '';
-    lastDigit: string = '';
+    vkDagPerc: number = 100;
+    spDagPerc: number = 100;
 
     btnSave: Btn = new Btn('save', 'Opslaan', 's', 3);
     btnSaveDef: Btn = new Btn('savedef', 'Opslaan', 'enter');
@@ -57,8 +50,8 @@ export class PoulesSpeeldata extends Base implements OnInit {
 
     opslaanClicked(andExit?: boolean) {
         this.poulesOk = this.allDatesFilledOk();
+        this.pouleRonde.status.gepland = this.poulesOk;
         if (this.poulesOk) {
-            this.pouleRonde.status.gepland = true;
             this.pouleRonde.poules.sort(this.comparePoules);
             // this.renamePoules();
             this.fillAllPouleKoppelIds();
@@ -104,75 +97,48 @@ export class PoulesSpeeldata extends Base implements OnInit {
 
     pouleClicked(nr: number) {
         const idx = this.pouleRonde.poules.findIndex(pl => pl.volgNr == nr);
-        if (idx >= 0) {
-            this.pouleButtonClicked(idx);
+        if (idx < 0) {
+            return;
         }
-    }
-
-    pouleButtonClicked(idx: number) {
         if (idx == this.idxPoule) {
             this.idxPoule = -1;
             this.poule = new Poule(0);
+            this.setSelectables();
             return;
         }
         this.idxPoule = idx;
         this.poule = this.pouleRonde.poules[idx];
-        this.mogelijkePouleSpeelData = this.getMogelijkePouleSpeelData(this.poule.dagNr);
-        // console.log(this.mogelijkePouleSpeelData);
+        this.setSelectables(this.poule);
     }
 
-    pouleDatumSelected() {
-        this.touched = true;
-        if (this.poule.datum != '') {
-            this.pouleRonde.poules.forEach(pl => {
-                if (pl.volgNr != this.poule.volgNr && pl.datum == this.poule.datum) {
-                    pl.datum = '';
-                }
-            });
+    speelDagClicked(dag: SpeelWeekDag) {
+        if (!dag.selectable || this.idxPoule < 0) {
+            return;
         }
-        this.poulesOk = this.allDatesFilledOk();
-    }
-
-    @HostListener('document:keyup', ['$event'])
-    handleKeyboardEvent(event: KeyboardEvent): boolean {
-        console.log(event.code + ' : ' + event.key);
-        if (event.key === 'Enter') {
-            if (this.poulesOk) {
-                if (this.touched) {
-                    this.buttonPressed(this.btnSaveNext);
-                    return false;
+        if (dag.poule) {
+            dag.poule.datum = '';
+        }
+        this.speelWeken.some(week => {
+            return week.weekDagen.some(dg => {
+                if (dg.poule && dg.poule.volgNr == this.poule.volgNr) {
+                    dg.poule.status.gepland = false;
+                    dg.poule = undefined;
+                    return true;
                 }
                 else {
-                    this.buttonPressed(this.btnNext);
                     return false;
                 }
-            }
-            else {
-                this.buttonPressed(this.btnSaveDef);
-                return false;
-            }
-        }
-        if (event.key === 'Escape') {
-            this.escapePressed();
-            return false;
-        }
-        if (event.code === 'KeyS') {
-            this.buttonPressed(this.btnSave);
-            return false;
-        }
-        if (event.code >= 'Digit1' && event.code <= 'Digit9') {
-            if (event.code >= this.firstDigit && event.code <= this.lastDigit) {
-                const idx = Number(event.code.substring(5)) - 1;
-                this.pouleButtonClicked(idx);
-                return false;
-            }
-            return true;
-        }
-        if (event.key === 'Home') {
-            this.gotoHome();
-            return false;
-        }
-        return true;
+            });
+        });
+        dag.poule = this.poule;
+        this.poule.datum = dag.dagDatum;
+        this.poule.status.gepland = true;
+        this.setSelectables();
+        this.idxPoule = -1;
+        this.poule = new Poule(0);
+        this.poulesOk = this.allDatesFilledOk();
+        this.touched = true;
+        console.log(this.pouleRonde.poules);
     }
 
     override ngOnInit(): void {
@@ -191,6 +157,9 @@ export class PoulesSpeeldata extends Base implements OnInit {
         ])
         .then(results => {
             this.config = results[0];
+            if (this.config.speelDagen.length) {
+                this.vkDagPerc = 100 / this.config.speelDagen.length;
+            }
             this.rondes = results[1];
             const idx = this.rondes.findIndex(rnd => rnd.rndId == id);
             if (idx < 0) {
@@ -222,14 +191,26 @@ export class PoulesSpeeldata extends Base implements OnInit {
                         }
                     });
                 });
-                if (this.pouleRonde.poules.length > 0) {
-                    this.firstDigit = 'Digit1';
-                    if (this.pouleRonde.poules.length < 10) {
-                        this.lastDigit = 'Digit' + this.pouleRonde.poules.length;
-                    }
-                }
                 this.fillPoulesPerDagen();
-                this.fillAllMogelijkeSpeelData();
+                this.speelWeken = this.aanmakenSpeelweken();
+                if (this.speelWeken.length) {
+                    this.spDagPerc = 100 / this.speelWeken.length;
+                }
+                this.pouleRonde.poules.forEach(pl => {
+                    if (pl.datum != '') {
+                        this.speelWeken.some(week => {
+                            return week.weekDagen.some(dag => {
+                                if (dag.dagDatum == pl.datum) {
+                                    dag.poule = pl;
+                                    return true;
+                                }
+                                else {
+                                    return false;
+                                }
+                            });
+                        });
+                    }
+                });
                 this.poulesOk = this.allDatesFilledOk();
                 this.touched = false;
             })
@@ -242,27 +223,16 @@ export class PoulesSpeeldata extends Base implements OnInit {
         });
     }
 
-    private buttonPressed(btn: Btn) {
-        btn.clicked = true;
-        setTimeout(() => {
-            btn.clicked = false;
-            setTimeout(() => {
-                if (btn.id == 'save' || btn.id == 'savedef') {
-                    this.opslaanClicked();
-                }
-                else if (btn.id == 'saveexit') {
-                    this.opslaanClicked(true);
-                }
-                else if (btn.id == 'exit') {
-                    this.exitClicked();
-                }
-            }, 250);
-        }, 250);
+    private setSelectables(pl?: Poule) {
+        this.speelWeken.forEach(week => {
+            week.weekDagen.forEach(dag => {
+                dag.selectable = pl ? pl.dagNr == dag.dagNr : false;
+            });
+        });
     }
 
-    private getMogelijkePouleSpeelData(dagNr: number): string[] {
-        const idx = this.mogelijkeSpeelData.findIndex(sd => sd.dagNr == dagNr);
-        return (idx < 0) ? [] : this.mogelijkeSpeelData[idx].data;
+    private aanmakenSpeelweken(): SpeelWeek[] {
+        return this.dater.getSpeelweken(this.ronde.periode, this.config.speelDagen.map(sd => sd.dagNr));
     }
 
     private fillPoulesPerDagen() {
@@ -279,29 +249,24 @@ export class PoulesSpeeldata extends Base implements OnInit {
         });
     }
 
-    private fillAllMogelijkeSpeelData() {
-        this.config.speelDagen.forEach((sdag) => {
-            let sd = new SelectData();
-            sd.dagNr = sdag.dagNr;
-            sd.data = this.dater.getAllWeekDaysOfMonth(Number(this.header.seizoen), 0, sd.dagNr);
-            this.mogelijkeSpeelData.push(sd);
-        });
-    }
-
     private allDatesFilledOk(): boolean {
-        return this.pouleRonde.poules.every(poule => poule.datum != '');
+        let countOk = 0;
+        this.pouleRonde.poules.forEach(pl => {
+            if (pl.koppels.length == this.config.maxKoppelsPerPoule && pl.datum != '') {
+                pl.status.gepland = true;
+                countOk++;
+            }
+            else {
+                pl.status = new Status();
+            }
+        });
+        return countOk == this.pouleRonde.poules.length;
     }
 
     private comparePoules(a: Poule, b: Poule): number {
         return a.datum < b.datum ? -1 : 1;
     }
     
-    // private renamePoules() {
-    //     this.pouleRonde.poules.forEach((pl, idx) => {
-    //         pl.pouleId = String.fromCharCode(65 + idx);
-    //     });
-    // }
-
     private fillAllPouleKoppelIds() {
         this.pouleRonde.poules.forEach((pl) => {
             pl.koppels.forEach((pk, idx) => {

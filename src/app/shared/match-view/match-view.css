@@ -23,7 +23,6 @@
 }
 .row-wedstrijd .wedstrijd.selected, .row-wedstrijd .wedstrijd.selected:hover {
     border-color: red;
-    cursor: default;
 }
 
 .col-header {
@@ -82,4 +81,12 @@
 .col-tussen {
     width: 3em;
     color: #265728;
+}
+
+.fa-keyboard {
+    font-size: 2em; 
+    cursor: pointer;
+}
+.fa-keyboard:hover {
+    transform: scale(1.35);
 }

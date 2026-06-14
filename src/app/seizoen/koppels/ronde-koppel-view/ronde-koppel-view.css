@@ -6,14 +6,32 @@
     color: darkgreen;
 }
 
+.poule-rang {
+    color: #bb0000; 
+    font-weight: bold;
+}
+.poule-rang.poule-gereed {
+    color: #f4faf4; 
+}
+
 .poule-uitslag {
     font-weight: bold;
     padding-left: 2.5em;
 }
 .poule-uitslag.gespeeld {
-    color: red;
+    color: #bb0000;
+}
+.poule-uitslag.gespeeld.poule-gereed {
+    color: #f4faf4;
 }
 .poule-uitslag div {
     width: 1.5em;
     text-align: right;
+}
+
+.poule-uitslag .fa-check {
+    color: green;
+}
+.poule-uitslag.poule-gereed .fa-check {
+    color: #b7dfb8;
 }

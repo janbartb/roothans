@@ -1,3 +1,5 @@
+import { Poule, RondeMatch } from "./ronde";
+
 export class Seizoen {
     id: number = 0;
     maxKoppels: number = 32;
@@ -21,4 +23,21 @@ export class SpeelDag {
             this.selected = true;
         }
     }
+}
+
+export class SpeelWeek {
+    weekNr: number = 0;
+    startdat: string = '';
+    einddat: string = '';
+    weekDagen: SpeelWeekDag[] = [];
+}
+
+export class SpeelWeekDag {
+    dagNr: number = -1;
+    dagNaam: string = '';
+    dagDatum: string = '';
+    isSpeeldag: boolean = false;
+    selectable: boolean = false;
+    poule: Poule | undefined = undefined;
+    matches: RondeMatch[] = [];
 }

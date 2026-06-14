@@ -77,7 +77,8 @@
                 @for (poule of pouleRonde.poules; track $index) {
                     <div style="width: 14.9375em; padding: .125em .25em;">
                         <div style="font-size: .5em;">
-                            <app-ronde-poule-view [poule]="poule" [idxKoppel]="-1" [koppelClick]="true" 
+                            <app-ronde-poule-view [poule]="poule" [idxKoppel]="-1" 
+                                        [koppelClick]="!poule.status.gestart" [allowDelete]="!poule.status.gestart"
                                         [pouleCheck]="true" [maxKoppels]="config.maxKoppelsPerPoule"
                                         (koppelClicked)="removeKoppelFromPoule($index, $event)"
                                         (deletePouleClicked)="removePoule($index)"></app-ronde-poule-view>

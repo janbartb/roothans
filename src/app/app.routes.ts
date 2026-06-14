@@ -13,13 +13,13 @@ import { SeizoenMenu } from './seizoen/seizoen-menu/seizoen-menu';
 import { AfvalRondePlanning } from './seizoen/rondes/afval/afval-ronde-planning/afval-ronde-planning';
 import { AfvalRondePlanner } from './seizoen/rondes/afval/afval-ronde-planner/afval-ronde-planner';
 import { PoulesAanmaken } from './seizoen/rondes/poule/planning/poules-aanmaken/poules-aanmaken';
-import { PoulesSpeeldata } from './seizoen/rondes/poule/planning/poules-speeldata/poules-speeldata';
 import { PoulesOverview } from './seizoen/rondes/poule/spelen/poules-overview/poules-overview';
 import { PouleOverview } from './seizoen/rondes/poule/spelen/poule-overview/poule-overview';
 import { PouleSchema } from './seizoen/rondes/poule/spelen/poule-schema/poule-schema';
 import { PouleMatch } from './seizoen/rondes/poule/spelen/poule-match/poule-match';
 import { PouleWedstrijd } from './seizoen/rondes/poule/spelen/poule-wedstrijd/poule-wedstrijd';
 import { PouleScorebord } from './seizoen/rondes/poule/spelen/poule-scorebord/poule-scorebord';
+import { PoulesSpeeldagen } from './seizoen/rondes/poule/planning/poules-speeldagen/poules-speeldagen';
 
 export const routes: Routes = [
     { path: 'home', component: Home },
@@ -35,7 +35,7 @@ export const routes: Routes = [
     { path: 'rondes/poule/:rondeId/spel/:pouleIdx/schema', component: PouleSchema },
     { path: 'rondes/poule/:rondeId/spel/:pouleIdx', component: PouleOverview },
     { path: 'rondes/poule/:rondeId/spel', component: PoulesOverview },
-    { path: 'rondes/poule/:rondeId/data', component: PoulesSpeeldata },
+    { path: 'rondes/poule/:rondeId/data', component: PoulesSpeeldagen },
     { path: 'rondes/poule/:rondeId/planner', component: PoulesAanmaken },
     { path: 'rondes/afval/:rondeId/plan', component: AfvalRondePlanning },
     { path: 'rondes/afval/:rondeId/planner', component: AfvalRondePlanner },

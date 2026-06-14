@@ -18,11 +18,17 @@ export class MatchView implements OnInit {
     @Input() idxSel: number = -1;
     @Input() idxWedBezig: number = -1;
     @Output() wedClicked: EventEmitter<number> = new EventEmitter();
+    @Output() keyboardClicked: EventEmitter<number> = new EventEmitter();
     @Output() error: EventEmitter<string> = new EventEmitter();
     matches: KoppelMatch[] = [];
 
     wedstrijdClicked(idx: number) {
         this.wedClicked.emit(idx);
+    }
+
+    keybClicked(event: MouseEvent, idx: number) {
+        event.stopPropagation();
+        this.keyboardClicked.emit(idx);
     }
 
     ngOnInit(): void {

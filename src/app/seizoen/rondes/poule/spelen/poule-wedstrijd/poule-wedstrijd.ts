@@ -204,7 +204,6 @@ export class PouleWedstrijd extends Base implements OnInit {
                     else {
                         this.lijsten = this.createScoreLijsten();
                     }
-
                 }
                 this.dataReady = true;
             })
@@ -335,6 +334,14 @@ export class PouleWedstrijd extends Base implements OnInit {
         tegKoppel.matches.forEach(match => {
             this.addUitslagToOtherUitslag(match.uitslag, tegKoppel.uitslag);
         });
+        this.poule.status.gestart = true;
+        this.poule.status.gereed = this.poule.koppels.every(kp => {
+            return kp.matches.every(mat => {
+                return mat.wedstrijden.every(wed => wed.uitslag.brt > 0);
+            });
+        });
+        this.pouleRonde.status.gestart = true;
+        this.pouleRonde.status.gereed = this.pouleRonde.poules.every(pl => pl.status.gereed);
         // opslaan
         const rondeToSave: SpeelRonde = JSON.parse(JSON.stringify(this.pouleRonde));
         const pouleToSave: Poule = rondeToSave.poules[this.idxPoule];
@@ -342,9 +349,22 @@ export class PouleWedstrijd extends Base implements OnInit {
         pouleToSave.koppels = [];
         this.dao.saveSpeelRondeFile(this.header.seizoen, this.ronde.fileNaam, rondeToSave)
         .then(resp => {
-            this.alert.showSuccess('Uitslag succesvol opgeslagen.');
-            this.viewMode = true;
-            this.header.subtitle = `Seizoen ${this.header.seizoen} - ${this.ronde.rndNaam} wedstrijd Poule ${this.poule.id}`;
+            if (this.ronde.status.gereed != this.pouleRonde.status.gereed || this.ronde.status.gestart != this.pouleRonde.status.gestart) {
+                this.ronde.status.gereed = this.pouleRonde.status.gereed;
+                this.ronde.status.gestart = this.pouleRonde.status.gestart;
+                this.dao.saveRondes(this.header.seizoen, this.rondes)
+                .then(resp2 => {
+                    this.alert.showSuccess('Uitslag succesvol opgeslagen.');
+                    this.escapePressed();
+                })
+                .catch(err => {
+                    this.alert.showError(err);
+                });
+            }
+            else {
+                this.alert.showSuccess('Uitslag succesvol opgeslagen.');
+                this.escapePressed();
+            }
         })
         .catch(err => {
             this.alert.showError(err);
@@ -398,6 +418,19 @@ export class PouleWedstrijd extends Base implements OnInit {
         tegKoppel.matches.forEach(match => {
             this.addUitslagToOtherUitslag(match.uitslag, tegKoppel.uitslag);
         });
+        this.poule.status.gestart = this.poule.koppels.some(kp => kp.uitslag.brt > 0);
+        if (!this.poule.status.gestart) {
+            this.poule.status.gereed = false;
+        }
+        else {
+            this.poule.status.gereed = this.poule.koppels.every(kp => {
+                return kp.matches.every(mat => {
+                    return mat.wedstrijden.every(wed => wed.uitslag.brt > 0);
+                });
+            });
+        }
+        this.pouleRonde.status.gestart = this.pouleRonde.poules.some(pl => pl.status.gestart);
+        this.pouleRonde.status.gereed = this.pouleRonde.poules.every(pl => pl.status.gereed);
         // opslaan
         const rondeToSave: SpeelRonde = JSON.parse(JSON.stringify(this.pouleRonde));
         const pouleToSave: Poule = rondeToSave.poules[this.idxPoule];
@@ -405,8 +438,22 @@ export class PouleWedstrijd extends Base implements OnInit {
         pouleToSave.koppels = [];
         this.dao.saveSpeelRondeFile(this.header.seizoen, this.ronde.fileNaam, rondeToSave)
         .then(resp => {
-            this.alert.showSuccess('Wedstrijd succesvol verwijderd.');
-            this.escapePressed();
+            if (this.ronde.status.gereed != this.pouleRonde.status.gereed || this.ronde.status.gestart != this.pouleRonde.status.gestart) {
+                this.ronde.status.gereed = this.pouleRonde.status.gereed;
+                this.ronde.status.gestart = this.pouleRonde.status.gestart;
+                this.dao.saveRondes(this.header.seizoen, this.rondes)
+                .then(resp2 => {
+                    this.alert.showSuccess('Wedstrijd succesvol verwijderd.');
+                    this.escapePressed();
+                })
+                .catch(err => {
+                    this.alert.showError(err);
+                });
+            }
+            else {
+                this.alert.showSuccess('Wedstrijd succesvol verwijderd.');
+                this.escapePressed();
+            }
         })
         .catch(err => {
             this.alert.showError(err);

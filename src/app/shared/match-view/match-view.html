@@ -1,7 +1,8 @@
 <div class="fullheight">
     @for (idxW of [0, 1]; track $index) {
         <div class="row-wedstrijd">
-            <div class="wedstrijd flexbox flexstretch" [ngClass]="{'selected': idxSel == idxW}" (click)="wedstrijdClicked(idxW)">
+            <div class="wedstrijd flexbox flexstretch" [ngClass]="{'selected': idxSel == idxW}" (click)="wedstrijdClicked(idxW)" 
+                        [title]="'Wedstrijd ' + (idxW + 1) + (matches[0].wedstrijden[idxW].uitslag.brt > 0 ? ' bekijken' : ' starten')">
                 <div class="col-header flexbox flexcenter flexmiddle">
                     <div class="wed-bal arial">
                         <span>{{idxW + 1}}</span>
@@ -58,6 +59,12 @@
                         </div>
                         <div style="padding-top: .1875em;">
                             <span style="font-size: 1.25em;">SER</span>
+                        </div>
+                    }
+                    @else {
+                        <div style="padding-top: 1em; text-align: center;">
+                            <i class="fas fa-keyboard" [title]="'Wedstrijd ' + (idxW + 1) + ' uitslag invoeren'" 
+                                        (click)="keybClicked($event, idxW)"></i>
                         </div>
                     }
                 </div>

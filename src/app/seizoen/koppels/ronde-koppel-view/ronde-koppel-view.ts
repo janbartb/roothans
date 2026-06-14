@@ -19,6 +19,7 @@ export class RondeKoppelView {
     @Input() view: string = 'normal';
     @Input() speelDagen: SpeelDag[] = [];
     @Input() selectable: boolean = true;
+    @Input() pouleGereed: boolean = false;
     @Output() hovered: EventEmitter<RondeKoppel> = new EventEmitter();
     @Output() clicked: EventEmitter<RondeKoppel> = new EventEmitter();
     @Output() dblClicked: EventEmitter<RondeKoppel> = new EventEmitter();

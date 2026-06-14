@@ -3,16 +3,27 @@
         <div>
             @for (ronde of rondes; track $index) {
                 <div>
-                    @if ($index == 0) {
-                        <app-ronde-view [ronde]="ronde" [prevRonde]="dummy" [btnPressed]="rondeButtonPressedIds[0]"
-                                    (plannenClicked)="plannenClicked($event)" (spelenClicked)="spelenClicked($event)"></app-ronde-view>
-                    }
-                    @else {
-                        <app-ronde-view [ronde]="ronde" [prevRonde]="rondes[$index - 1]" [btnPressed]="rondeButtonPressedIds[$index]"
-                                    (plannenClicked)="plannenClicked($event)" (spelenClicked)="spelenClicked($event)"></app-ronde-view>
-                    }
+                    <app-ronde-view [ronde]="ronde" [selected]="$index == idxRonde"
+                                    (clicked)="rondeClicked($event)"></app-ronde-view>
                 </div>
             }
+        </div>
+    </div>
+    <div class="flexbox flexmiddle flexcenter page-footer" style="height: 3.5em; min-height: 3.5em;">
+        <div style="padding-right: 2.25em;">
+            <span style="font-size: 1.25em;">Ronde <b>{{ronde.rndId}}</b> - {{ronde.rndNaam}}</span>
+        </div>
+        <div style="padding-top: .5em;">
+            <app-button [button]="btnPlan" [disabled]="!prevRonde.status.gereed || ronde.status.gestart"
+                        (btnClicked)="plannenClicked()"></app-button>
+        </div>
+        <div style="padding-top: .5em;">
+            <app-button [button]="btnSpel" [disabled]="!ronde.status.gepland"
+                        (btnClicked)="spelenClicked()"></app-button>
+        </div>
+        <div style="padding-left: 2em; padding-top: .5em;">
+            <app-button [button]="btnEdit" [disabled]="ronde.status.gepland"
+                        (btnClicked)="wijzigenClicked()"></app-button>
         </div>
     </div>
 </div>

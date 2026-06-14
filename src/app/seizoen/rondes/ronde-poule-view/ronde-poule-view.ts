@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { Poule } from '../../../model/ronde';
 import { RondeKoppelView } from '../../koppels/ronde-koppel-view/ronde-koppel-view';
@@ -12,7 +12,7 @@ import { RondeKoppelView } from '../../koppels/ronde-koppel-view/ronde-koppel-vi
     templateUrl: './ronde-poule-view.html',
     styleUrl: './ronde-poule-view.css',
 })
-export class RondePouleView implements OnInit {
+export class RondePouleView {
     @Input() poule: Poule = new Poule(0);
     @Input() type: string = '';
     @Input() selected: boolean = false;
@@ -23,11 +23,14 @@ export class RondePouleView implements OnInit {
     @Input() koppelSelect: boolean = false;
     @Input() pouleCheck: boolean = false;
     @Input() allowDelete: boolean = true;
+    @Input() forSpeelDatum: boolean = false;
     @Output() koppelClicked: EventEmitter<number> = new EventEmitter<number>();
     @Output() deletePouleClicked: EventEmitter<string> = new EventEmitter<string>();
-    pouleGestart: boolean = false;
 
     kplClicked(idx: number) {
+        if (!this.koppelClick) {
+            return;
+        }
         if (this.koppelSelect) {
             this.idxKoppel = idx;
         }
@@ -44,10 +47,6 @@ export class RondePouleView implements OnInit {
             return '';
         }
         return `${dat.substring(8)}-${dat.substring(5,7)}-${dat.substring(0,4)}`;
-    }
-
-    ngOnInit(): void {
-        this.pouleGestart = this.poule.koppels.some(pk => pk.uitslag.brt > 0);
     }
 
 }

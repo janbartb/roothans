@@ -70,6 +70,7 @@ export class PoulesAanmaken extends Base implements OnInit {
     btnNext: Btn = new Btn('next', 'Naar speeldata', 'enter');
 
     opslaanClicked(andNext?: boolean) {
+        this.pouleRonde.status.gepland = this.poulesOk && this.pouleRonde.poules.every(pl => pl.datum != '');
         const rondeToSave: SpeelRonde = JSON.parse(JSON.stringify(this.pouleRonde));
         rondeToSave.poules.forEach(p => {
             p.koppelIds = p.koppels.map(k => k.kopId);
@@ -77,10 +78,22 @@ export class PoulesAanmaken extends Base implements OnInit {
         });
         this.dao.saveSpeelRondeFile(this.header.seizoen, this.ronde.fileNaam, rondeToSave)
         .then(resp => {
-            this.alert.showSuccess(resp.message);
             this.touched = false;
-            if (andNext) {
-                this.nextClicked();
+            if (this.pouleRonde.status.gepland != this.ronde.status.gepland) {
+                this.ronde.status.gepland = this.pouleRonde.status.gepland;
+                this.dao.saveRondes(this.header.seizoen, this.rondes)
+                .then(resp2 => {
+                    this.alert.showSuccess(resp.message);
+                    if (andNext) {
+                        this.nextClicked();
+                    }
+                })
+                .catch(err => {
+                    this.alert.showError(err);
+                });
+            }
+            else {
+                this.alert.showSuccess(resp.message);
             }
         })
         .catch(err => {
@@ -133,6 +146,7 @@ export class PoulesAanmaken extends Base implements OnInit {
         this.pouleKoppelBackToKoppelsPerDagen(koppelToRemove);
         poule.koppels[idxKoppel] = new RondeKoppel();
         poule.koppelIds[idxKoppel] = '';
+        //poule.datum = '';
         if (this.pouleIsEmpty(poule)) {
             this.pouleRonde.poules.splice(idxPoule, 1);
         }
@@ -315,7 +329,10 @@ export class PoulesAanmaken extends Base implements OnInit {
 
     private allPoulesFilled(): boolean {
         return this.pouleRonde.poules.length == this.maxPoules &&
-                this.pouleRonde.poules.every(pl => pl.koppels.length == this.config.maxKoppelsPerPoule);
+                this.pouleRonde.poules.every(pl => {
+                    return pl.koppels.length == this.config.maxKoppelsPerPoule &&
+                            pl.koppels.every(kpl => kpl.kopId != '');
+                });
     }
 
     private removeKoppelFromKoppelsPerDagen(koppel: Koppel) {

@@ -5,7 +5,8 @@
         </div>
         @for (koppel of poule.koppels; track $index) {
             <div class="poule-koppel" style="padding: .0625em .5em;">
-                <app-ronde-koppel-view [koppel]="koppel" [view]="koppelView" [rang]="$index + 1"></app-ronde-koppel-view>
+                <app-ronde-koppel-view [koppel]="koppel" [view]="koppelView" [rang]="$index + 1"
+                                [pouleGereed]="poule.status.gereed"></app-ronde-koppel-view>
             </div>
         }
     </div>
@@ -38,10 +39,15 @@
             }
             <div style="padding-right: .25em;">
                 @if (allowDelete) {
-                    <i class="fas fa-trash-alt btn-delete" (click)="deleteClicked($event)"></i>
+                    @if (forSpeelDatum) {
+                        <span>&nbsp;</span>
+                    }
+                    @else {
+                        <i class="fas fa-trash-alt btn-delete" (click)="deleteClicked($event)"></i>
+                    }
                 }
                 @else {
-                    <span>&nbsp;</span>
+                    <i style="color: red;" class="fas fa-lock" title="Wijzigen niet toegestaan. Poule al gestart."></i>
                 }
             </div>
         </div>
@@ -55,14 +61,14 @@
                         <div class="ellipsis" style="width: 10em;"><span><b>Speler A</b></span></div>
                         <div style="width: 2em;"></div>
                         <div style="width: 5.25em;"></div>
-                        @if (pouleGestart) {
+                        @if (poule.status.gestart) {
                             <div><span><b>GW</b></span></div>
                             <div style="width: 3em;"></div>
                             <div><span><b>Score</b></span></div>
                         }
                     </div>
                 }
-                @else {
+                @else if (!forSpeelDatum) {
                     <div class="poule-koppel">
                         <app-ronde-koppel-view [view]="'poule-header'"></app-ronde-koppel-view>
                     </div>
@@ -74,7 +80,8 @@
                 @for (koppel of poule.koppels; track $index) {
                     <div class="poule-koppel" [ngClass]="{'list-row': koppelClick, 'selected': $index == idxKoppel}" 
                                 (click)="kplClicked($index)">
-                        <app-ronde-koppel-view [koppel]="koppel" [view]="koppelView" [rang]="$index + 1"></app-ronde-koppel-view>
+                        <app-ronde-koppel-view [koppel]="koppel" [view]="koppelView" [rang]="$index + 1"
+                                        [pouleGereed]="poule.status.gereed"></app-ronde-koppel-view>
                     </div>
                 }
             </div>

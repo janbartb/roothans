@@ -56,3 +56,9 @@ export class BtnKey {
         this.pos = p;
     }
 }
+
+export class Periode {
+    // periode is inclusief van en exclusief tot
+    van: string = '';
+    tot: string = '';
+}

@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { Periode } from '../model/misc';
+import { SpeelWeek, SpeelWeekDag } from '../model/seizoen';
 
 class DateParts {
     year: number = 2000;
@@ -56,7 +58,6 @@ export class DateHelper {
             return [];
         }
         let dat = '';
-        let today = this.getToday();
         let result: string[] = [];
         let counter = 0;
         let parts = new DateParts(startFrom);
@@ -78,9 +79,75 @@ export class DateHelper {
         return result;
     }
 
+    getSpeelweken(periode: Periode, speeldagNrs: number[], isFinaleDag?: boolean): SpeelWeek[] {
+        let result: SpeelWeek[] = [];
+        let start = periode.van;
+        while (start < periode.tot) {
+            let dat = start;
+            let parts = new DateParts(dat);
+            let d = parts.date;
+            let week = new SpeelWeek();
+            week.weekNr = this.getWeekNr(new DateParts(dat).date);
+            week.startdat = start;
+            [0,1,2,3,4,5,6].forEach(dagNr => {
+                d.setDate(d.getDate() + (dagNr == 0 ? 0 : 1));
+                dat = d.toISOString().substring(0, 10);
+                let speeldag = new SpeelWeekDag();
+                speeldag.dagNr = dagNr;
+                speeldag.dagNaam = this.getDagNaam(dagNr);
+                speeldag.dagDatum = dat;
+                speeldag.isSpeeldag = speeldagNrs.includes(dagNr);
+                week.weekDagen.push(speeldag);
+                if (dagNr == 6) {
+                    week.einddat = dat;
+                }
+            });
+            result.push(week);
+            d.setDate(d.getDate() + 1);
+            start = d.toISOString().substring(0, 10);
+        }
+        return result;
+    }
+
+    getRondePeriodes(seizoen: number): Periode[] {
+        let result: Periode[] = [];
+        let d = new Date(seizoen, 0, 1, 12);
+        const dayNr = d.getDay();
+        if (dayNr > 0) {
+            d.setDate(d.getDate() + (7 - dayNr));
+        }
+        // voorronde
+        let periode = new Periode();
+        periode.van = d.toISOString().substring(0, 10);
+        d.setDate(d.getDate() + 28);
+        periode.tot = d.toISOString().substring(0, 10);
+        result.push(periode);
+        // 16e
+        periode = new Periode();
+        periode.van = d.toISOString().substring(0, 10);
+        d.setDate(d.getDate() + 21);
+        periode.tot = d.toISOString().substring(0, 10);
+        result.push(periode);
+        // 8e
+        periode = new Periode();
+        periode.van = d.toISOString().substring(0, 10);
+        d.setDate(d.getDate() + 7);
+        periode.tot = d.toISOString().substring(0, 10);
+        result.push(periode);
+        // 4e
+        periode = new Periode();
+        periode.van = d.toISOString().substring(0, 10);
+        d.setDate(d.getDate() + 7);
+        periode.tot = d.toISOString().substring(0, 10);
+        result.push(periode);
+        // finale
+        result.push(periode);
+        return result;
+    }
+
     getDagNaam(dagNr: number): string {
         if (dagNr < 0 || dagNr > 6) {
-            return 'Error';
+            return 'Error:' + dagNr;
         }
         return this.dagNamen[dagNr];
     }
@@ -90,6 +157,16 @@ export class DateHelper {
             return '';
         }
         return `${dat.substring(8)}-${dat.substring(5,7)}-${dat.substring(0,4)}`;
+    }
+
+    private getWeekNr(dat: Date): number {
+        // Thursday in current week decides the year.
+        dat.setDate(dat.getDate() + 3 - (dat.getDay() + 6) % 7);
+        // January 4 is always in week 1.
+        var week1 = new Date(dat.getFullYear(), 0, 4, 12);
+        // Adjust to Thursday in week 1 and count number of weeks from date to week1.
+        return 1 + Math.round(((dat.getTime() - week1.getTime()) / 86400000
+                              - 3 + (week1.getDay() + 6) % 7) / 7);      
     }
 
 }

@@ -16,7 +16,8 @@
         </div>
         <div class="row-match">
             <app-match-view [koppels]="koppels" [isPouleMatch]="true" [idxSel]="idxWed" [idxWedBezig]="idxWedBezig"
-                        (wedClicked)="wedstrijdClicked($event)" (error)="showMatchViewError($event)"></app-match-view>
+                        (wedClicked)="wedstrijdClicked($event)" (keyboardClicked)="keyboardClicked($event)"
+                        (error)="showMatchViewError($event)"></app-match-view>
         </div>
         <div class="row-footer flexbox flexcenter flexmiddle">
             <div style="position: relative; width: 9em;"><span>&nbsp;</span>

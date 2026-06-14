@@ -30,6 +30,9 @@
     color: #163317;
     overflow: hidden;
 }
+.sectie.square {
+    border-radius: 0;
+}
 .sectie.donker {
     background-color: #163317;
     color: #b7dfb8;
@@ -62,6 +65,31 @@
     border-bottom: .0625em solid #163317;
     border-bottom-left-radius: .5em;
     border-bottom-right-radius: .5em;
+}
+.square .sectie-content.met-rand {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.speeldag.poule {
+    height: 1.25em;
+    background-color: #2e6830;
+    color: #dbefdc;
+    padding: 0 .25em;
+    border-radius: .375em;
+    overflow: hidden;
+    cursor: default;
+}
+.speeldag.poule.selectable {
+    background-color: #163317;
+    cursor: pointer;
+}
+.speeldag.poule.selectable:hover {
+    background-color: darkred;
+}
+.speeldag.poule .dag-content {
+    background-color: #dbefdc;
+    color: #163317;
 }
 
 /* scroll areas */

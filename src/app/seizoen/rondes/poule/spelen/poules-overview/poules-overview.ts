@@ -9,6 +9,7 @@ import { Seizoen } from '../../../../../model/seizoen';
 import { Poule, Ronde, SpeelRonde } from '../../../../../model/ronde';
 import { Btn } from '../../../../../model/misc';
 import { RondeKoppel } from '../../../../../model/koppel';
+import { Tester } from '../../../../../services/tester';
 
 @Component({
     selector: 'app-poules-overview',
@@ -23,21 +24,51 @@ import { RondeKoppel } from '../../../../../model/koppel';
 export class PoulesOverview extends Base implements OnInit {
     route = inject(ActivatedRoute);
     dater = inject(DateHelper);
+    tester = inject(Tester);
     config: Seizoen = new Seizoen();
     rondes: Ronde[] = [];
     ronde: Ronde = new Ronde(0, '', '', 0, '');
     pouleRonde: SpeelRonde = new SpeelRonde(0, '', '', 0, '');
     idxPoule: number = -1;
     today: string = '';
-    touched: boolean = false;
-    poulesOk: boolean = false;
 
     btnWeds: Btn = new Btn('next', 'Naar poule', 'enter');
+    btnVul: Btn = new Btn('vul', 'Alle weds invullen');
 
     naarPouleClicked() {
         if (this.idxPoule >= 0) {
             this.gotoPage(`rondes/poule/${this.ronde.rndId}/spel/${this.idxPoule}`, `rondes/poule/${this.ronde.rndId}/spel`);
         }
+    }
+
+    alleWedstrijdenVullenClicked() {
+        this.tester.vulAllePouleRondeWedstrijden(this.pouleRonde, this.config);
+        // opslaan
+        const rondeToSave: SpeelRonde = JSON.parse(JSON.stringify(this.pouleRonde));
+        rondeToSave.poules.forEach(pl => {
+            pl.koppelIds = pl.koppels.map(k => k.kopId);
+            pl.koppels = [];
+        });
+        this.dao.saveSpeelRondeFile(this.header.seizoen, this.ronde.fileNaam, rondeToSave)
+        .then(resp => {
+            if (this.ronde.status.gereed != this.pouleRonde.status.gereed || this.ronde.status.gestart != this.pouleRonde.status.gestart) {
+                this.ronde.status.gereed = this.pouleRonde.status.gereed;
+                this.ronde.status.gestart = this.pouleRonde.status.gestart;
+                this.dao.saveRondes(this.header.seizoen, this.rondes)
+                .then(resp2 => {
+                    this.alert.showSuccess('Uitslag succesvol opgeslagen.');
+                })
+                .catch(err => {
+                    this.alert.showError(err);
+                });
+            }
+            else {
+                this.alert.showSuccess('Uitslag succesvol opgeslagen.');
+            }
+        })
+        .catch(err => {
+            this.alert.showError(err);
+        });
     }
 
     pouleSelected(idx: number) {
@@ -61,6 +92,15 @@ export class PoulesOverview extends Base implements OnInit {
                 this.selectPrevPoule();
             }
             if (event.key === 'ArrowDown') {
+                this.selectNextPoule();
+            }
+            return false;
+        }
+        if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+            if (event.key === 'ArrowLeft') {
+                this.selectPrevPoule();
+            }
+            if (event.key === 'ArrowRight') {
                 this.selectNextPoule();
             }
             return false;
@@ -192,11 +232,16 @@ export class PoulesOverview extends Base implements OnInit {
 
     private comparePouleKoppels(a: RondeKoppel, b: RondeKoppel): number {
         if (a.uitslag.pnt == b.uitslag.pnt) {
-            if ((b.uitslag.moy / b.kopMoyenne) == (a.uitslag.moy / a.kopMoyenne)) {
-                return b.kopMoyenne - a.kopMoyenne;
+            if (a.uitslag.weds == b.uitslag.weds) {
+                if ((b.uitslag.moy / b.kopMoyenne) == (a.uitslag.moy / a.kopMoyenne)) {
+                    return b.kopMoyenne - a.kopMoyenne;
+                }
+                else {
+                    return (b.uitslag.moy / b.kopMoyenne) - (a.uitslag.moy / a.kopMoyenne);
+                }
             }
             else {
-                return (b.uitslag.moy / b.kopMoyenne) - (a.uitslag.moy / a.kopMoyenne);
+                return a.uitslag.weds - b.uitslag.weds;
             }
         }
         else {

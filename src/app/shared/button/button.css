@@ -42,6 +42,7 @@
 }
 .button-front-inner.disabled {
     background-color: gray;
+    border-color: gray;
     cursor: not-allowed;
 }
 .button-front-inner.default.disabled {

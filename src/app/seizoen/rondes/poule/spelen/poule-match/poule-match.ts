@@ -101,6 +101,14 @@ export class PouleMatch extends Base implements OnInit {
 
     wedstrijdClicked(idx: number) {
         this.selectWedstrijd(idx);
+        this.naarWedstrijdClicked();
+    }
+
+    keyboardClicked(idx: number) {
+        this.selectWedstrijd(idx);
+        if (!this.wedGespeeld) {
+            this.uitslagToevoegenClicked();
+        }
     }
 
     showMatchViewError(err: string) {

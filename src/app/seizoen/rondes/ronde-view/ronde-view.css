@@ -1,26 +1,31 @@
 .ronde-container {
     background-color: #1e461f;
     color: #dbefdc;
-    border: .125em solid #1e461f;
+    border: .1875em solid #1e461f;
     border-radius: .5em;
-    padding: .125em;
+    padding: .1875em;
     margin: .125em 0;
     cursor: pointer;
 }
 .ronde-container:hover {
-    border-color: red;
+    border-color: #b80000;
 }
 
 .ronde-nummer {
     width: 2.5em;
     height: 2.5em;
-    background-color: #b7dfb8;
-    color: #1e461f;
+    background-color: #2e6830;
+    color: #dbefdc;
     border-radius: 50%;
 }
 .ronde-nummer > div {
     font-size: 1.25em;
     line-height: 1;
+}
+.ronde-container.selected .ronde-nummer {
+    background-color: #b7dfb8;
+    color: #1e461f;
+    font-weight: bold;
 }
 
 .ronde-status {

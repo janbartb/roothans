@@ -1,12 +1,18 @@
 .poule-view {
     width: 100%;
     cursor: pointer;
+    /* padding-bottom: .125em; */
 }
-.poule-view.selected .sectie-title, .poule-view:hover .sectie-title {
+.poule-view:hover .sectie-content {
+    background-color: #dbefdc;
+}
+.poule-view.selected .sectie-title {
     background-color: darkred;
 }
-.poule-view.selected .sectie-content.met-rand, .poule-view:hover .sectie-content.met-rand {
-    border-left: .0625em solid darkred;
-    border-right: .0625em solid darkred;
-    border-bottom: .0625em solid darkred;
+.poule-view.finished .sectie-content {
+    background-color: #265728;
+    color: #b7dfb8;
+}
+.poule-view.finished:hover .sectie-content {
+    background-color: #357a38;
 }

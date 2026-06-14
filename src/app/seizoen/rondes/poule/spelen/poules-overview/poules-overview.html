@@ -4,7 +4,7 @@
             @for (poule of pouleRonde.poules; track $index) {
                 <div class="container flexbox flexmiddle" style="width: 50%;" 
                             [ngClass]="{'onder': $index > 1, 'boven': $index < (pouleRonde.poules.length - 2)}">
-                    <div class="sectie poule-view" [ngClass]="{'selected': $index == idxPoule}" (click)="pouleClicked($index)">
+                    <div class="sectie poule-view" [ngClass]="{'selected': $index == idxPoule, 'finished': poule.status.gereed}" (click)="pouleClicked($index)">
                         <div class="sectie-title flexbox flexmiddle flexbetween" style="font-weight: normal; padding: 0 1em;">
                             <div style="font-size: .75em; line-height: 1.2;">
                                 <span>Poule <b>{{poule.id}}</b></span>
@@ -13,8 +13,8 @@
                                 <span>{{poule.dagNaam}} <b>{{dater.dateReverse(poule.datum)}}</b></span>
                             </div>
                         </div>
-                        <div class="sectie-content met-rand flexbox flexmiddle" style="min-height: 4em;">
-                            <div style="font-size: .625em; ">
+                        <div class="sectie-content flexbox flexmiddle" style="min-height: 4em; padding: .125em 0 .25em .5em;">
+                            <div style="font-size: .625em;">
                                 <app-ronde-poule-view [poule]="poule" [type]="'only-content'" [allowDelete]="false" [koppelView]="'poule-uitslag'"
                                             [koppelClick]="false" [selected]="$index == idxPoule"></app-ronde-poule-view>
                             </div>
@@ -24,9 +24,12 @@
             }
         </div>
     </div>
-    <div class="flexbox flexcenter flexmiddle" style="min-height: 3em;">
-        <div>
+    <div class="flexbox flexcenter flexmiddle" style="min-height: 3em; height: 3em;">
+        <div style="padding-top: .25em;">
             <app-button [button]="btnWeds" [disabled]="idxPoule < 0" (btnClicked)="naarPouleClicked()"></app-button>
+        </div>
+        <div style="padding-top: .25em;">
+            <app-button [button]="btnVul" [disabled]="pouleRonde.status.gestart" (btnClicked)="alleWedstrijdenVullenClicked()"></app-button>
         </div>
     </div>
 </div>
