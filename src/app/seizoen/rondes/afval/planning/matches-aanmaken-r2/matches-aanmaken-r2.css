@@ -1,24 +1,16 @@
-.sectie-page {
-    border-radius: .5em;
-    background-color: #dbefdc;
-}
-.sectie-page-title {
-    background-color: #265728;
-    color: #dbefdc;
-    min-height: 1.125em;
-    font-weight: bold;
-    text-align: center;
-}
-.sectie-page-title > div {
-    padding: 0 1em;
-}
-
 .sectie-rangkoppels {
     border-radius: .5em;
     background-color: #b7dfb8;
 }
+/* .sectie-rangkoppels-title {
+    background-color: #163317;
+    color: #dbefdc;
+    min-height: 1.125em;
+    font-weight: bold;
+    text-align: center;
+} */
 .sectie-rangkoppels-title {
-    background-color: #265728;
+    background-color: #2e6830;
     color: #dbefdc;
     min-height: 1.125em;
     font-weight: bold;
@@ -91,4 +83,3 @@
     background-color: #265728;
     color: #dbefdc;
 }
-

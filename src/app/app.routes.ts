@@ -10,8 +10,6 @@ import { Settings } from './seizoen/settings/settings';
 import { Rondes } from './seizoen/rondes/rondes';
 import { Probeer } from './probeer/probeer';
 import { SeizoenMenu } from './seizoen/seizoen-menu/seizoen-menu';
-import { AfvalRondePlanning } from './seizoen/rondes/afval/afval-ronde-planning/afval-ronde-planning';
-import { AfvalRondePlanner } from './seizoen/rondes/afval/afval-ronde-planner/afval-ronde-planner';
 import { PoulesAanmaken } from './seizoen/rondes/poule/planning/poules-aanmaken/poules-aanmaken';
 import { PoulesOverview } from './seizoen/rondes/poule/spelen/poules-overview/poules-overview';
 import { PouleOverview } from './seizoen/rondes/poule/spelen/poule-overview/poule-overview';
@@ -20,6 +18,10 @@ import { PouleMatch } from './seizoen/rondes/poule/spelen/poule-match/poule-matc
 import { PouleWedstrijd } from './seizoen/rondes/poule/spelen/poule-wedstrijd/poule-wedstrijd';
 import { PouleScorebord } from './seizoen/rondes/poule/spelen/poule-scorebord/poule-scorebord';
 import { PoulesSpeeldagen } from './seizoen/rondes/poule/planning/poules-speeldagen/poules-speeldagen';
+import { MatchesAanmakenR2 } from './seizoen/rondes/afval/planning/matches-aanmaken-r2/matches-aanmaken-r2';
+import { MatchesAanmaken } from './seizoen/rondes/afval/planning/matches-aanmaken/matches-aanmaken';
+import { MatchesSpeeldagenR2 } from './seizoen/rondes/afval/planning/matches-speeldagen-r2/matches-speeldagen-r2';
+import { MatchesSpeeldagen } from './seizoen/rondes/afval/planning/matches-speeldagen/matches-speeldagen';
 
 export const routes: Routes = [
     { path: 'home', component: Home },
@@ -37,8 +39,10 @@ export const routes: Routes = [
     { path: 'rondes/poule/:rondeId/spel', component: PoulesOverview },
     { path: 'rondes/poule/:rondeId/data', component: PoulesSpeeldagen },
     { path: 'rondes/poule/:rondeId/planner', component: PoulesAanmaken },
-    { path: 'rondes/afval/:rondeId/plan', component: AfvalRondePlanning },
-    { path: 'rondes/afval/:rondeId/planner', component: AfvalRondePlanner },
+    { path: 'rondes/afval/2/planner', component: MatchesAanmakenR2 },
+    { path: 'rondes/afval/2/data', component: MatchesSpeeldagenR2 },
+    { path: 'rondes/afval/:rondeId/planner', component: MatchesAanmaken },
+    { path: 'rondes/afval/:rondeId/data', component: MatchesSpeeldagen },
     { path: 'rondes', component: Rondes },
     { path: 'init', component: InitSpelers },
     { path: 'spelers', component: Spelers },

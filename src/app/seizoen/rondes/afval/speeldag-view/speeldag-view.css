@@ -7,7 +7,7 @@
     border: .125em solid #6ec071;
 }
 .sectie-speeldag.selected {
-    border-color: red;
+    border-color: #bb0000;
 }
 .sectie-speeldag > div {
 }
@@ -47,15 +47,15 @@
     border: .125em solid #1e461f;
 }
 .sectie-match.selected {
-    border-color: red;
+    border-color: #bb0000;
+    background-color: #bb0000;
 }
 .sectie-match:hover {
-    background-color: darkred;
-    border-color: darkred;
+    border-color: #bb0000;
 }
 .sectie-match.selected:hover {
-    background-color: darkred;
-    border-color: red;
+    background-color: #bb0000;
+    border-color: #bb0000;
 }
 .container-koppel {
     padding: .0625em .125em;

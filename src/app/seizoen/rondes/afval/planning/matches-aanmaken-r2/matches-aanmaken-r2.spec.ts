@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AfvalRondePlanner } from './afval-ronde-planner';
+import { MatchesAanmakenR2 } from './matches-aanmaken-r2';
 
-describe('AfvalRondePlanner', () => {
-  let component: AfvalRondePlanner;
-  let fixture: ComponentFixture<AfvalRondePlanner>;
+describe('MatchesAanmakenR2', () => {
+  let component: MatchesAanmakenR2;
+  let fixture: ComponentFixture<MatchesAanmakenR2>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AfvalRondePlanner]
+      imports: [MatchesAanmakenR2]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(AfvalRondePlanner);
+    fixture = TestBed.createComponent(MatchesAanmakenR2);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

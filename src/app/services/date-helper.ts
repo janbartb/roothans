@@ -53,6 +53,25 @@ export class DateHelper {
         return result;
     }
 
+    getWeekDaysInPeriod(dayOfWeek: number, periode: Periode): string[] {
+        let dat = '';
+        let result: string[] = [];
+        let parts = new DateParts(periode.van);
+        let d = parts.date;
+        // Get the first weekDay in the month
+        while (d.getDay() != dayOfWeek) {
+            d.setDate(d.getDate() + 1);
+        }
+        dat = d.toISOString().substring(0, 10);
+        // Get the other same weekDays in the month
+        while (dat < periode.tot) {
+            result.push(dat);
+            d.setDate(d.getDate() + 7);
+            dat = d.toISOString().substring(0, 10);
+        }
+        return result;
+    }
+
     getGivenNrOfWeekDaysStartingFrom(dayOfWeek: number, nrOfDays: number, startFrom: string, notInPast?: boolean): string[] {
         if (nrOfDays < 1) {
             return [];

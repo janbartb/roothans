@@ -1,37 +1,53 @@
-<!-- @if (viewType == 'row') {
+@if (viewType == 'row') {
     <div class="sectie-speeldag" [ngClass]="{'selected': selected}">
         <div class="flexbox flexmiddle">
             <div class="dagnaam" (click)="dagClicked()">
                 <span title="Selecteer deze speeldag">{{speelDag.dagNaam}}</span>
             </div>
-            <div class="dagdatum">
-                @if (speelDag.mogelijkeData.length) {
-                    <select [(ngModel)]="speelDag.datum" (change)="datumGewijzigd()">
-                        <option value=""></option>
-                        @for (opt of speelDag.mogelijkeData; track $index) {
-                            <option [ngValue]="opt">{{opt}}</option>
-                        }
-                    </select>
-                }
-                @else {
-                    <span>{{dater.dateReverse(speelDag.datum)}}</span>
-                }
-            </div>
+            @if (metDatum) {
+                <div class="dagdatum">
+                    @if (speelDag.mogelijkeData.length) {
+                        <select [(ngModel)]="speelDag.datum" (change)="datumGewijzigd()">
+                            <option value=""></option>
+                            @for (opt of speelDag.mogelijkeData; track $index) {
+                                <option [ngValue]="opt">{{opt}}</option>
+                            }
+                        </select>
+                    }
+                    @else {
+                        <span>{{dater.dateReverse(speelDag.datum)}}</span>
+                    }
+                </div>    
+            }
             <div class="flexgrow1 flexbox">
                 @for (match of speelDag.matches; track $index) {
                     <div class="flex25perc container-match">
                         <div class="sectie-match flexbox" [ngClass]="{'selected': selected && $index == idxMatch}"
-                                    [title]="match.splKoppelId == '' ? '' : 'Match verwijderen'" (click)="matchClicked($index)">
-                            <div class="flex50perc container-koppel">
-                                <div class="sectie-koppel">
-                                    <div>{{match.splKoppel.koppel.spelers[0].splNaam || nbs}}</div>
-                                    <div>{{match.splKoppel.koppel.spelers[1].splNaam || nbs}}</div>
+                                    [title]="match.koppels[0].kopId == '' ? '' : 'Match verwijderen'" (click)="matchClicked($index)">
+                            <div class="flex50perc container-koppel" style="overflow: hidden;">
+                                <div class="sectie-koppel flexbox" style="overflow: hidden;">
+                                    <div class="flexgrow1" style="overflow: hidden;">
+                                        <div class="ellipsis">{{match.koppels[0].spelers[0].splNaam || nbs}}</div>
+                                        <div class="ellipsis">{{match.koppels[0].spelers[1].splNaam || nbs}}</div>    
+                                    </div>
+                                    @if (!metDatum) {
+                                        <div class="flexbox flexcenter flexmiddle" style="width: 1.75em;">
+                                            <div><span style="font-size: 1.25em;">{{match.koppels[0].pouleId}}</span></div>
+                                        </div>
+                                    }
                                 </div>
                             </div>
-                            <div class="flex50perc container-koppel">
-                                <div class="sectie-koppel">
-                                    <div>{{match.tegKoppel.koppel.spelers[0].splNaam || nbs}}</div>
-                                    <div>{{match.tegKoppel.koppel.spelers[1].splNaam || nbs}}</div>
+                            <div class="flex50perc container-koppel" style="overflow: hidden;">
+                                <div class="sectie-koppel flexbox" style="overflow: hidden;">
+                                    <div class="flexgrow1" style="overflow: hidden;">
+                                        <div class="ellipsis">{{match.koppels[1].spelers[0].splNaam || nbs}}</div>
+                                        <div class="ellipsis">{{match.koppels[1].spelers[1].splNaam || nbs}}</div>    
+                                    </div>
+                                    @if (!metDatum) {
+                                        <div class="flexbox flexcenter flexmiddle" style="width: 1.75em;">
+                                            <div><span style="font-size: 1.25em;">{{match.koppels[1].pouleId}}</span></div>
+                                        </div>
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -48,4 +64,4 @@
             </div>
         </div>
     </div>
-} -->
+}

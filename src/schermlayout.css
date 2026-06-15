@@ -71,6 +71,42 @@
     border-bottom-right-radius: 0;
 }
 
+/* TAB SECTIE */
+
+.tab-sectie {}
+.tab-tabs {
+    height: 1.25em;
+}
+.tab-tab-container.links {
+    padding: 0 .25em 0 .5em;    
+}
+.tab-tab-container.rechts {
+    padding: 0 .5em 0 .25em;    
+}
+.tab-tab {
+    border-top-left-radius: .5em;
+    border-top-right-radius: .5em;
+    background-color: #b7dfb8;
+    color: #459c48;
+    cursor: pointer;
+}
+.tab-tab-container.selected .tab-tab {
+    font-weight: bold;
+    background-color: #163317;
+    color: #dbefdc;
+    cursor: default;
+}
+.tab-tab-container:not(.selected) .tab-tab:hover {
+    color: #1e461f;
+    font-weight: bold;
+}
+.tab-content {
+    background-color: #b7dfb8;
+    color: #163317;
+    border: .0625em solid #163317;
+    border-radius: .5em;
+}
+
 .speeldag.poule {
     height: 1.25em;
     background-color: #2e6830;

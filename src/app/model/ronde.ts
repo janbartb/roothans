@@ -68,10 +68,13 @@ export class RondeSpeelDag {
 
 export class RondeMatch {
     koppels: RondeKoppel[] = [];
+    koppelIds: string[] = [];
     datum: string = '';
 
     constructor(a: RondeKoppel, b: RondeKoppel) {
         this.koppels.push(a);
         this.koppels.push(b);
+        this.koppelIds.push(a.kopId);
+        this.koppelIds.push(b.kopId);
     }
 }

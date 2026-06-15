@@ -17,8 +17,10 @@ export class SpeeldagView {
     dater = inject(DateHelper);
     @Input() speelDag: RondeSpeelDag = new RondeSpeelDag(0);
     @Input() viewType: string = 'row';
+    @Input() metDatum: boolean = false;
     @Input() selected: boolean = false;
     @Input() idxMatch: number = -1;
+
     @Output() dateChanged: EventEmitter<string> = new EventEmitter();
     @Output() select: EventEmitter<boolean> = new EventEmitter();
     @Output() matchClick: EventEmitter<number> = new EventEmitter();
