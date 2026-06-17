@@ -9,6 +9,8 @@ import { Poule, Ronde, SpeelRonde } from '../../../../../model/ronde';
 import { Btn } from '../../../../../model/misc';
 import { Base } from '../../../../../base/base';
 import { RondeKoppelView } from '../../../../koppels/ronde-koppel-view/ronde-koppel-view';
+import { ConfirmKoppelsDialogType } from '../../../../../model/dialogs';
+import { ConfirmDialog } from '../../../../../shared/confirm-dialog/confirm-dialog';
 
 class KoppelsPerDag {
     dagNr: number = 0;
@@ -30,6 +32,7 @@ interface IData {
     imports: [
         RondeKoppelView,
         RondePouleView,
+        ConfirmDialog,
         Button,
         NgClass
     ],
@@ -49,6 +52,7 @@ export class PoulesAanmaken extends Base implements OnInit {
     maxWeekdagen: number = 4;  // geeft aan hoeveel maandagen, dinsdagen enz beschikbaar zijn voor de poule ronde
     touched: boolean = false;
     poulesOk: boolean = false;
+    confirmKoppels: ConfirmKoppelsDialogType = new ConfirmKoppelsDialogType();
     matchToNrs: IData = {
         m01 : 1,
         m10 : 1,
@@ -68,6 +72,7 @@ export class PoulesAanmaken extends Base implements OnInit {
     btnSave: Btn = new Btn('save', 'Opslaan', 's', 3);
     btnSaveNext: Btn = new Btn('savenext', 'Opslaan en naar speeldata');
     btnNext: Btn = new Btn('next', 'Naar speeldata', 'enter');
+    btnKpls: Btn = new Btn('kpls', 'Koppels', 'K', 1);
 
     opslaanClicked(andNext?: boolean) {
         this.pouleRonde.status.gepland = this.poulesOk && this.pouleRonde.poules.every(pl => pl.datum != '');
@@ -103,6 +108,25 @@ export class PoulesAanmaken extends Base implements OnInit {
 
     nextClicked() {
         this.gotoPage(`rondes/poule/${this.ronde.rndId}/data`, this.router.url);
+    }
+
+    naarKoppelsClicked() {
+        if (!this.pouleRonde.koppels.length) {
+            return;
+        }
+        if (this.touched) {
+            this.confirmKoppels.open = true;
+        }
+        else {
+            this.confirmKoppelsReplied(true);
+        }
+    }
+
+    confirmKoppelsReplied(confirmed: boolean) {
+        this.confirmKoppels.open = false;
+        if (confirmed) {
+            this.gotoPage(`rondes/${this.ronde.rndId}/koppels`, this.router.url);
+        }
     }
 
     clearHovered() {
@@ -169,6 +193,9 @@ export class PoulesAanmaken extends Base implements OnInit {
     @HostListener('document:keyup', ['$event'])
     handleKeyboardEvent(event: KeyboardEvent): boolean {
         console.log(event.code + ' : ' + event.key);
+        if (this.confirmKoppels.open) {
+            return true;
+        }
         if (event.key === 'Enter') {
             if (this.poulesOk) {
                 if (this.touched) {

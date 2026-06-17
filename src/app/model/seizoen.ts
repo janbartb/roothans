@@ -1,4 +1,4 @@
-import { Poule, RondeMatch } from "./ronde";
+import { Poule, RondeMatch, RondeSpeelDag } from "./ronde";
 
 export class Seizoen {
     id: number = 0;
@@ -39,5 +39,5 @@ export class SpeelWeekDag {
     isSpeeldag: boolean = false;
     selectable: boolean = false;
     poule: Poule | undefined = undefined;
-    matches: RondeMatch[] = [];
+    speeldag: RondeSpeelDag | undefined = undefined;
 }

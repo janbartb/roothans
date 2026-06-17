@@ -1,1 +1,104 @@
-<p>matches-speeldagen-r2 works!</p>
+<div class="fullheight flexbox flexcolumn">
+    <div class="flexgrow1 container boven" style="overflow-y: hidden;">
+        <div class="sectie fullheight flexbox flexcolumn">
+            <div class="sectie-title flexbox flexcenter flexmiddle">
+                <div style="font-size: .75em; line-height: 1.2;">
+                    <span>Aangemaakte speeldagen</span>
+                </div>
+            </div>
+            <div class="flexgrow1 scroll-container no-header" style="overflow: hidden;">
+                <div class="scroll-sectie">
+                    @for (dag of afvalRonde.speelDagen; track $index) {
+                        <div class="container" [ngClass]="{'boven': !$last, 'onder': !$first}">
+                            <app-speeldag-view [speelDag]="dag" [viewType]="'data'" [selected]="$index == idxSpeelDag" 
+                                    (select)="speelDagClicked($index)"></app-speeldag-view>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container onder">
+        <div class="sectie flexbox flexcolumn">
+            <div class="sectie-title flexbox flexcenter flexmiddle">
+                <div style="font-size: .75em; line-height: 1.2;">
+                    <span>Speeldagen</span>
+                </div>
+            </div>
+            <div class="flexbox">
+                @for (week of speelWeken; track $index) {
+                    <div class="container" [style.flex]="'0 0 ' + spDagPerc + '%'">
+                        <div class="sectie flexbox flexcolumn">
+                            <div class="sectie-title flexbox flexcenter flexmiddle">
+                                <div style="font-size: .75em; line-height: 1.2;">
+                                    <span>Week {{week.weekNr}}</span>
+                                </div>
+                            </div>
+                            <div class="sectie-content met-rand" style="padding: 0 .25em .125em .25em;">
+                                @for (dag of week.weekDagen; track $index) {
+                                    @if (dag.isSpeeldag) {
+                                        <div style="padding-top: .125em;">
+                                            <div class="flexbox flexmiddle speeldag poule" [ngClass]="{'selectable': dag.selectable}"
+                                                        (click)="speelWeekDagClicked(dag)">
+                                                <div style="font-size: .625em; line-height: 1.2; width: 5.5em;">
+                                                    <span>{{dag.dagNaam}}</span>
+                                                </div>
+                                                <div style="font-size: .625em; line-height: 1.2; width: 6em;">
+                                                    <span>{{dater.dateReverse(dag.dagDatum)}}</span>
+                                                </div>
+                                                <div class="flexgrow1 fullheight" style="padding: .1875em;">
+                                                    @if (dag.poule) {
+                                                        <div class="fullheight flexbox flexcenter flexmiddle dag-content">
+                                                            <div style="font-size: .625em; line-height: 1.2;">
+                                                                <span>Poule <b>{{dag.poule.volgNr}}</b></span>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>    
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="flexbox flexcenter flexmiddle" style="font-size: .75em; height: 3em; min-height: 3em;">
+        @if (alleDataToegekend) {
+            @if (touched) {
+                <div>
+                    <app-button [button]="btnSave" (btnClicked)="opslaanClicked()"></app-button>
+                </div>
+                <div>
+                    <app-button [button]="btnSaveNext" (btnClicked)="opslaanClicked(true)"></app-button>
+                </div>
+            }
+            @else {
+                <div>
+                    <app-button [button]="btnNext" (btnClicked)="exitClicked()"></app-button>
+                </div>
+            }
+        }
+        @else {
+            <div>
+                <app-button [button]="btnSaveDef" [disabled]="!touched" (btnClicked)="opslaanClicked()"></app-button>
+            </div>
+        }
+        <div>
+            <app-button [button]="btnKpls" [disabled]="!afvalRonde.koppels.length" (btnClicked)="naarKoppelsClicked()"></app-button>
+        </div>
+    </div>
+</div>
+@if (confirmKoppels.open) {
+    <div class="overlay flexbox flexcenter flexmiddle">
+        <div style="opacity: 1;">
+            <div class="dialog" style="font-size: .75em;">
+                <app-confirm-dialog [dialog]="confirmKoppels" [sure]="true"
+                                    (reply)="confirmKoppelsReplied($event)"></app-confirm-dialog>
+            </div>
+        </div>
+    </div>
+}

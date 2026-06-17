@@ -50,6 +50,7 @@ export class Poule {
 }
 
 export class RondeSpeelDag {
+    dagId: string = '';
     dagNr: number = -1;
     dagNaam: string = '';
     datum: string = '';

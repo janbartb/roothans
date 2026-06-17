@@ -1,0 +1,69 @@
+<div class="fullheight flexbox flexcolumn" style="overflow: hidden;">
+    <div class="flexgrow1 container boven" style="overflow: hidden;">
+        <div class="sectie fullheight flexbox flexcolumn">
+            <div class="sectie-title flexbox flexcenter flexmiddle">
+                <div style="font-size: .75em; line-height: 1.2;">
+                    <span>Koppels in {{speelRonde.rndNaam}}</span>
+                </div>
+                <div style="font-size: .75em; line-height: 1.2; font-weight: normal;">
+                    <span>({{speelRonde.koppels.length}})</span>
+                </div>
+            </div>
+            <div class="flexgrow1 flexbox flexcolumn" style="overflow: hidden; font-size: .75em;">
+                <div class="flexbox flexcenter flexmiddle lijst-header with-scroll" style="min-height: 3em;">
+                    <div style="width: 4em;">ID</div>
+                    <div class="flexbox" style="width: 15em;">
+                        <div class="sortable" (click)="sortClicked('spl1')">
+                            <span>Speler 1</span>
+                            @if (sortCol == 'spl1') {
+                                <i class="fas" [ngClass]="sortDir == 1 ? 'fa-sort-up' : 'fa-sort-down'" style="padding-left: .25em;"></i>
+                            }
+                            @else {
+                                <i style="padding-left: .25em;" class="fas fa-sort"></i>
+                            }
+                        </div>
+                    </div>
+                    <div style="width: 2em;"></div>
+                    <div class="flexbox" style="width: 15em;">
+                        <div class="sortable" (click)="sortClicked('spl2')">
+                            <span>Speler 2</span>
+                            @if (sortCol == 'spl2') {
+                                <i class="fas" [ngClass]="sortDir == 1 ? 'fa-sort-up' : 'fa-sort-down'" style="padding-left: .25em;"></i>
+                            }
+                            @else {
+                                <i style="padding-left: .25em;" class="fas fa-sort"></i>
+                            }
+                        </div>
+                    </div>
+                    <div style="width: 2em;"></div>
+                    <div class="flexbox" style="width: 8em;">
+                        <div class="sortable" (click)="sortClicked('moy')">
+                            <span>Koppel<br>moyenne</span>
+                            @if (sortCol == 'moy') {
+                                <i class="fas" [ngClass]="sortDir == 1 ? 'fa-sort-up' : 'fa-sort-down'" style="padding-left: .25em;"></i>
+                            }
+                            @else {
+                                <i style="padding-left: .25em;" class="fas fa-sort"></i>
+                            }
+                        </div>
+                    </div>
+                    <div style="width: 10em;">
+                        <span>Voorkeur dagen</span>
+                    </div>
+                </div>
+                <div class="flexgrow1 scroll-container">
+                    <div class="flexbox flexcenter scroll-sectie">
+                        <div>
+                            @for (koppel of speelRonde.koppels; track $index) {
+                                <div class="flexbox lijst-row clickable">
+                                    <app-ronde-koppel-view [koppel]="koppel" [view]="'row'" [speelDagen]="config.speelDagen" 
+                                                (clicked)="koppelClicked($event)"></app-ronde-koppel-view>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>        
+            </div>
+        </div>
+    </div>
+</div>

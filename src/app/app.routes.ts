@@ -22,6 +22,8 @@ import { MatchesAanmakenR2 } from './seizoen/rondes/afval/planning/matches-aanma
 import { MatchesAanmaken } from './seizoen/rondes/afval/planning/matches-aanmaken/matches-aanmaken';
 import { MatchesSpeeldagenR2 } from './seizoen/rondes/afval/planning/matches-speeldagen-r2/matches-speeldagen-r2';
 import { MatchesSpeeldagen } from './seizoen/rondes/afval/planning/matches-speeldagen/matches-speeldagen';
+import { RondeKoppels } from './seizoen/rondes/koppels/ronde-koppels/ronde-koppels';
+import { RondeKoppelDetail } from './seizoen/rondes/koppels/ronde-koppel-detail/ronde-koppel-detail';
 
 export const routes: Routes = [
     { path: 'home', component: Home },
@@ -43,6 +45,8 @@ export const routes: Routes = [
     { path: 'rondes/afval/2/data', component: MatchesSpeeldagenR2 },
     { path: 'rondes/afval/:rondeId/planner', component: MatchesAanmaken },
     { path: 'rondes/afval/:rondeId/data', component: MatchesSpeeldagen },
+    { path: 'rondes/:rondeId/koppels/:koppelId', component: RondeKoppelDetail },
+    { path: 'rondes/:rondeId/koppels', component: RondeKoppels },
     { path: 'rondes', component: Rondes },
     { path: 'init', component: InitSpelers },
     { path: 'spelers', component: Spelers },

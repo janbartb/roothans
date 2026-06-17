@@ -109,5 +109,18 @@
                 <app-button [button]="btnSaveDef" [disabled]="!touched" (btnClicked)="opslaanClicked()"></app-button>
             </div>
         }
+        <div>
+            <app-button [button]="btnKpls" [disabled]="!pouleRonde.koppels.length" (btnClicked)="naarKoppelsClicked()"></app-button>
+        </div>
     </div>
 </div>
+@if (confirmKoppels.open) {
+    <div class="overlay flexbox flexcenter flexmiddle">
+        <div style="opacity: 1;">
+            <div class="dialog" style="font-size: .75em;">
+                <app-confirm-dialog [dialog]="confirmKoppels" [sure]="true"
+                                    (reply)="confirmKoppelsReplied($event)"></app-confirm-dialog>
+            </div>
+        </div>
+    </div>
+}

@@ -7,11 +7,11 @@
             <div>
                 <span>{{txt}}</span>
             </div>
-            @if (sure) {
-                <div style="padding-top: .25em;">
-                    <span>Weet je het zeker?</span>
-                </div>
-            }
+        }
+        @if (sure) {
+            <div style="padding-top: .25em;">
+                <span>{{dialog.sureText}}</span>
+            </div>
         }
     </div>
     <div class="dialog-footer flexbox flexright">

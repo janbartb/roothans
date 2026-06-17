@@ -9,6 +9,8 @@ import { Btn, Uitslag } from '../../../../../model/misc';
 import { NgClass } from '@angular/common';
 import { SpeeldagView } from '../../speeldag-view/speeldag-view';
 import { Button } from '../../../../../shared/button/button';
+import { ConfirmKoppelsDialogType } from '../../../../../model/dialogs';
+import { ConfirmDialog } from '../../../../../shared/confirm-dialog/confirm-dialog';
 
 class RondeKoppelsPerDag {
     dagNr: number = 0;
@@ -37,6 +39,7 @@ class KoppelsPerRang {
     selector: 'app-matches-aanmaken-r2',
     imports: [
         SpeeldagView,
+        ConfirmDialog,
         Button,
         NgClass
     ],
@@ -65,16 +68,18 @@ export class MatchesAanmakenR2 extends Base implements OnInit {
     touched: boolean = false;
     alleMatchesToegekend: boolean = false;
     alleDataToegekend: boolean = false;
+    confirmKoppels: ConfirmKoppelsDialogType = new ConfirmKoppelsDialogType();
 
     btnSaveDef: Btn = new Btn('savedef', 'Opslaan', 'enter');
     btnSave: Btn = new Btn('save', 'Opslaan', 's', 3);
     btnSaveNext: Btn = new Btn('savenext', 'Opslaan en naar speeldata');
     btnNext: Btn = new Btn('next', 'Naar speeldata', 'enter');
+    btnKpls: Btn = new Btn('kpls', 'Koppels', 'K', 1);
 
     tabKeuzeClicked(nr: number) {
-            if (nr != this.tabKeuze) {
-                this.selectTabKeuze(nr);
-            }
+        if (nr != this.tabKeuze) {
+            this.selectTabKeuze(nr);
+        }
     }
 
     speelDagToevoegenClicked(dagNr: number) {
@@ -181,6 +186,25 @@ export class MatchesAanmakenR2 extends Base implements OnInit {
         this.gotoPage(urlTo, this.router.url);
     }
 
+    naarKoppelsClicked() {
+        if (!this.afvalRonde.koppels.length) {
+            return;
+        }
+        if (this.touched) {
+            this.confirmKoppels.open = true;
+        }
+        else {
+            this.confirmKoppelsReplied(true);
+        }
+    }
+
+    confirmKoppelsReplied(confirmed: boolean) {
+        this.confirmKoppels.open = false;
+        if (confirmed) {
+            this.gotoPage(`rondes/${this.ronde.rndId}/koppels`, this.router.url);
+        }
+    }
+
     datumGewijzigd(idx: number, datum: string) {
         if (idx != this.idxSpeelDag) {
             this.idxSpeelDag = idx;
@@ -242,7 +266,6 @@ export class MatchesAanmakenR2 extends Base implements OnInit {
                     });
                 });
                 this.tePlannenKoppels = this.getTePlannenKoppelsFromPouleRonde();
-                console.log(this.tePlannenKoppels);
                 this.afvalRonde.maxDagen = (this.tePlannenKoppels.length / 2) / this.afvalRonde.maxMatchesPerDag;
                 if (this.afvalRonde.maxDagen < 1) {
                     this.afvalRonde.maxDagen = 1;
@@ -266,20 +289,7 @@ export class MatchesAanmakenR2 extends Base implements OnInit {
                     });
                 });
                 this.setUpdateStatus();
-                this.touched = false;
-                // if (idx == 1) {
-                //     this.prevRondeIsPoule = true;
-                //     this.prevPouleRonde = <PouleRonde>rndFiles[1];
-                //     this.prevRondeBeurtenFinished = 6 * rndPrev.rndBeurten;
-                //     this.tePlannenKoppels = this.getTePlannenKoppelsFromPouleRonde();
-                //     this.startDatum = this.getStartDatumFromPouleRonde();
-                // }
-                // else {
-                //     this.prevAfvalRonde = <AfvalRonde>rndFiles[1];
-                //     this.prevRondeBeurtenFinished = 2 * rndPrev.rndBeurten;
-                //     this.tePlannenKoppels = this.getTePlannenKoppelsFromAfvalRonde();
-                //     this.startDatum = this.getStartDatumFromAfvalRonde();
-                // }
+                this.touched = this.afvalRonde.koppels.length ? false : true;
             })
             .catch(err => {
                 this.alert.showError(err);
@@ -297,7 +307,6 @@ export class MatchesAanmakenR2 extends Base implements OnInit {
     }
 
     private selectKoppel(id: string, idxR: number, idxD: number) {
-        console.log('selecting koppel: ' + id);
         this.idxVkDag[idxR] = idxD;
         this.selKoppelIds[idxR] = id;
         if (this.selKoppelIds.every(ski => ski != '')) {
@@ -479,7 +488,6 @@ export class MatchesAanmakenR2 extends Base implements OnInit {
             this.koppelsOpScherm.push(this.koppelsPerRang[2]);
             this.rangenOpScherm = [2, 3];
         }
-        console.log(this.koppelsOpScherm);
     }
 
     private setUpdateStatus() {

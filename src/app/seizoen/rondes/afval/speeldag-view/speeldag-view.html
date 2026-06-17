@@ -65,3 +65,56 @@
         </div>
     </div>
 }
+@else if (viewType == 'data') {
+    <div class="sectie-speeldag immutable" [ngClass]="{'selected': selected}">
+        <div class="flexbox flexmiddle">
+            <div class="dagid-container flexbox flexcenter flexmiddle">
+                <div class="dagid" (click)="dagClicked()">
+                    <span>{{speelDag.dagId}}</span>
+                </div>
+            </div>
+            <div class="dagnaam" (click)="dagClicked()">
+                <span>{{speelDag.dagNaam}}</span>
+            </div>
+            <div class="flexgrow1 flexbox">
+                @for (match of speelDag.matches; track $index) {
+                    <div class="flex25perc container-match">
+                        <div class="sectie-match flexbox">
+                            <div class="flex50perc container-koppel" style="overflow: hidden;">
+                                <div class="sectie-koppel flexbox" style="overflow: hidden;">
+                                    <div class="flexgrow1" style="overflow: hidden;">
+                                        <div class="ellipsis">{{match.koppels[0].spelers[0].splNaam || nbs}}</div>
+                                        <div class="ellipsis">{{match.koppels[0].spelers[1].splNaam || nbs}}</div>    
+                                    </div>
+                                    @if (!metDatum) {
+                                        <div class="flexbox flexcenter flexmiddle" style="width: 1.75em;">
+                                            <div><span style="font-size: 1.25em;">{{match.koppels[0].pouleId}}</span></div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            <div class="flex50perc container-koppel" style="overflow: hidden;">
+                                <div class="sectie-koppel flexbox" style="overflow: hidden;">
+                                    <div class="flexgrow1" style="overflow: hidden;">
+                                        <div class="ellipsis">{{match.koppels[1].spelers[0].splNaam || nbs}}</div>
+                                        <div class="ellipsis">{{match.koppels[1].spelers[1].splNaam || nbs}}</div>    
+                                    </div>
+                                    @if (!metDatum) {
+                                        <div class="flexbox flexcenter flexmiddle" style="width: 1.75em;">
+                                            <div><span style="font-size: 1.25em;">{{match.koppels[1].pouleId}}</span></div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                @empty {
+                    <div style="font-size: .75em; padding-left: .25em;">
+                        <span>Nog geen matches</span>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}

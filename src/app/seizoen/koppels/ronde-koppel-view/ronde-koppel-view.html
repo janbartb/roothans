@@ -5,6 +5,33 @@
         <span> ({{koppel.kopMoyenne | number:'1.3-3':'nl-NL'}})</span>
     </div>
 }
+@else if (view == 'row') {
+    <div class="flexbox" [ngClass]="{'clickable': selectable}" (click)="koppelClicked()">
+        <div style="width: 4em;">
+            <span>{{koppel.kopId}}</span>
+        </div>
+        <div class="ellipsis" style="width: 15em;">
+            <span>{{koppel.spelers[0].splNaam}} ({{koppel.spelers[0].splMoy | number:'1.3-3':'nl-NL'}})</span>
+        </div>
+        <div style="width: 2em; text-align: center;">-</div>
+        <div class="ellipsis" style="width: 15em;">
+            <span>{{koppel.spelers[1].splNaam}} ({{koppel.spelers[1].splMoy | number:'1.3-3':'nl-NL'}})</span>
+        </div>
+        <div style="width: 2em;"><i class="fas fa-long-arrow-alt-right"></i></div>
+        <div style="width: 8em;">
+            <span>{{koppel.kopMoyenne | number:'1.3-3':'nl-NL'}}</span>
+        </div>
+        <div class="flexbox" style="width: 10em; overflow: hidden;">
+            @for (dag of speelDagen; track $index) {
+                <div style="width: 2em;">
+                    @if (koppel.voorkeurDagen.includes(dag.dagNr)) {
+                        <span>{{dag.dagNaam.substring(0, 2)}}</span>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+}
 @else if (view == 'poule-header') {
     <div class="flexbox" style="font-weight: bold;">
         <div class="ellipsis" style="width: 10em;"><span>Speler B</span></div>

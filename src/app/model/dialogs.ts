@@ -4,6 +4,7 @@ import { WedSpeler } from "./wedstrijd";
 export class ConfirmDialogType {
     title: string = '';
     texts: string[] = [];
+    sureText: string = 'Weet je het zeker?';
     followUp: string = '';
     open: boolean = false;
 
@@ -12,6 +13,17 @@ export class ConfirmDialogType {
         if (texts) {
             this.texts = texts;
         }
+    }
+}
+
+export class ConfirmKoppelsDialogType extends ConfirmDialogType {
+    constructor() {
+        super('Naar koppels');
+        this.texts = [
+            'Huidige wijzigingen niet opgeslagen.',
+            'Deze gaan verloren als je doorgaat.'
+        ];
+        this.sureText = 'Toch doorgaan?';
     }
 }
 

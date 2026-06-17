@@ -6,10 +6,26 @@
     color: #163317;
     border: .125em solid #6ec071;
 }
+.sectie-speeldag.immutable {
+    padding: .125em 0;
+    cursor: pointer;
+}
 .sectie-speeldag.selected {
     border-color: #bb0000;
 }
-.sectie-speeldag > div {
+.sectie-speeldag .dagid-container {
+    width: 1.5em;
+    height: 1.5em;
+    overflow: hidden;
+    border-radius: 50%;
+    background-color: #1e461f;
+    color: #dbefdc;
+    margin: 0 .5em 0 .25em;
+}
+.sectie-speeldag .dagid {
+    font-size: .75em; 
+    line-height: 1.2;
+    font-weight: bold;
 }
 .sectie-speeldag .dagnaam {
     font-size: .75em; 
@@ -17,7 +33,10 @@
     width: 6.25em; 
     font-weight: bold;
 }
-.sectie-speeldag .dagnaam span:hover {
+.sectie-speeldag.immutable .dagnaam {
+    font-weight: normal;
+}
+.sectie-speeldag:not(.immutable) .dagnaam span:hover {
     cursor: pointer;
     color: darkred;
 }
@@ -50,7 +69,7 @@
     border-color: #bb0000;
     background-color: #bb0000;
 }
-.sectie-match:hover {
+.sectie-speeldag:not(.immutable) .sectie-match:hover {
     border-color: #bb0000;
 }
 .sectie-match.selected:hover {

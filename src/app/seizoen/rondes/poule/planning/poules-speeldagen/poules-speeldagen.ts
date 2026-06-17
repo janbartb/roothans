@@ -9,6 +9,8 @@ import { RondePouleView } from '../../../ronde-poule-view/ronde-poule-view';
 import { Button } from '../../../../../shared/button/button';
 import { NgClass } from '@angular/common';
 import { RondeKoppel } from '../../../../../model/koppel';
+import { ConfirmKoppelsDialogType } from '../../../../../model/dialogs';
+import { ConfirmDialog } from '../../../../../shared/confirm-dialog/confirm-dialog';
 
 class PoulesPerDag {
     dagNr: number = 0;
@@ -20,6 +22,7 @@ class PoulesPerDag {
     selector: 'app-poules-speeldagen',
     imports: [
         RondePouleView,
+        ConfirmDialog,
         Button,
         NgClass
     ],
@@ -42,11 +45,13 @@ export class PoulesSpeeldagen extends Base implements OnInit {
     poulesOk: boolean = false;
     vkDagPerc: number = 100;
     spDagPerc: number = 100;
+    confirmKoppels: ConfirmKoppelsDialogType = new ConfirmKoppelsDialogType();
 
     btnSave: Btn = new Btn('save', 'Opslaan', 's', 3);
     btnSaveDef: Btn = new Btn('savedef', 'Opslaan', 'enter');
     btnSaveNext: Btn = new Btn('saveexit', 'Opslaan en planning afsluiten', 'enter');
     btnNext: Btn = new Btn('exit', 'Terug naar rondes', 'enter');
+    btnKpls: Btn = new Btn('kpls', 'Koppels', 'K', 1);
 
     opslaanClicked(andExit?: boolean) {
         this.poulesOk = this.allDatesFilledOk();
@@ -93,6 +98,25 @@ export class PoulesSpeeldagen extends Base implements OnInit {
 
     exitClicked() {
         this.goBackToPage(`rondes`);
+    }
+
+    naarKoppelsClicked() {
+        if (!this.pouleRonde.koppels.length) {
+            return;
+        }
+        if (this.touched) {
+            this.confirmKoppels.open = true;
+        }
+        else {
+            this.confirmKoppelsReplied(true);
+        }
+    }
+
+    confirmKoppelsReplied(confirmed: boolean) {
+        this.confirmKoppels.open = false;
+        if (confirmed) {
+            this.gotoPage(`rondes/${this.ronde.rndId}/koppels`, this.router.url);
+        }
     }
 
     pouleClicked(nr: number) {
