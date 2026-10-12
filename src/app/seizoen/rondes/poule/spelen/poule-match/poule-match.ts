@@ -281,18 +281,14 @@ export class PouleMatch extends Base implements OnInit {
         let match = this.koppels[0].matches.find(m => m.tegKoppelId == this.koppels[1].kopId);
         if (match) {
             // eerste wedstrijd
-            if (match.wedstrijden[0].uitslag.brt > 0) {
-                if (wedSplIds.includes(match.wedstrijden[0].splId) && wedSplIds.includes(match.wedstrijden[0].tegId)) {
-                    this.idxWedBezig = 0;
-                    return;
-                }
+            if (wedSplIds.includes(match.wedstrijden[0].splId) && wedSplIds.includes(match.wedstrijden[0].tegId)) {
+                this.idxWedBezig = 0;
+                return;
             }
             // tweede wedstrijd
-            if (match.wedstrijden[1].uitslag.brt > 0) {
-                if (wedSplIds.includes(match.wedstrijden[1].splId) && wedSplIds.includes(match.wedstrijden[1].tegId)) {
-                    this.idxWedBezig = 0;
-                    return;
-                }
+            if (wedSplIds.includes(match.wedstrijden[1].splId) && wedSplIds.includes(match.wedstrijden[1].tegId)) {
+                this.idxWedBezig = 1;
+                return;
             }
         }
     }

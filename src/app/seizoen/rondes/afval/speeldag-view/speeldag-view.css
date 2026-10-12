@@ -10,6 +10,9 @@
     padding: .125em 0;
     cursor: pointer;
 }
+.sectie-speeldag.immutable:hover {
+    border-color: darkred;
+}
 .sectie-speeldag.selected {
     border-color: #bb0000;
 }
@@ -27,6 +30,9 @@
     line-height: 1.2;
     font-weight: bold;
 }
+.sectie-speeldag.immutable.selected .dagid-container {
+    background-color: #bb0000;
+}
 .sectie-speeldag .dagnaam {
     font-size: .75em; 
     line-height: 1.2;
@@ -35,6 +41,10 @@
 }
 .sectie-speeldag.immutable .dagnaam {
     font-weight: normal;
+}
+.sectie-speeldag.immutable.selected .dagnaam {
+    font-weight: bold;
+    color: #bb0000;
 }
 .sectie-speeldag:not(.immutable) .dagnaam span:hover {
     cursor: pointer;

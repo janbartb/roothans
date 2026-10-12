@@ -6,6 +6,12 @@
             </div>
             <div style="height: 3em; line-height: 2.5em; padding-left: .125em;">
                 <span style="font-size: 2.5em; position: relative; top: -.125em;">{{moyenne | number:'1.3-3':'nl-NL'}}</span>
+                @if (handicap < 0) {
+                    <span style="font-size: 2.5em; position: relative; top: -.125em; padding-left: 1.75em;">
+                        <i class="fas fa-hospital-symbol"></i>
+                        <span> {{handicap * -1}}</span>
+                    </span>
+                }
             </div>
         </div>
         <div style="width: 8em; padding: .5em;">
@@ -24,6 +30,12 @@
             </div>
             <div class="flexbox flexright">
                 <div style="height: 3em; line-height: 2.5em; padding-right: .25em;">
+                    @if (handicap < 0) {
+                        <span style="font-size: 2.5em; position: relative; top: -.125em; padding-right: 1.75em;">
+                            <i class="fas fa-hospital-symbol"></i>
+                            <span> {{handicap * -1}}</span>
+                        </span>
+                    }
                     <span style="font-size: 2.5em; position: relative; top: -.125em;">{{moyenne | number:'1.3-3':'nl-NL'}}</span>
                 </div>
             </div>

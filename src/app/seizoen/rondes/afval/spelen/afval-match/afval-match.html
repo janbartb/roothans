@@ -1,0 +1,60 @@
+@if (dataReady) {
+    <div>
+        <div class="row-header flexbox flexmiddle">
+            <div style="padding-left: 1em;">
+                <span style="font-size: 2.25em;"><b>{{ronde.rndNaam}}</b></span>
+            </div>
+            <div style="padding-left: 3em;">
+                <span style="font-size: 2.25em;">match <b>{{koppels[0].kopId}}</b> - <b>{{koppels[1].kopId}}</b></span>
+            </div>
+            <div class="flexgrow1" style="padding-right: 1em; text-align: right;">
+                <span style="font-size: 2.25em;"><b>{{ronde.rndBeurten}}</b> beurten</span>
+            </div>
+        </div>
+        <div class="row-match">
+            <app-afval-match-view [koppels]="koppels" [isPouleMatch]="false" [idxSel]="idxWed" [idxWedBezig]="idxWedBezig"
+                        (wedClicked)="wedstrijdClicked($event)" (keyboardClicked)="keyboardClicked($event)"
+                        (error)="showMatchViewError($event)"></app-afval-match-view>
+        </div>
+        <div class="row-footer flexbox flexcenter flexmiddle">
+            <div style="position: relative; width: 9em;"><span>&nbsp;</span>
+                <div style="position: absolute; top: -.625em;">
+                    <span style="font-size: 1.5em; color: #1e461f;">Wedstrijd <b>{{idxWed + 1}}</b></span>
+                </div>
+            </div>
+            @if (wedGespeeld) {
+                <div style="font-size: 1.25em;">
+                    <app-button [button]="btnNaar" (btnClicked)="naarWedstrijdClicked()"></app-button>
+                </div>
+            }
+            @else {
+                @if (idxWed == idxWedBezig) {
+                    <div style="font-size: 1.25em;">
+                        <app-button [button]="btnVervolg" (btnClicked)="naarWedstrijdClicked()"></app-button>
+                    </div>
+                    <div style="font-size: 1.25em;">
+                        <app-button [button]="btnOpnieuw" (btnClicked)="startOpnieuwClicked()"></app-button>
+                    </div>
+                }
+                @else {
+                    <div style="font-size: 1.25em;">
+                        <app-button [button]="btnStart" (btnClicked)="naarWedstrijdClicked()"></app-button>
+                    </div>
+                }
+                <div style="font-size: 1.25em;">
+                    <app-button [button]="btnAdd" (btnClicked)="uitslagToevoegenClicked()"></app-button>
+                </div>
+            }
+        </div>
+    </div>
+}
+@if (confirmOpnieuw.open) {
+    <div class="overlay flexbox flexcenter flexmiddle">
+        <div style="opacity: 1;">
+            <div class="dialog" style="font-size: 1.75em;">
+                <app-confirm-dialog [dialog]="confirmOpnieuw"
+                                    (reply)="startOpnieuwReplied($event)"></app-confirm-dialog>
+            </div>
+        </div>
+    </div>
+}

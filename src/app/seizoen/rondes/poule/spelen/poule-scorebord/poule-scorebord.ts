@@ -197,6 +197,9 @@ export class PouleScorebord extends Base implements OnInit {
         this.splWed.metWit = wedSpl.metWit;
         this.splWed.uitslag.brt = wedSpl.stand.aantBrt;
         this.splWed.uitslag.car = wedSpl.stand.aantCar;
+        if (wedTeg.splHand < wedSpl.splHand) {
+            this.splWed.uitslag.handicap = wedSpl.splHand - wedTeg.splHand;
+        }
         this.splWed.uitslag.moy = wedSpl.stand.gemiddelde;
         this.setSpelerPunten(this.splWed.uitslag, wedSpl.stand.aantCar, wedTeg.stand.aantCar, wedSpl.stand.gemiddelde, this.splSpl.splMoy);
         this.splWed.uitslag.ser = wedSpl.stand.hoogSer;
@@ -224,6 +227,9 @@ export class PouleScorebord extends Base implements OnInit {
         this.tegWed.metWit = wedTeg.metWit;
         this.tegWed.uitslag.brt = wedTeg.stand.aantBrt;
         this.tegWed.uitslag.car = wedTeg.stand.aantCar;
+        if (wedSpl.splHand < wedTeg.splHand) {
+            this.tegWed.uitslag.handicap = wedTeg.splHand - wedSpl.splHand;
+        }
         this.tegWed.uitslag.moy = wedTeg.stand.gemiddelde;
         this.setSpelerPunten(this.tegWed.uitslag, wedTeg.stand.aantCar, wedSpl.stand.aantCar, wedTeg.stand.gemiddelde, this.tegSpl.splMoy);
         this.tegWed.uitslag.ser = wedTeg.stand.hoogSer;
@@ -315,6 +321,7 @@ export class PouleScorebord extends Base implements OnInit {
 
     private addUitslagToOtherUitslag(source: Uitslag, target: Uitslag) {
         target.car += source.car;
+        target.handicap += source.handicap;
         target.brt += source.brt;
         target.moy = (target.brt == 0) ? 0 : target.car / target.brt;
         if (source.ser > target.ser) {
@@ -349,10 +356,22 @@ export class PouleScorebord extends Base implements OnInit {
             spl.splSpreekNaam = kopSpl.splSnaam;
             spl.splTsMoy = kopSpl.splMoy;
             spl.splTsBrt = wed.regels.vastAantBrt;
+            spl.splHand = kopSpl.splHand;
             spl.metWit = idx == 0;
             spl.splKoppelId = kpl.pouleKplId;
+            spl.stand.wgvClass = 'fa-meh';
             wed.spelers.push(spl);
         });
+        if (wed.spelers[0].splHand < wed.spelers[1].splHand) {
+            wed.spelers[1].stand.handicap = wed.spelers[1].splHand - wed.spelers[0].splHand;
+            wed.spelers[1].stand.wgvClass = 'fa-grin-beam';
+            wed.spelers[0].stand.wgvClass = 'fa-angry';
+        }
+        else if (wed.spelers[1].splHand < wed.spelers[0].splHand) {
+            wed.spelers[0].stand.handicap = wed.spelers[0].splHand - wed.spelers[1].splHand;
+            wed.spelers[0].stand.wgvClass = 'fa-grin-beam';
+            wed.spelers[1].stand.wgvClass = 'fa-angry';
+        }
         return wed;
     }
 

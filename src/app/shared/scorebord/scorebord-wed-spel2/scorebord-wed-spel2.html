@@ -5,12 +5,14 @@
                         [oldPunten]="oldPunten[0]"
                         [wedOver]="wedstrijd.wedGespeeld"
                         [isVijfde]="wedstrijd.regels.idxOptie == 4 && wedstrijd.aantSpelers < 5"
-                        [position]="'left'"></app-scorebord-speler>
+                        [position]="'left'"
+                        [afvalWed]="afvalWed"></app-scorebord-speler>
     <app-scorebord-speler [speler]="tegenstander"
                         [maxBrt]="wedstrijd.regels.maxBeurten"
                         [showPunten]="wedstrijd.telling.idxOptie == 0"
                         [oldPunten]="oldPunten[1]"
                         [wedOver]="wedstrijd.wedGespeeld"
                         [isVijfde]="wedstrijd.regels.idxOptie == 4 && wedstrijd.aantSpelers < 5"
-                        [position]="'right'"></app-scorebord-speler>
+                        [position]="'right'"
+                        [afvalWed]="afvalWed"></app-scorebord-speler>
 </div>

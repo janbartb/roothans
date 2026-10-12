@@ -4,13 +4,15 @@ import { ActivatedRoute } from '@angular/router';
 import { DateHelper } from '../../../../../services/date-helper';
 import { Seizoen } from '../../../../../model/seizoen';
 import { Ronde, RondeMatch, RondeSpeelDag, SpeelRonde } from '../../../../../model/ronde';
-import { RondeKoppel } from '../../../../../model/koppel';
+import { KoppelSpelerUitslagen, RondeKoppel } from '../../../../../model/koppel';
 import { Btn, Uitslag } from '../../../../../model/misc';
 import { NgClass } from '@angular/common';
 import { SpeeldagView } from '../../speeldag-view/speeldag-view';
 import { Button } from '../../../../../shared/button/button';
 import { ConfirmKoppelsDialogType } from '../../../../../model/dialogs';
 import { ConfirmDialog } from '../../../../../shared/confirm-dialog/confirm-dialog';
+import { KoppelSpeler } from '../../../../../model/speler';
+import { Helper } from '../../../../../services/helper';
 
 class RondeKoppelsPerDag {
     dagNr: number = 0;
@@ -49,6 +51,7 @@ class KoppelsPerRang {
 export class MatchesAanmakenR2 extends Base implements OnInit {
     route = inject(ActivatedRoute);
     dater = inject(DateHelper);
+    helper = inject(Helper);
     config: Seizoen = new Seizoen();
     rondes: Ronde[] = [];
     ronde: Ronde = new Ronde(0, '', '', 0, '');
@@ -265,7 +268,12 @@ export class MatchesAanmakenR2 extends Base implements OnInit {
                         kpl.pouleRang = idx + 1;
                     });
                 });
-                this.tePlannenKoppels = this.getTePlannenKoppelsFromPouleRonde();
+                if (this.afvalRonde.koppels.length < this.pouleRonde.koppels.length) {
+                    this.tePlannenKoppels = this.getTePlannenKoppelsFromPouleRonde();
+                }
+                else {
+                    this.tePlannenKoppels = JSON.parse(JSON.stringify(this.afvalRonde.koppels));
+                }
                 this.afvalRonde.maxDagen = (this.tePlannenKoppels.length / 2) / this.afvalRonde.maxMatchesPerDag;
                 if (this.afvalRonde.maxDagen < 1) {
                     this.afvalRonde.maxDagen = 1;
@@ -463,12 +471,26 @@ export class MatchesAanmakenR2 extends Base implements OnInit {
                 Object.assign(koppel, kpl);
                 koppel.matches = [];
                 koppel.kopMoyenne = kpl.uitslag.moy;
-                koppel.spelers[0].splMoy = kpl.splUitslagen[0].uitslag.moy;
-                koppel.spelers[1].splMoy = kpl.splUitslagen[1].uitslag.moy;
+                if (this.afvalRonde.moyBepalen) {
+                    koppel.spelers[0].splMoy = kpl.splUitslagen[0].uitslag.moy;
+                    koppel.spelers[0].splHand = this.helper.getHandicap(koppel.spelers[0].splMoy)
+                    koppel.spelers[1].splMoy = kpl.splUitslagen[1].uitslag.moy;    
+                    koppel.spelers[1].splHand = this.helper.getHandicap(koppel.spelers[1].splMoy)
+                }
+                koppel.totNuToe = koppel.uitslag;
+                koppel.uitslag = new Uitslag();
                 koppel.splUitslagen[0].totNuToe = kpl.splUitslagen[0].uitslag;
                 koppel.splUitslagen[1].totNuToe = kpl.splUitslagen[1].uitslag;
                 koppel.splUitslagen[0].uitslag = new Uitslag();
                 koppel.splUitslagen[1].uitslag = new Uitslag();
+                if (this.afvalRonde.moyBepalen && koppel.spelers[0].splMoy > koppel.spelers[1].splMoy) {
+                    const tempSpl: KoppelSpeler = JSON.parse(JSON.stringify(koppel.spelers[0]));
+                    koppel.spelers[0] = koppel.spelers[1];
+                    koppel.spelers[1] = tempSpl;
+                    const tempUit: KoppelSpelerUitslagen = JSON.parse(JSON.stringify(koppel.splUitslagen[0]));
+                    koppel.splUitslagen[0] = koppel.splUitslagen[1];
+                    koppel.splUitslagen[1] = tempUit;
+                }
                 result.push(koppel);
             });
         });

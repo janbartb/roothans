@@ -32,6 +32,29 @@
         </div>
     </div>
 }
+@else if (view == 'row-edit') {
+    <div class="flexbox">
+        <div style="width: 1.75em;">
+            <i class="fas clickable kpl-speler-btn" [ngClass]="idxSpeler == 0 ? 'fa-undo-alt' : 'fa-user-edit'" (click)="splClicked(0)"></i>
+        </div>
+        <div class="ellipsis" style="width: 15.5em;">
+            <span><b class="kpl-speler" [ngClass]="{'selected': idxSpeler == 0}" 
+                    >{{koppel.spelers[0].splNaam}}</b> ({{koppel.spelers[0].splMoy | number:'1.3-3':'nl-NL'}})</span>
+        </div>
+        <div style="width: 2em; text-align: center;">-</div>
+        <div style="width: 1.75em;">
+            <i class="fas clickable kpl-speler-btn" [ngClass]="idxSpeler == 1 ? 'fa-undo-alt' : 'fa-user-edit'" (click)="splClicked(1)"></i>
+        </div>
+        <div class="ellipsis" style="width: 15.5em;">
+            <span><b class="kpl-speler" [ngClass]="{'selected': idxSpeler == 1}" 
+                    >{{koppel.spelers[1].splNaam}}</b> ({{koppel.spelers[1].splMoy | number:'1.3-3':'nl-NL'}})</span>
+        </div>
+        <div style="width: 2em;"><i class="fas fa-long-arrow-alt-right"></i></div>
+        <div style="width: 5em;">
+            <span>{{koppel.kopMoyenne | number:'1.3-3':'nl-NL'}}</span>
+        </div>
+    </div>
+}
 @else if (view == 'poule-header') {
     <div class="flexbox" style="font-weight: bold;">
         <div class="ellipsis" style="width: 10em;"><span>Speler B</span></div>

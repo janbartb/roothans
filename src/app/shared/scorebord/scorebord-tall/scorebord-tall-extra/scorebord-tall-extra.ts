@@ -1,4 +1,4 @@
-import { Component, input, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { GetalVar } from '../../../getal-var/getal-var';
 import { NgClass } from '@angular/common';
 
@@ -21,5 +21,7 @@ export class ScorebordTallExtra {
     @Input() formatSer: string = '009';
     @Input() hilite: string = '';
     @Input() position: string = 'left';
-
+    @Input() afvalWed: boolean = false;
+    @Input() handicap: number = 0;
+    @Input() wgvClass: string = '';
 }

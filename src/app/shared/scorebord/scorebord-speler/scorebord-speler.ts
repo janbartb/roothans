@@ -30,6 +30,8 @@ export class ScorebordSpeler implements OnInit {
     @Input() isVijfde: boolean = false;
     @Input() hilite: string = '';
     @Input() position: string = 'left';
+    @Input() afvalWed: boolean = false;
+
     meteenToev: boolean = false;
 
     formatCar: string = '009';

@@ -19,11 +19,20 @@
             </div>
         </div>
         <div style="padding: 0 .5em; width: 8em; min-width: 8em;">
-            <div class="flexbox flexcenter flexmiddle speler-punten" [ngClass]="{'gewijzigd': punten > oldPunten}">
-                <div class="flexbox flexmiddle" [ngClass]="{'clr-red': hilite == 'pnt'}" style="padding-bottom: 1em;">
-                    <app-getal-var style="font-size: 5em;" [naam]="'pnt'" [getal]="'' + punten" [format]="'09'"></app-getal-var>
+            @if (afvalWed) {
+                <div class="flexbox flexcenter flexmiddle speler-punten" [ngClass]="{'gewijzigd': punten > oldPunten}">
+                    <div class="flexbox flexmiddle" style="padding-bottom: 1em;">
+                        <i class="fas" [ngClass]="wgvClass"></i>
+                    </div>
                 </div>
-            </div>
+            }
+            @else {
+                <div class="flexbox flexcenter flexmiddle speler-punten" [ngClass]="{'gewijzigd': punten > oldPunten}">
+                    <div class="flexbox flexmiddle" style="padding-bottom: 1em;">
+                        <app-getal-var style="font-size: 5em;" [naam]="'pnt'" [getal]="'' + punten" [format]="'09'"></app-getal-var>
+                    </div>
+                </div>    
+            }
         </div>
     }
     @else {

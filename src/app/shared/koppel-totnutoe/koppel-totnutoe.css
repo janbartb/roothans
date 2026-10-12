@@ -1,0 +1,16 @@
+.tbl-tnt {
+    table-layout: fixed;
+    border: 0;
+	padding: 0;
+	border-spacing: 0;
+    border-collapse: collapse;
+}
+.tbl-tnt td {
+    padding: 0 .75em;
+}
+.tbl-tnt thead {
+    font-weight: bold;
+}
+.tbl-tnt td.num {
+    text-align: right;
+}

@@ -1,0 +1,18 @@
+.sel-lijst {
+    color: gray;
+    cursor: not-allowed;
+}
+.sel-lijst.actief {
+    color: #265728;
+}
+.sel-lijst .lst-item {
+    padding: 0 1em;
+    border-radius: .375em;
+}
+.sel-lijst.actief .lst-item {
+    cursor: pointer;
+}
+.sel-lijst.actief .lst-item:hover {
+    background-color: #265728;
+    color: #dbefdc;
+}

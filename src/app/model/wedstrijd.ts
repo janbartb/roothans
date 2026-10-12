@@ -65,6 +65,7 @@ export class WedSpeler {
     actief: boolean = false;
     splTsMoy: number = 0;
     splTsCar: number = 0;
+    splHand: number = 0;
     splTsBrt: number = 0;
     stand: WedSpelerStand = new WedSpelerStand();
     teamTsCar: number = 0;
@@ -78,6 +79,7 @@ export class WedSpeler {
 }
 
 export class WedSpelerStand {
+    handicap: number = 0;
     aantCar: number = 0;
     aantBrt: number = 0;
     gemiddelde: number = 0;
@@ -91,6 +93,7 @@ export class WedSpelerStand {
     moyView: string = '0,000';
     percView: string = '0,00';
     serView: string = '0';
+    wgvClass: string = '';
 }
 
 export class WedstrijdLeesResultaat {

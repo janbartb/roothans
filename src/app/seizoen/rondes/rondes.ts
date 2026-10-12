@@ -92,7 +92,11 @@ export class Rondes extends Base implements OnInit {
             this.buttonPressed(this.btnPlan);
             return false;
         }
-        if (event.code === 'KeyS' && this.prevRonde.status.gepland) {
+        if (event.code === 'KeyS' && this.ronde.status.gepland && !this.ronde.status.gereed) {
+            this.buttonPressed(this.btnSpel);
+            return false;
+        }
+        if (event.code === 'KeyB' && this.ronde.status.gereed) {
             this.buttonPressed(this.btnSpel);
             return false;
         }
@@ -169,10 +173,14 @@ export class Rondes extends Base implements OnInit {
     }
 
     private setDefaultButton() {
+        this.btnSpel = new Btn('spel', 'Spelen', 'S', 1);
         this.btnPlan.default = false;
         this.btnSpel.default = false;
         this.btnEdit.default = false;
         if (this.ronde.status.gepland) {
+            if (this.ronde.status.gereed) {
+                this.btnSpel = new Btn('spel', 'Bekijken', 'B', 1);
+            }
             this.btnSpel.default = true;
         }
         else if (this.prevRonde.status.gereed) {

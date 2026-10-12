@@ -1,3 +1,7 @@
+.tbl-normal td {
+    padding-right: .25em;
+}
+
 .row-header {
     min-height: 3.125em;
     height: 3.125em;

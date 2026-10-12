@@ -1,0 +1,52 @@
+<div>
+    <table class="tbl-tnt">
+        <thead>
+            <tr>
+                <td>Naam</td>
+                <td class="num">Wed</td>
+                <td class="num">W</td>
+                <td class="num">G</td>
+                <td class="num">V</td>
+                <td class="num">Pnt</td>
+                <td class="num">Car</td>
+                <td class="num">Brt</td>
+                <td class="num">Moy</td>
+                <td class="num">Ser</td>
+            </tr>
+        </thead>
+        <tbody>
+            @for (result of results; track $index) {
+                <tr>
+                    <td>{{result.naam}}</td>
+                    <td class="num">
+                        <span>{{result.weds}}</span>
+                    </td>
+                    <td class="num">
+                        <span>{{result.winst}}</span>
+                    </td>
+                    <td class="num">
+                        <span>{{result.gelijk}}</span>
+                    </td>
+                    <td class="num">
+                        <span>{{result.verlies}}</span>
+                    </td>
+                    <td class="num">
+                        <span><b>{{result.pnt}}</b></span>
+                    </td>
+                    <td class="num">
+                        <span>{{result.car}}</span>
+                    </td>
+                    <td class="num">
+                        <span>{{result.brt}}</span>
+                    </td>
+                    <td class="num">
+                        <span>{{result.moy | number:'1.3-3':'nl-NL'}}</span>
+                    </td>
+                    <td class="num">
+                        <span>{{result.ser}}</span>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

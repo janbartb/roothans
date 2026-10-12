@@ -15,6 +15,7 @@ import { SpeelDag } from '../../../model/seizoen';
 })
 export class RondeKoppelView {
     @Input() koppel: RondeKoppel = new RondeKoppel();
+    @Input() idxSpeler: number = -1;
     @Input() rang: number = 0;
     @Input() view: string = 'normal';
     @Input() speelDagen: SpeelDag[] = [];
@@ -23,6 +24,7 @@ export class RondeKoppelView {
     @Output() hovered: EventEmitter<RondeKoppel> = new EventEmitter();
     @Output() clicked: EventEmitter<RondeKoppel> = new EventEmitter();
     @Output() dblClicked: EventEmitter<RondeKoppel> = new EventEmitter();
+    @Output() spelerClicked: EventEmitter<number> = new EventEmitter();
     aantGespeeld: number = 0;
     punten: number[] = [0, 0];
 
@@ -36,6 +38,10 @@ export class RondeKoppelView {
 
     hover() {
         this.hovered.emit(this.koppel);
+    }
+
+    splClicked(idx: number) {
+        this.spelerClicked.emit(idx);
     }
 
     // voorkeurDagClicked(dagNr: number) {

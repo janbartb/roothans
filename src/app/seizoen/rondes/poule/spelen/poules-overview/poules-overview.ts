@@ -57,6 +57,7 @@ export class PoulesOverview extends Base implements OnInit {
                 this.dao.saveRondes(this.header.seizoen, this.rondes)
                 .then(resp2 => {
                     this.alert.showSuccess('Uitslag succesvol opgeslagen.');
+                    this.reloadPage();
                 })
                 .catch(err => {
                     this.alert.showError(err);
@@ -64,6 +65,7 @@ export class PoulesOverview extends Base implements OnInit {
             }
             else {
                 this.alert.showSuccess('Uitslag succesvol opgeslagen.');
+                this.reloadPage();
             }
         })
         .catch(err => {
@@ -82,6 +84,10 @@ export class PoulesOverview extends Base implements OnInit {
     pouleClicked(idx: number) {
         this.idxPoule = idx;
         this.naarPouleClicked();
+    }
+
+    reloadPage() {
+        window.location.reload();
     }
 
     @HostListener('document:keyup', ['$event'])
@@ -152,32 +158,8 @@ export class PoulesOverview extends Base implements OnInit {
             this.dao.getSpeelRondeFile(this.header.seizoen, this.ronde.fileNaam)
             .then(data => {
                 this.pouleRonde = data;
-                this.pouleRonde.poules.sort(this.comparePoules);
-                if (this.pouleRonde.poules[0].id == '') {
-                    this.pouleRonde.poules.forEach((pl, idx) => {
-                        pl.volgNr = 0;
-                        pl.id = String.fromCharCode(65 + idx);
-                    });
-                    this.pouleRondeOpslaan(JSON.parse(JSON.stringify(this.pouleRonde)));
-                }
-                this.pouleRonde.poules.forEach((pl) => {
-                    pl.koppels = [];
-                    let aantKoppels = pl.koppelIds.length;
-                    while (aantKoppels--) pl.koppels.push(new RondeKoppel()); 
-                    pl.koppelIds.forEach((kplId, idx) => {
-                        if (kplId != '') {
-                            const foundKoppel = this.pouleRonde.koppels.find(kpl => kpl.kopId == kplId);
-                            if (foundKoppel) {
-                                pl.koppels[idx] = foundKoppel;
-                            }
-                        }
-                    });
-                    if (this.pouleIsGestart(pl)) {
-                        pl.koppels.sort(this.comparePouleKoppels);
-                    }
-                });
-                //this.today = '2026-01-05';
-                this.idxPoule = this.pouleRonde.poules.findIndex(pl => pl.datum == this.today);
+                this.verwerkPouleRonde();
+                console.log(this.pouleRonde);
             })
             .catch(err => {
                 this.alert.showError(err);
@@ -186,6 +168,35 @@ export class PoulesOverview extends Base implements OnInit {
         .catch(err => {
             this.alert.showError(err);
         });
+    }
+
+    private verwerkPouleRonde() {
+        this.pouleRonde.poules.sort(this.comparePoules);
+        if (this.pouleRonde.poules[0].id == '') {
+            this.pouleRonde.poules.forEach((pl, idx) => {
+                pl.volgNr = 0;
+                pl.id = String.fromCharCode(65 + idx);
+            });
+            this.pouleRondeOpslaan(JSON.parse(JSON.stringify(this.pouleRonde)));
+        }
+        this.pouleRonde.poules.forEach((pl) => {
+            pl.koppels = [];
+            let aantKoppels = pl.koppelIds.length;
+            while (aantKoppels--) pl.koppels.push(new RondeKoppel()); 
+            pl.koppelIds.forEach((kplId, idx) => {
+                if (kplId != '') {
+                    const foundKoppel = this.pouleRonde.koppels.find(kpl => kpl.kopId == kplId);
+                    if (foundKoppel) {
+                        pl.koppels[idx] = foundKoppel;
+                    }
+                }
+            });
+            if (this.pouleIsGestart(pl)) {
+                pl.koppels.sort(this.comparePouleKoppels);
+            }
+        });
+        //this.today = '2026-01-05';
+        this.idxPoule = this.pouleRonde.poules.findIndex(pl => pl.datum == this.today);
     }
 
     private buttonPressed(btn: Btn) {

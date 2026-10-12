@@ -9,7 +9,8 @@
             <div class="flexbox" style="padding-top: .5em;">
                 <div style="width: 8em;"><label for="">Voorkeurdagen</label></div>
                 <div>
-                    @for (speelDag of config.speelDagen; let idxSd = $index; track $index) {
+                    <app-voorkeur-dagen [config]="config" [dagen]="dagen" (dagClicked)="voorkeurDagClicked($event)"></app-voorkeur-dagen>
+                    <!-- @for (speelDag of config.speelDagen; let idxSd = $index; track $index) {
                         @if (idxSd < 4) {
                             <div class="flexbox">
                                 <div style="width: 2.5em;">
@@ -38,7 +39,7 @@
                                 }
                             </div>
                         }
-                    }
+                    } -->
                 </div>
             </div>
         </div>

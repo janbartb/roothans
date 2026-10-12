@@ -24,6 +24,10 @@ import { MatchesSpeeldagenR2 } from './seizoen/rondes/afval/planning/matches-spe
 import { MatchesSpeeldagen } from './seizoen/rondes/afval/planning/matches-speeldagen/matches-speeldagen';
 import { RondeKoppels } from './seizoen/rondes/koppels/ronde-koppels/ronde-koppels';
 import { RondeKoppelDetail } from './seizoen/rondes/koppels/ronde-koppel-detail/ronde-koppel-detail';
+import { DagenOverview } from './seizoen/rondes/afval/spelen/dagen-overview/dagen-overview';
+import { AfvalMatch } from './seizoen/rondes/afval/spelen/afval-match/afval-match';
+import { AfvalWedstrijd } from './seizoen/rondes/afval/spelen/afval-wedstrijd/afval-wedstrijd';
+import { AfvalScorebord } from './seizoen/rondes/afval/spelen/afval-scorebord/afval-scorebord';
 
 export const routes: Routes = [
     { path: 'home', component: Home },
@@ -45,6 +49,10 @@ export const routes: Routes = [
     { path: 'rondes/afval/2/data', component: MatchesSpeeldagenR2 },
     { path: 'rondes/afval/:rondeId/planner', component: MatchesAanmaken },
     { path: 'rondes/afval/:rondeId/data', component: MatchesSpeeldagen },
+    { path: 'rondes/afval/:rondeId/match/:dagId/:splKopId/:tegKopId/:wedIdx/score', component: AfvalScorebord },
+    { path: 'rondes/afval/:rondeId/match/:dagId/:splKopId/:tegKopId/:wedIdx', component: AfvalWedstrijd },
+    { path: 'rondes/afval/:rondeId/match/:dagId/:splKopId/:tegKopId', component: AfvalMatch },
+    { path: 'rondes/afval/:rondeId/spel', component: DagenOverview },
     { path: 'rondes/:rondeId/koppels/:koppelId', component: RondeKoppelDetail },
     { path: 'rondes/:rondeId/koppels', component: RondeKoppels },
     { path: 'rondes', component: Rondes },

@@ -1,0 +1,26 @@
+<div class="fullheight flexbox flexcolumn" style="overflow-y: hidden;">
+    <div class="flexbox flexmiddle" style="height: 2em;">
+        <div style="padding-right: .5em;"><b>Selecteer dag</b></div>
+        <div>
+            <select [(ngModel)]="gekozen" (change)="dagSelected()">
+                <option [ngValue]="dummy"></option>
+                @for (dag of dagenWel; track $index) {
+                    <option [ngValue]="dag">{{dag.naam}} {{dag.datum}}</option>
+                }
+            </select>
+        </div>
+    </div>
+    <div class="flexgrow1 flexbox flexcenter" style="overflow-y: hidden; padding: .25em 0;">
+        <div class="fullheight" style="overflow-y: auto;">
+            @for (dagNiet of dagenNiet; track $index) {
+                <div class="flexbox" style="line-height: 1.25em;">
+                    <div style="width: 6em;">{{dagNiet.naam}}</div>
+                    <div style="padding-right: 1em;">{{dagNiet.datum}}</div>
+                    <div style="padding-right: 1em;">
+                        <i class="fas fa-trash-alt dag-delete" (click)="removeDagNiet(dagNiet)" title="Verwijder"></i>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,7 @@
+.dag-delete {
+    color: #3d8b40;
+    cursor: pointer;
+}
+.dag-delete:hover {
+    color: #163317;
+}

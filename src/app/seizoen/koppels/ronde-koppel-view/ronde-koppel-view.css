@@ -35,3 +35,10 @@
 .poule-uitslag.poule-gereed .fa-check {
     color: #b7dfb8;
 }
+
+.kpl-speler-btn:hover {
+    color: darkred;
+}
+.kpl-speler.selected {
+    color: darkred;
+}

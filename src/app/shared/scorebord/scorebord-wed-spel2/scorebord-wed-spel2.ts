@@ -15,5 +15,6 @@ export class ScorebordWedSpel2 {
     @Input() speler: WedSpeler = new WedSpeler();
     @Input() tegenstander: WedSpeler = new WedSpeler();
     @Input() oldPunten: number[] = [0, 0];
+    @Input() afvalWed: boolean = false;
 
 }

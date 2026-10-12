@@ -11,6 +11,7 @@ import { Base } from '../../../../../base/base';
 import { RondeKoppelView } from '../../../../koppels/ronde-koppel-view/ronde-koppel-view';
 import { ConfirmKoppelsDialogType } from '../../../../../model/dialogs';
 import { ConfirmDialog } from '../../../../../shared/confirm-dialog/confirm-dialog';
+import { Helper } from '../../../../../services/helper';
 
 class KoppelsPerDag {
     dagNr: number = 0;
@@ -41,6 +42,7 @@ interface IData {
 })
 export class PoulesAanmaken extends Base implements OnInit {
     route = inject(ActivatedRoute);
+    helper = inject(Helper);
     config: Seizoen = new Seizoen();
     rondes: Ronde[] = [];
     ronde: Ronde = new Ronde(0, '', '', 0, '');
@@ -99,7 +101,10 @@ export class PoulesAanmaken extends Base implements OnInit {
             }
             else {
                 this.alert.showSuccess(resp.message);
-            }
+                if (andNext) {
+                    this.nextClicked();
+                }
+        }
         })
         .catch(err => {
             this.alert.showError(err);
@@ -315,6 +320,7 @@ export class PoulesAanmaken extends Base implements OnInit {
             if (!this.existingKoppelIds.includes(kpl.kopId)) {
                 const rndKoppel: RondeKoppel = new RondeKoppel();
                 Object.assign(rndKoppel, kpl);
+                rndKoppel.spelers.forEach(spl => spl.splHand = this.helper.getHandicap(spl.splMoy));
                 this.pouleRonde.koppels.push(rndKoppel);
                 this.existingKoppelIds.push(kpl.kopId);
             }

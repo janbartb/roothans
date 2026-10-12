@@ -45,6 +45,7 @@ export class Scorebord implements OnInit {
     helper = inject(Helper);
 
     @Input() interactive: boolean = false;
+    @Input() afvalWed: boolean = false;
     @Input() wedstrijd: Wedstrijd = new Wedstrijd();
     @Output() opslaan: EventEmitter<Wedstrijd> = new EventEmitter<Wedstrijd>();
     @Output() keyPressed: EventEmitter<string> = new EventEmitter<string>();
@@ -498,6 +499,10 @@ export class Scorebord implements OnInit {
         }
         this.actieveSpeler.stand.serie += nr;
         this.actieveSpeler.stand.serView = '' + this.actieveSpeler.stand.serie;
+        if (this.wedstrijd.regels.idxOptie == 1) {
+            const teg = this.wedstrijd.spelers[Math.abs(this.idxSpeler - 1)];
+            this.setEmoticons(this.actieveSpeler, teg);
+        }
         if (this.isTeamWedstrijd()) {
             this.actieveTeam.stand.serie += nr;
             this.actieveTeam.stand.serView = '' + this.actieveTeam.stand.serie;
@@ -947,6 +952,10 @@ export class Scorebord implements OnInit {
             }
             this.actieveTeam.stand.laatste5brt = laatste5;    
         }
+        if (this.wedstrijd.regels.idxOptie == 1) {
+            const teg = this.wedstrijd.spelers[Math.abs(this.idxSpeler - 1)];
+            this.setEmoticons(this.actieveSpeler, teg);
+        }
         const copyOfWedstrijd: Wedstrijd = JSON.parse(JSON.stringify(this.wedstrijd));
         if (this.isTeamWedstrijd()) {
             let actTeam = copyOfWedstrijd.teams[this.idxTeam];
@@ -1081,10 +1090,10 @@ export class Scorebord implements OnInit {
             if (idx != undefined && idx != null) {
                 let teg = this.wedstrijd.spelers[Math.abs(idx - 1)];
                 if (this.wedstrijd.regels.idxOptie == 1) {
-                    if (spl.stand.aantCar > teg.stand.aantCar) {
+                    if ((spl.stand.aantCar + spl.stand.handicap) > (teg.stand.aantCar + teg.stand.handicap)) {
                         punten = this.wedstrijd.telling.winstPunten;
                     }
-                    else if (spl.stand.aantCar == teg.stand.aantCar) {
+                    else if ((spl.stand.aantCar + spl.stand.handicap) > (teg.stand.aantCar + teg.stand.handicap)) {
                         punten = this.wedstrijd.telling.gelijkPunten;
                     }
                     else {
@@ -1220,6 +1229,20 @@ export class Scorebord implements OnInit {
             this.idxSpeler = (this.idxSpeler < 0) ? 0 : this.idxSpeler;
             this.actieveSpeler = this.wedstrijd.spelers[this.idxSpeler];
             this.actieveSpeler.actief = true;
+        }
+    }
+
+    private setEmoticons(spl: WedSpeler, teg: WedSpeler) {
+        const splTot = spl.stand.aantCar + spl.stand.serie + spl.stand.handicap;
+        const tegTot = teg.stand.aantCar + teg.stand.serie + teg.stand.handicap;
+        spl.stand.wgvClass = teg.stand.wgvClass = 'fa-meh';
+        if (splTot > tegTot) {
+            spl.stand.wgvClass = 'fa-grin-beam';
+            teg.stand.wgvClass = 'fa-angry';
+        }
+        else if (splTot < tegTot) {
+            spl.stand.wgvClass = 'fa-angry';
+            teg.stand.wgvClass = 'fa-grin-beam';
         }
     }
 

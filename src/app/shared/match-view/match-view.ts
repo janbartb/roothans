@@ -46,5 +46,6 @@ export class MatchView implements OnInit {
         else {
             this.matches.push(new KoppelMatch(new RondeKoppel(), new RondeKoppel()));
         }
+        console.log(this.idxWedBezig);
     }
 }

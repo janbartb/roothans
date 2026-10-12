@@ -8,13 +8,14 @@ import { Button } from '../../../shared/button/button';
 import { KoppelRow } from '../koppel-row/koppel-row';
 import { NgClass } from '@angular/common';
 import { Speech } from '../../../services/speech';
+import { VoorkeurDagen } from '../../../shared/voorkeur-dagen/voorkeur-dagen';
 
 @Component({
     selector: 'app-koppel-preferences',
     imports: [
         KoppelRow,
-        Button,
-        NgClass
+        VoorkeurDagen,
+        Button
     ],
     templateUrl: './koppel-preferences.html',
     styleUrl: './koppel-preferences.css',
@@ -50,24 +51,8 @@ export class KoppelPreferences extends Base implements OnInit {
         });
     }
 
-    voorkeurDagClicked(idx: number, waarde: number) {
-        if (waarde == -1) {
-            if (this.dagen.some((vkDag, index) => index > idx && vkDag > -1)) {
-                this.spraak.beep();
-                return;
-            }
-        }
-        else {
-            if (this.dagen.some((vkDag, index) => index < idx && vkDag == -1)) {
-                this.spraak.beep();
-                return;
-            }
-            if (this.dagen.some((vkDag, index) => index < idx && vkDag == waarde)) {
-                this.spraak.beep();
-                return;
-            }
-        }
-        this.dagen[idx] = waarde;
+    voorkeurDagClicked(days: number[]) {
+        this.dagen = days;
         this.dagenValid = this.dagen[0] > -1 && this.dagen[1] > -1;
         this.gewijzigd = this.dagenGewijzigd();
     }

@@ -41,6 +41,8 @@ export class PouleWedstrijd extends Base implements OnInit {
     koppels: RondeKoppel[] = [];
     splSpl: KoppelSpeler = new KoppelSpeler();
     tegSpl: KoppelSpeler = new KoppelSpeler();
+    splHcapCar: number = 0;
+    tegHcapCar: number = 0;
     splMatch: KoppelMatch = new KoppelMatch(new RondeKoppel(), new RondeKoppel());
     tegMatch: KoppelMatch = new KoppelMatch(new RondeKoppel(), new RondeKoppel());
     splWed: KoppelWedstrijd = new KoppelWedstrijd(new RondeKoppel(), new RondeKoppel(), 0);
@@ -60,6 +62,9 @@ export class PouleWedstrijd extends Base implements OnInit {
 
     enterPressed() {
         if (this.viewMode) {
+            if (this.ronde.status.gereed) {
+                return;
+            }
             this.buttonPressed(this.btnDel);
         }
         else {
@@ -74,6 +79,9 @@ export class PouleWedstrijd extends Base implements OnInit {
     }
 
     verwijderenClicked() {
+        if (this.ronde.status.gereed) {
+            return;
+        }
         this.confirmDelete.open = true;
     }
 
@@ -194,6 +202,12 @@ export class PouleWedstrijd extends Base implements OnInit {
                 this.koppels.push(this.poule.koppels[tegKopIdx]);
                 this.splSpl = this.koppels[0].spelers[this.idxWed];
                 this.tegSpl = this.koppels[1].spelers[this.idxWed];
+                if (this.splSpl.splHand < this.tegSpl.splHand) {
+                    this.tegHcapCar = this.tegSpl.splHand - this.splSpl.splHand;
+                }
+                if (this.tegSpl.splHand < this.splSpl.splHand) {
+                    this.splHcapCar = this.splSpl.splHand - this.tegSpl.splHand;
+                }
                 this.header.subtitle = `Seizoen ${this.header.seizoen} - ${this.ronde.rndNaam} wedstrijd Poule ${this.poule.id}`;
                 this.createUitslagForm();
                 if (this.getWedstrijden()) {
@@ -288,8 +302,9 @@ export class PouleWedstrijd extends Base implements OnInit {
         this.splWed.uitslag.sco = [];
         this.splWed.uitslag.brt = this.ronde.rndBeurten;
         this.splWed.uitslag.car = this.splCar?.value;
+        this.splWed.uitslag.handicap = this.splHcapCar;
         this.splWed.uitslag.moy = (this.splWed.uitslag.brt == 0) ? 0 : this.splWed.uitslag.car / this.splWed.uitslag.brt;
-        this.setSpelerPunten(this.splWed.uitslag, this.splCar?.value, this.tegCar?.value, this.splWed.uitslag.moy, this.splSpl.splMoy);
+        this.setSpelerPunten(this.splWed.uitslag, this.splCar?.value + this.splHcapCar, this.tegCar?.value + this.tegHcapCar, this.splWed.uitslag.moy, this.splSpl.splMoy);
         this.splWed.uitslag.ser = this.splSer?.value;
         // speler uitslagen
         splKoppel.splUitslagen[this.idxWed].uitslag = new Uitslag();
@@ -314,8 +329,9 @@ export class PouleWedstrijd extends Base implements OnInit {
         this.tegWed.uitslag.sco = [];
         this.tegWed.uitslag.brt = this.ronde.rndBeurten;
         this.tegWed.uitslag.car = this.tegCar?.value;
+        this.tegWed.uitslag.handicap = this.tegHcapCar;
         this.tegWed.uitslag.moy = (this.tegWed.uitslag.brt == 0) ? 0 : this.tegWed.uitslag.car / this.tegWed.uitslag.brt;
-        this.setSpelerPunten(this.tegWed.uitslag, this.tegCar?.value, this.splCar?.value, this.tegWed.uitslag.moy, this.tegSpl.splMoy);
+        this.setSpelerPunten(this.tegWed.uitslag, this.tegCar?.value + this.tegHcapCar, this.splCar?.value + this.splHcapCar, this.tegWed.uitslag.moy, this.tegSpl.splMoy);
         this.tegWed.uitslag.ser = this.tegSer?.value;
         // tegenstander uitslagen
         tegKoppel.splUitslagen[this.idxWed].uitslag = new Uitslag();
@@ -462,6 +478,7 @@ export class PouleWedstrijd extends Base implements OnInit {
 
     private addUitslagToOtherUitslag(source: Uitslag, target: Uitslag) {
         target.car += source.car;
+        target.handicap += source.handicap;
         target.brt += source.brt;
         target.moy = (target.brt == 0) ? 0 : target.car / target.brt;
         if (source.ser > target.ser) {

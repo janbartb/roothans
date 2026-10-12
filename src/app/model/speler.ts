@@ -15,6 +15,7 @@ export class KoppelSpeler {
     splBNaam: string = '';
     splSnaam: string = '';
     splMoy: number = 0;
+    splHand: number = 0;
 }
 
 export class LijstSpeler {

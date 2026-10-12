@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Poule, SpeelRonde } from '../model/ronde';
+import { Poule, RondeSpeelDag, SpeelRonde } from '../model/ronde';
 import { KoppelMatch, KoppelWedstrijd, RondeKoppel } from '../model/koppel';
 import { KoppelSpeler } from '../model/speler';
 import { Uitslag } from '../model/misc';
@@ -12,6 +12,7 @@ export class Tester {
     private config: Seizoen = new Seizoen();
     private ronde: SpeelRonde = new SpeelRonde(0, '', '', 0, '');
     private poule: Poule = new Poule(0);
+    private speelDag: RondeSpeelDag = new RondeSpeelDag(0);
     private koppels: RondeKoppel[] = [new RondeKoppel(), new RondeKoppel()];
     private splSpl: KoppelSpeler = new KoppelSpeler();
     private tegSpl: KoppelSpeler = new KoppelSpeler();
@@ -19,20 +20,16 @@ export class Tester {
     private tegMatch: KoppelMatch = new KoppelMatch(new RondeKoppel(), new RondeKoppel());
     private splWed: KoppelWedstrijd = new KoppelWedstrijd(new RondeKoppel(), new RondeKoppel(), 0);
     private tegWed: KoppelWedstrijd = new KoppelWedstrijd(new RondeKoppel(), new RondeKoppel(), 1);
-    private uitslagen: number[][] = [];
     private today: string = '';
     private aantalGevuld: number = 0;
 
     vulAllePouleRondeWedstrijden(rnd: SpeelRonde, conf: Seizoen) {
         this.config = conf;
         this.today = new Date().toISOString().substring(0, 10);
-        if (rnd.rndType != 'poule' || !rnd.poules.length) {
-            return;
-        }
         this.ronde = rnd;
         this.ronde.poules.forEach(pl => {
             this.poule = pl;
-            this.vulAllePouleWedstrijden();
+            this.vulAllePouleWedstrijden(this.ronde.rndBeurten);
             this.poule.status.gestart = true;
             this.poule.status.gereed = true;
         });
@@ -40,9 +37,23 @@ export class Tester {
         this.ronde.status.gereed = true;
     }
 
-    private vulAllePouleWedstrijden() {
+    vulAlleAfvalRondeWedstrijden(rnd: SpeelRonde, conf: Seizoen) {
+        this.config = conf;
+        this.today = new Date().toISOString().substring(0, 10);
+        this.ronde = rnd;
+        this.ronde.speelDagen.forEach(sdag => {
+            this.speelDag = sdag;
+            this.vulAlleSpeelDagWedstrijden(this.ronde.rndBeurten);
+            this.speelDag.status.gestart = true;
+            this.speelDag.status.gereed = true;
+        });
+        this.ronde.status.gestart = true;
+        this.ronde.status.gereed = true;
+
+    }
+
+    private vulAllePouleWedstrijden(brt: number) {
         this.aantalGevuld = 0;
-        this.uitslagen = this.getPouleUitslagen();
         this.poule.koppels.forEach((kplS, idxS) => {
             this.poule.koppels.forEach((kplT, idxT) => {
                 if (idxS != idxT) {
@@ -54,7 +65,7 @@ export class Tester {
                         match = this.koppels[1].matches.find(m => m.tegKoppelId == this.koppels[0].kopId);
                         if (match) {
                             this.tegMatch = match;
-                            this.vulMatchWedstrijden();
+                            this.vulPouleMatchWedstrijden(idxS, idxT, brt);
                         }
                     }
                 }
@@ -65,33 +76,123 @@ export class Tester {
         console.log('Poule ' + id + ' : aantal ' + aant);
     }
 
-    private vulMatchWedstrijden() {
+    private vulAlleSpeelDagWedstrijden(brt: number) {
+        this.aantalGevuld = 0;
+        this.speelDag.matches.forEach(match => {
+            match.datum = this.speelDag.datum;
+            this.koppels = match.koppels;
+            if (this.koppels[0].uitslag.brt == 0) {
+                this.vulAfvalMatchWedstrijden(brt);
+            }
+        });
+    }
+
+    private vulPouleMatchWedstrijden(idxS: number, idxT: number, brt: number) {
         [0, 1].forEach(idxWed => {
             this.splSpl = this.koppels[0].spelers[idxWed];
             this.tegSpl = this.koppels[1].spelers[idxWed];
             this.splWed = this.splMatch.wedstrijden[idxWed];
             this.tegWed = this.tegMatch.wedstrijden[idxWed];
-            this.uitslagToevoegen(idxWed);
+            this.pouleUitslagToevoegen(idxWed, idxS, idxT, brt);
             this.aantalGevuld++;
         });
     }
 
-    private uitslagToevoegen(idxWed: number) {
+    private vulAfvalMatchWedstrijden(brt: number) {
+        [0, 1].forEach(idxWed => {
+            this.splSpl = this.koppels[0].spelers[idxWed];
+            this.tegSpl = this.koppels[1].spelers[idxWed];
+            this.afvalUitslagToevoegen(idxWed, brt);
+            this.aantalGevuld++;
+        });
+        const splKopCars = this.koppels[0].uitslag.car + this.koppels[0].uitslag.handicap;
+        const tegKopCars = this.koppels[1].uitslag.car + this.koppels[1].uitslag.handicap;
+        if (splKopCars == tegKopCars) {
+            const idx = Math.floor(Math.random() * 2);
+            this.koppels[idx].uitslag.barrage = 1;
+            this.koppels[Math.abs(idx - 1)].afgevallen = true;
+        }
+        else if (splKopCars > tegKopCars) {
+            this.koppels[1].afgevallen = true;
+        }
+        else {
+            this.koppels[0].afgevallen = true;
+        }
+    }
+
+    private afvalUitslagToevoegen(idxWed: number, brt: number) {
         const splKoppel = this.koppels[0];
         const tegKoppel = this.koppels[1];
-        const invoer = this.uitslagen.shift() || [0, 0, 0, 0];
-        const splCar = invoer[0];
-        const splSer = invoer[1];
-        const tegCar = invoer[2];
-        const tegSer = invoer[3];
+        const splCar = this.getAantalCaramboles(this.splSpl.splMoy, brt);
+        const splSer = this.getSerie(splCar);
+        let splHcap = 0;
+        if (this.tegSpl.splHand < this.splSpl.splHand) {
+            splHcap = this.splSpl.splHand - this.tegSpl.splHand;
+        }
+        const tegCar = this.getAantalCaramboles(this.tegSpl.splMoy, brt);
+        const tegSer = this.getSerie(tegCar);
+        let tegHcap = 0;
+        if (this.splSpl.splHand < this.tegSpl.splHand) {
+            tegHcap = this.tegSpl.splHand - this.splSpl.splHand;
+        }
+        // speler wedstrijd uitslag
+        splKoppel.splUitslagen[idxWed].uitslag = new Uitslag();
+        let splUit = splKoppel.splUitslagen[idxWed].uitslag;
+        splUit.metWit = true;
+        splUit.sco = [];
+        splUit.brt = this.ronde.rndBeurten;
+        splUit.car = splCar;
+        splUit.handicap = splHcap;
+        splUit.moy = (splUit.brt == 0) ? 0 : splUit.car / splUit.brt;
+        this.setSpelerPunten(splUit, splCar + splHcap, tegCar + tegHcap, splUit.moy, this.splSpl.splMoy);
+        splUit.ser = splSer;
+        // speler koppel uitslag
+        splKoppel.uitslag = new Uitslag();
+        splKoppel.splUitslagen.forEach(splU => {
+            this.addUitslagToOtherUitslag(splU.uitslag, splKoppel.uitslag);
+        });
+        // tegenstander wedstrijd uitslag
+        tegKoppel.splUitslagen[idxWed].uitslag = new Uitslag();
+        let tegUit = tegKoppel.splUitslagen[idxWed].uitslag;
+        tegUit.metWit = false;
+        tegUit.sco = [];
+        tegUit.brt = this.ronde.rndBeurten;
+        tegUit.car = tegCar;
+        tegUit.handicap = tegHcap;
+        tegUit.moy = (tegUit.brt == 0) ? 0 : tegUit.car / tegUit.brt;
+        this.setSpelerPunten(tegUit, tegCar + tegHcap, splCar + splHcap, tegUit.moy, this.tegSpl.splMoy);
+        tegUit.ser = tegSer;
+        // tegenstander koppel uitslag
+        tegKoppel.uitslag = new Uitslag();
+        tegKoppel.splUitslagen.forEach(splU => {
+            this.addUitslagToOtherUitslag(splU.uitslag, tegKoppel.uitslag);
+        });
+    }
+
+    private pouleUitslagToevoegen(idxWed: number, idxS: number, idxT: number, brt:number) {
+        const splKoppel = this.koppels[0];
+        const tegKoppel = this.koppels[1];
+        const splCar = this.getAantalCaramboles(this.splSpl.splMoy, brt);
+        const splSer = this.getSerie(splCar);
+        let splHcap = 0;
+        if (this.tegSpl.splHand < this.splSpl.splHand) {
+            splHcap = this.splSpl.splHand - this.tegSpl.splHand;
+        }
+        const tegCar = this.getAantalCaramboles(this.tegSpl.splMoy, brt);
+        const tegSer = this.getSerie(tegCar);
+        let tegHcap = 0;
+        if (this.splSpl.splHand < this.tegSpl.splHand) {
+            tegHcap = this.tegSpl.splHand - this.splSpl.splHand;
+        }
         // speler wedstrijd uitslag
         this.splWed.uitslag = new Uitslag();
         this.splWed.metWit = true;
         this.splWed.uitslag.sco = [];
         this.splWed.uitslag.brt = this.ronde.rndBeurten;
         this.splWed.uitslag.car = splCar;
+        this.splWed.uitslag.handicap = splHcap;
         this.splWed.uitslag.moy = (this.splWed.uitslag.brt == 0) ? 0 : this.splWed.uitslag.car / this.splWed.uitslag.brt;
-        this.setSpelerPunten(this.splWed.uitslag, splCar, tegCar, this.splWed.uitslag.moy, this.splSpl.splMoy);
+        this.setSpelerPunten(this.splWed.uitslag, splCar + splHcap, tegCar + tegHcap, this.splWed.uitslag.moy, this.splSpl.splMoy);
         this.splWed.uitslag.ser = splSer;
         // speler uitslagen
         splKoppel.splUitslagen[idxWed].uitslag = new Uitslag();
@@ -116,8 +217,9 @@ export class Tester {
         this.tegWed.uitslag.sco = [];
         this.tegWed.uitslag.brt = this.ronde.rndBeurten;
         this.tegWed.uitslag.car = tegCar;
+        this.tegWed.uitslag.handicap = tegHcap;
         this.tegWed.uitslag.moy = (this.tegWed.uitslag.brt == 0) ? 0 : this.tegWed.uitslag.car / this.tegWed.uitslag.brt;
-        this.setSpelerPunten(this.tegWed.uitslag, tegCar, splCar, this.tegWed.uitslag.moy, this.tegSpl.splMoy);
+        this.setSpelerPunten(this.tegWed.uitslag, tegCar + tegHcap, splCar + splHcap, this.tegWed.uitslag.moy, this.tegSpl.splMoy);
         this.tegWed.uitslag.ser = tegSer;
         // tegenstander uitslagen
         tegKoppel.splUitslagen[idxWed].uitslag = new Uitslag();
@@ -141,6 +243,7 @@ export class Tester {
 
     private addUitslagToOtherUitslag(source: Uitslag, target: Uitslag) {
         target.car += source.car;
+        target.handicap += source.handicap;
         target.brt += source.brt;
         target.moy = (target.brt == 0) ? 0 : target.car / target.brt;
         if (source.ser > target.ser) {
@@ -173,20 +276,22 @@ export class Tester {
         uitslag.pnt = punten;
     }
 
-    private getPouleUitslagen() {
-        return [
-            [12, 4, 10, 3],
-            [8, 3, 7, 2],
-            [10, 3, 8, 2],
-            [7, 2, 6, 2],
-            [8, 3, 5, 1],
-            [6, 2, 4, 1],
-            [12, 4, 10, 3],
-            [8, 3, 7, 2],
-            [10, 3, 8, 2],
-            [7, 2, 6, 2],
-            [8, 3, 5, 1],
-            [6, 2, 4, 1]
-        ];
+    getAantalCaramboles(moy: number, brt: number): number {
+        const car = Math.round((brt * moy) + (Math.random() * 8)) - 4;
+        return (car < 3) ? 3 : car;
     }
+
+    private getSerie(car: number): number {
+        if (car < 6) {
+            return 1;
+        }
+        if (car < 9) {
+            return 2;
+        }
+        if (car < 12) {
+            return 3;
+        }
+        return 4;
+    }
+
 }

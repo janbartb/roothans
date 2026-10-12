@@ -26,7 +26,7 @@
 }
 
 .col-header {
-    width: 8em;
+    width: 6em;
     padding: 0 1em;
     line-height: 1;
     color: #2e6830;
@@ -54,7 +54,7 @@
 }
 
 .col-speler {
-    width: 22.75em;
+    width: 24.75em;
     padding: .125em .5em;
 }
 .col-speler .wed-speler {
@@ -69,7 +69,6 @@
 .row-naam {
     height: 2em;
     line-height: 1.1;
-    font-weight: bold;
     color: #dbefdc;
     white-space: nowrap;
     text-overflow: ellipsis;

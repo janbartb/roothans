@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Periode } from '../model/misc';
+import { Dag, Periode } from '../model/misc';
 import { SpeelWeek, SpeelWeekDag } from '../model/seizoen';
 
 class DateParts {
@@ -36,6 +36,32 @@ export class DateHelper {
 
     getToday(): string {
         return new Date().toISOString().substring(0, 10);
+    }
+
+    getDagFromDate(dt: string): Dag {
+        let dag: Dag = new Dag();
+        let parts = new DateParts(dt);
+        dag.datum = dt;
+        dag.nr = parts.weekDay;
+        dag.naam = this.getDagNaam(dag.nr);
+        return dag;
+    }
+
+    getDagenInPeriode(periode: Periode, dagenNiet: string[], ingepland: string, weekDagen: number[]): Dag[] {
+        //console.log(periode);
+        let result: Dag[] = [];
+        let dat = periode.van;
+        while (dat < periode.tot) {
+            let parts = new DateParts(dat);
+            let d = parts.date;
+            if (!dagenNiet.includes(dat) && weekDagen.includes(parts.weekDay) && dat != ingepland) {
+                const dag = this.getDagFromDate(dat);
+                result.push(dag);
+            }
+            d.setDate(d.getDate() + 1);
+            dat = d.toISOString().substring(0, 10);
+        }
+        return result;
     }
 
     getAllWeekDaysOfMonth(year: number, month: number, dayOfWeek: number): string[] {

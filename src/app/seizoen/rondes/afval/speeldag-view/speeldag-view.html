@@ -66,14 +66,14 @@
     </div>
 }
 @else if (viewType == 'data') {
-    <div class="sectie-speeldag immutable" [ngClass]="{'selected': selected}">
+    <div class="sectie-speeldag immutable" [ngClass]="{'selected': selected}" (click)="dagClicked()">
         <div class="flexbox flexmiddle">
             <div class="dagid-container flexbox flexcenter flexmiddle">
-                <div class="dagid" (click)="dagClicked()">
+                <div class="dagid">
                     <span>{{speelDag.dagId}}</span>
                 </div>
             </div>
-            <div class="dagnaam" (click)="dagClicked()">
+            <div class="dagnaam">
                 <span>{{speelDag.dagNaam}}</span>
             </div>
             <div class="flexgrow1 flexbox">

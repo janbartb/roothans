@@ -3,7 +3,6 @@ import { KoppelSpeler } from "./speler";
 
 export class Koppel {
     kopId: string = '';
-    uitgeschakeld: boolean = false;
     spelers: KoppelSpeler[] = [];
     kopMoyenne: number = 0;
     voorkeurDagen: number[] = [];

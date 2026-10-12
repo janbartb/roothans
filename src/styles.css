@@ -35,6 +35,11 @@ label .req {
     padding-right: .125em;
 }
 
+.subtekst {
+    font-size: .75em;
+    font-weight: normal;
+}
+
 input,select,textarea{ font: inherit; margin: 0; }
 
 .fullviewheight { height: 100vh; }
@@ -151,6 +156,16 @@ select:disabled, select.disabled {
 .success { background-color: green; }
 .warning { background-color: chocolate; }
 .error { background-color: red; }
+
+.fa-grin-beam {
+    color: green;
+}
+.fa-angry, .fa-meh-rolling-eyes {
+    color: #bb0000;
+}
+.fa-meh {
+    color: coral;
+}
 
 /* DIALOGS */
 

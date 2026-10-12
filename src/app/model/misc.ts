@@ -17,6 +17,7 @@ export class Uitslag {
     gelijk: number = 0;
     verlies: number = 0;
     barrage: number = 0;
+    metWit: boolean = false;
 }
 
 export class Alert {
@@ -61,4 +62,10 @@ export class Periode {
     // periode is inclusief van en exclusief tot
     van: string = '';
     tot: string = '';
+}
+
+export class Dag {
+    datum: string = '';
+    nr: number = -1;
+    naam: string = '';
 }

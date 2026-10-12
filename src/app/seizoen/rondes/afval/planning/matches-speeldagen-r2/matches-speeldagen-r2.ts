@@ -9,7 +9,7 @@ import { NgClass } from '@angular/common';
 import { Btn } from '../../../../../model/misc';
 import { Button } from '../../../../../shared/button/button';
 import { SpeeldagView } from '../../speeldag-view/speeldag-view';
-import { ConfirmDialogType, ConfirmKoppelsDialogType } from '../../../../../model/dialogs';
+import { ConfirmKoppelsDialogType } from '../../../../../model/dialogs';
 import { ConfirmDialog } from '../../../../../shared/confirm-dialog/confirm-dialog';
 
 @Component({
@@ -92,7 +92,14 @@ export class MatchesSpeeldagenR2 extends Base implements OnInit {
     }
 
     speelDagClicked(idx: number) {
-
+        this.idxSpeelDag = (idx == this.idxSpeelDag) ? -1 : idx;
+        if (this.idxSpeelDag < 0) {
+            this.speelDag = new RondeSpeelDag(0);
+            this.setSelectables(this.speelDag);
+            return;
+        }
+        this.speelDag = this.afvalRonde.speelDagen[this.idxSpeelDag];
+        this.setSelectables(this.speelDag);
     }
 
     naarKoppelsClicked() {
@@ -200,6 +207,7 @@ export class MatchesSpeeldagenR2 extends Base implements OnInit {
                 });
                 this.setUpdateStatus();
                 this.touched = false;
+                console.log(this.afvalRonde);
             })
             .catch(err => {
                 this.alert.showError(err);

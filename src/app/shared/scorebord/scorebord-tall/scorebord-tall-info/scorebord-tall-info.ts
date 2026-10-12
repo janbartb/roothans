@@ -17,6 +17,7 @@ export class ScorebordTallInfo {
     @Input() moyenne: number = 0;
     @Input() aantCar: number = 0;
     @Input() aantBrt: number = 0;
+    @Input() handicap: number = 0;
     @Input() position: string = 'left';
     @Input() hilite: string = '';
 }

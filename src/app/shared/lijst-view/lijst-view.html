@@ -4,6 +4,9 @@
             <div class="spl-container">
                 <div class="spl-naam">
                     <span>{{spl.speler.splBNaam}}</span>
+                    @if (spl.speler.splHand < 0) {
+                        <span style="font-size: .75em; font-weight: normal; padding-left: .75em;"><i class="fas fa-hospital-symbol"></i> {{spl.speler.splHand * -1}}</span>
+                    }
                 </div>
                 <div class="spl-score arial">
                     @for (beurt of spl.scores; track $index) {

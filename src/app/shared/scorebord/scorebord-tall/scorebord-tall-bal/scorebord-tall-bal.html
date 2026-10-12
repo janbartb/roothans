@@ -12,7 +12,12 @@
                 }
                 @else {
                     <span style="line-height: 1; font-size: 1em;">KOPPEL</span><br>
-                    <span style="line-height: 1; font-size: 3.5em;">{{koppelId}}</span>
+                    @if (koppelId.length > 1) {
+                        <span style="line-height: 1; font-size: 3em;">{{koppelId}}</span>
+                    }
+                    @else {
+                        <span style="line-height: 1; font-size: 3.5em;">{{koppelId}}</span>
+                    }
                 }
             </div>
         </div>

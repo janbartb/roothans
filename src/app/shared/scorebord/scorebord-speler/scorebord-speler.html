@@ -4,9 +4,10 @@
                             [moyenne]="speler.splTsMoy"
                             [aantCar]="speler.splTsCar"
                             [aantBrt]="speler.splTsBrt"
+                            [handicap]="speler.splHand"
                             [hilite]="hilite"
                             [position]="position"></app-scorebord-tall-info>
-    <app-scorebord-tall-stand [aantCar]="meteenToev ? (speler.stand.aantCar + speler.stand.serie) : speler.stand.aantCar"
+    <app-scorebord-tall-stand [aantCar]="meteenToev ? (speler.stand.handicap + speler.stand.aantCar + speler.stand.serie) : (speler.stand.handicap + speler.stand.aantCar)"
                             [aantBrt]="speler.stand.aantBrt"
                             [moy]="speler.stand.gemiddelde"
                             [serie]="speler.stand.serie"
@@ -38,5 +39,8 @@
                             [percView]="speler.stand.percView"
                             [formatSer]="formatSer"
                             [hilite]="hilite"
-                            [position]="position"></app-scorebord-tall-extra>
+                            [position]="position"
+                            [afvalWed]="afvalWed"
+                            [handicap]="speler.splHand"
+                            [wgvClass]="speler.stand.wgvClass"></app-scorebord-tall-extra>
 </div>

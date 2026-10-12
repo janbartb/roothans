@@ -16,6 +16,19 @@ export class Helper {
         return !result ? '' : result;
     }
 
+    getHandicap(moy: number): number {
+        if (moy >= 1) {
+            return -4;
+        }
+        if (moy >= .9) {
+            return -2;
+        }
+        if (moy >= .8) {
+            return -1;
+        }
+        return 0;
+    }
+
     getSpelerNaam(spl: Speler): string {
         let result = spl.vnaam;
         if (spl.tvoeg != '') {
