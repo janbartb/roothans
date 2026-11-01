@@ -1,1 +1,165 @@
-<p>matches-aanmaken works!</p>
+<div class="fullheight flexbox flexcolumn" style="overflow: hidden;">
+    <div class="flexgrow1 container boven" style="overflow: hidden;">
+        <div class="sectie fullheight flexbox flexcolumn" style="overflow: hidden;">
+            <div class="sectie-title flexbox flexcenter flexmiddle">
+                <div style="font-size: .75em;">Koppels per voorkeurdag</div>
+            </div>
+            <div class="flexgrow1 flexbox flexstretch" style="overflow: hidden;">
+                @for (dagKoppels of koppelsPerDagen; let idxKpd = $index; track $index) {
+                    <div [style.flex]="'0 0 ' + (100 / $count) + '%'" class="container" [ngClass]="{'links': !$last, 'rechts': !$first}"
+                                    (mouseover)="clearHovered()" (mouseout)="clearHovered()">
+                        <div class="sectie-dagkoppels fullheight flexbox flexcolumn" style="overflow: hidden;">
+                            <div class="sectie-dagkoppels-title flexbox flexcenter flexmiddle" (click)="speelDagToevoegenClicked(dagKoppels.dagNr)"
+                                            [title]="dagKoppels.dagNaam + ' als speeldag toevoegen'">
+                                <div style="font-size: .625em;">{{dagKoppels.dagNaam}}</div>
+                                <div style="font-size: .75em;">
+                                    <i class="fas fa-plus-circle"></i>
+                                </div>
+                            </div>
+                            <div class="flexgrow1 sectie-dagkoppels-content" style="overflow-y: auto;">
+                                <div style="font-size: .5em;">
+                                    @if (dagKoppels.koppelsFirst.length) {
+                                        <div class="koppel-container">
+                                            <div class="voorkeur-header">
+                                                <span>1e voorkeur</span>
+                                            </div>
+                                        </div>
+                                    }
+                                    @for (koppel of dagKoppels.koppelsFirst; track $index) {
+                                        <div class="koppel-container">
+                                            <div class="dagkoppel flexbox" 
+                                                    [ngClass]="{'hovered': $index == dagKoppels.idxHovFirst, 
+                                                        'selected': selKoppelIds.includes(koppel.kopId),
+                                                        'gepland': koppel.ingepland
+                                                    }"
+                                                    (click)="koppelClicked(koppel.kopId)" (mouseover)="koppelHovered($event, koppel)">
+                                                <div class="flexgrow1" style="padding-left: .5em; overflow: hidden; font-weight: bold;">
+                                                    <div>{{koppel.spelers[0].splNaam}}</div>
+                                                    <div>{{koppel.spelers[1].splNaam}}</div>
+                                                </div>
+                                                <div class="flexbox flexright flexmiddle" style="width: 4em;">
+                                                    <div><span style="font-size: 1.25em;">{{koppel.kopMoyenne | number:'1.3-3':'nl-NL'}}</span></div>
+                                                </div>
+                                                <div class="flexbox flexright flexmiddle" style="width: 4em; padding-right: .75em;">
+                                                    <div><span style="font-size: 1.25em;">{{koppel.pouleId}}</span></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                    @if (dagKoppels.koppelsSecond.length) {
+                                        <div class="koppel-container">
+                                            <div class="voorkeur-header">
+                                                <span>2e voorkeur</span>
+                                            </div>
+                                        </div>
+                                    }
+                                    @for (koppel of dagKoppels.koppelsSecond; track $index) {
+                                        <div class="koppel-container">
+                                            <div class="dagkoppel flexbox" 
+                                                    [ngClass]="{'hovered': $index == dagKoppels.idxHovSecond,
+                                                        'selected': selKoppelIds.includes(koppel.kopId),
+                                                        'gepland': koppel.ingepland
+                                                    }"
+                                                    (click)="koppelClicked(koppel.kopId)" (mouseover)="koppelHovered($event, koppel)">
+                                                <div class="flexgrow1" style="padding-left: .5em; overflow: hidden; font-weight: bold;">
+                                                    <div>{{koppel.spelers[0].splNaam}}</div>
+                                                    <div>{{koppel.spelers[1].splNaam}}</div>
+                                                </div>
+                                                <div class="flexbox flexright flexmiddle" style="width: 4em;">
+                                                    <div><span style="font-size: 1.25em;">{{koppel.kopMoyenne | number:'1.3-3':'nl-NL'}}</span></div>
+                                                </div>
+                                                <div class="flexbox flexright flexmiddle" style="width: 4em; padding-right: .75em;">
+                                                    <div><span style="font-size: 1.25em;">{{koppel.pouleId}}</span></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                    @if (dagKoppels.koppelsRest.length) {
+                                        <div class="koppel-container">
+                                            <div class="voorkeur-header">
+                                                <span>3e of 4e voorkeur</span>
+                                            </div>
+                                        </div>
+                                    }
+                                    @for (koppel of dagKoppels.koppelsRest; track $index) {
+                                        <div class="koppel-container">
+                                            <div class="dagkoppel flexbox" 
+                                                    [ngClass]="{'hovered': $index == dagKoppels.idxHovRest,
+                                                        'selected': selKoppelIds.includes(koppel.kopId),
+                                                        'gepland': koppel.ingepland
+                                                    }"
+                                                    (click)="koppelClicked(koppel.kopId)" (mouseover)="koppelHovered($event, koppel)">
+                                                <div class="flexgrow1" style="padding-left: .5em; overflow: hidden; font-weight: bold;">
+                                                    <div>{{koppel.spelers[0].splNaam}}</div>
+                                                    <div>{{koppel.spelers[1].splNaam}}</div>
+                                                </div>
+                                                <div class="flexbox flexright flexmiddle" style="width: 4em;">
+                                                    <div><span style="font-size: 1.25em;">{{koppel.kopMoyenne | number:'1.3-3':'nl-NL'}}</span></div>
+                                                </div>
+                                                <div class="flexbox flexright flexmiddle" style="width: 4em; padding-right: .75em;">
+                                                    <div><span style="font-size: 1.25em;">{{koppel.pouleId}}</span></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="container onder">
+        <div class="sectie" style="overflow: hidden;">
+            <div class="sectie-title flexbox flexcenter flexmiddle">
+                <div style="font-size: .75em;">Planning matches per dag</div>
+            </div>
+            <div style="min-height: 3em; max-height: 11em; overflow-y: auto;">
+                @for (dag of afvalRonde.speelDagen; track $index) {
+                    <div class="container" [ngClass]="{'boven': !$last, 'onder': !$first}">
+                        <app-speeldag-view [speelDag]="dag" [selected]="$index == idxSpeelDag" [idxMatch]="idxMatch" 
+                                (select)="speelDagClicked($index)" (delete)="speelDagVerwijderen($index)"
+                                (dateChanged)="datumGewijzigd($index, $event)" 
+                                (matchClick)="matchClicked($index, $event)"></app-speeldag-view>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="flexbox flexcenter flexmiddle" style="font-size: .75em; height: 3em; min-height: 3em;">
+        @if (alleMatchesToegekend) {
+            @if (touched) {
+                <div>
+                    <app-button [button]="btnSave" (btnClicked)="opslaanClicked()"></app-button>
+                </div>
+                <div>
+                    <app-button [button]="btnSaveNext" (btnClicked)="opslaanClicked(true)"></app-button>
+                </div>
+            }
+            @else {
+                <div>
+                    <app-button [button]="btnNext" (btnClicked)="nextClicked()"></app-button>
+                </div>
+            }
+        }
+        @else {
+            <div>
+                <app-button [button]="btnSaveDef" [disabled]="!touched" (btnClicked)="opslaanClicked()"></app-button>
+            </div>
+        }
+        <div>
+            <app-button [button]="btnKpls" [disabled]="!afvalRonde.koppels.length" (btnClicked)="naarKoppelsClicked()"></app-button>
+        </div>
+    </div>
+</div>
+@if (confirmKoppels.open) {
+    <div class="overlay flexbox flexcenter flexmiddle">
+        <div style="opacity: 1;">
+            <div class="dialog" style="font-size: .75em;">
+                <app-confirm-dialog [dialog]="confirmKoppels" [sure]="true"
+                                    (reply)="confirmKoppelsReplied($event)"></app-confirm-dialog>
+            </div>
+        </div>
+    </div>
+}

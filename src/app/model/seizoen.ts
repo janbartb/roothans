@@ -1,3 +1,4 @@
+import { Status } from "./misc";
 import { Poule, RondeMatch, RondeSpeelDag } from "./ronde";
 
 export class Seizoen {
@@ -9,6 +10,7 @@ export class Seizoen {
     pntMoyenne: number = 0;
     huidigeRonde: number = 0;
     speelDagen: SpeelDag[] = [];
+    afgesloten: boolean = false;
 }
 
 export class SpeelDag {

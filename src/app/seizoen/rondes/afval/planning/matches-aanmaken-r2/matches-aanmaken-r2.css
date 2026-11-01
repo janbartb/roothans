@@ -2,13 +2,6 @@
     border-radius: .5em;
     background-color: #b7dfb8;
 }
-/* .sectie-rangkoppels-title {
-    background-color: #163317;
-    color: #dbefdc;
-    min-height: 1.125em;
-    font-weight: bold;
-    text-align: center;
-} */
 .sectie-rangkoppels-title {
     background-color: #2e6830;
     color: #dbefdc;
@@ -22,7 +15,6 @@
 
 .sectie-dagkoppels {
     border-radius: .375em;
-    /* overflow: hidden; */
     background-color: #93cf95;
 }
 .sectie-dagkoppels-title {
@@ -62,7 +54,6 @@
 }
 .dagkoppel:not(.selected).gepland.hovered {
     background-color: gray;
-    /* color: #1e461f; */
 }
 .dagkoppel.selected {
     background-color: gold;

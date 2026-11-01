@@ -1,0 +1,115 @@
+<div class="fullheight flexbox flexcolumn">
+    <div class="flexgrow1 flexbox flexstretch" style="overflow-y: hidden;">
+        <div class="flex25perc"></div>
+        <div class="flexgrow1 container" style="overflow: hidden;">
+            <div class="fullheight sectie flexbox flexcolumn dag-selected">
+                <div class="sectie-title flexbox flexcenter flexmiddle">
+                    <div style="font-size: .75em; line-height: 1.2;">
+                        <span>{{speelDag.dagNaam}} {{dater.dateReverse(speelDag.datum)}}</span>
+                    </div>
+                </div>
+                <div class="sectie-content flexgrow1 flexbox flexcolumn" style="padding: .25em .25em .25em 1em;">
+                    @for (combo of combos; let idxC = $index; track $index) {
+                        <div class="flex50perc combo-container flexbox flexstretch">
+                            <div class="flexgrow1 flexbox flexcolumn">
+                                @for (match of combo.matches; let idxM = $index, firstM = $first, lastM = $last; track $index) {
+                                    <div class="flex50perc match-container flexbox flexstretch">
+                                        <div class="match-time-container" style="width: 3em; padding-top: .25em;">
+                                            <div style="font-size: .625em; line-height: 1.2;">
+                                                <span><b>{{19 + (2 * idxC) + idxM}}:00 u</b></span>
+                                            </div>
+                                        </div>
+                                        <div class="flexgrow1" style="padding: .125em 0;">
+                                            <div class="fullheight match-data-container flexbox flexcolumn" 
+                                                            [ngClass]="{'match-selected': idxC == idxCombo && idxM == idxMatch}"
+                                                            (click)="matchClicked(idxC, idxM)">
+                                                @for (koppel of match.koppels; let idxK = $index; track $index) {
+                                                    <div class="flex50perc match-koppel-container flexbox flexcolumn" [ngClass]="idxK == 0 ? 'met-ondergrens' : 'met-bovengrens'">
+                                                        @if (idxK == 0) {
+                                                            <div class="flexgrow2"></div>
+                                                        }
+                                                        @if (idxK == 1) {
+                                                            <div class="flexgrow1"></div>
+                                                        }
+                                                        <div class="flexbox spelers-container">
+                                                            <div class="flexgrow1" style="position: relative;">
+                                                                <div class="spelers-naam-container" [ngClass]="{'afgevallen diagonal': koppel.afgevallen}">
+                                                                    @for (speler of koppel.spelers; track $index) {
+                                                                        <div class="speler-container" style="font-size: .75em; line-height: 1.2;">
+                                                                            <span><b>{{speler.splNaam}}</b> </span>
+                                                                            @if (speler.splHand < 0) {
+                                                                                <span>&nbsp;&nbsp;<i class="fas fa-hospital-symbol"></i> {{speler.splHand * -1}}</span>
+                                                                            }
+                                                                        </div>
+                                                                    }    
+                                                                </div>
+                                                            </div>
+                                                            <div class="spelers-car-container" style="width: 2.5em;">
+                                                                @for (speler of koppel.spelers; let idxS = $index; track $index) {
+                                                                    <div class="speler-car-container num" style="font-size: .75em; line-height: 1.2;">
+                                                                        @if (koppel.splUitslagen[idxS].uitslag.brt > 0) {
+                                                                            @if (koppel.splUitslagen[idxS].uitslag.handicap > 0) {
+                                                                                <span class="subtekst">{{koppel.splUitslagen[idxS].uitslag.handicap}} + </span>
+                                                                            }
+                                                                            <span> {{koppel.splUitslagen[idxS].uitslag.car}}</span>
+                                                                        }
+                                                                    </div>
+                                                                }    
+                                                            </div>
+                                                            <div class="koppel-resultaat-container flexbox flexmiddle" style="width: 4em;">
+                                                                <div class="totaal-container">
+                                                                    @if (koppel.uitslag.brt == (afvalRonde.rndBeurten * 2)) {
+                                                                        <span style="font-size: .75em;">{{koppel.uitslag.car + koppel.uitslag.handicap}}</span>
+                                                                    }
+                                                                </div>
+                                                                <div class="resultaat-container">
+                                                                    @if (koppel.uitslag.brt == (afvalRonde.rndBeurten * 2)) {
+                                                                        @if (koppel.afgevallen) {
+                                                                            <i class="fas fa-frown" style="font-size: 1.25em;"></i>
+                                                                        }
+                                                                        @else {
+                                                                            <i class="fas fa-laugh" style="font-size: 1.25em;"></i>
+                                                                        }
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        @if (idxK == 0) {
+                                                            <div class="flexgrow1"></div>
+                                                        }
+                                                        @if (idxK == 1) {
+                                                            <div class="flexgrow2"></div>
+                                                        }
+                                                    </div>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                            <div class="arrow-container flexbox flexstretch" style="width: 5.5em;">
+                                <div class="arrow" style="width: 2em;">
+                                </div>
+                                <div class="flexgrow1 flexbox flexright flexmiddle">
+                                    <div style="text-align: center; line-height: 1.1; padding-left: .5em;">
+                                        <span style="font-size: 1em;">H.F.</span><br>
+                                        <span style="font-size: 1.5em;"><b>{{combo.id}}</b></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="flex25perc"></div>
+    </div>
+    <div class="flexbox flexcenter flexmiddle" style="font-size: .75em; height: 3em; min-height: 3em;">
+        <div>
+            <app-button [button]="btnSel" [disabled]="idxMatch < 0" (btnClicked)="naarMatchClicked()"></app-button>
+        </div>
+        <div>
+            <app-button [button]="btnVul" [disabled]="afvalRonde.status.gereed" (btnClicked)="alleWedstrijdenVullenClicked()"></app-button>
+        </div>
+    </div>
+</div>

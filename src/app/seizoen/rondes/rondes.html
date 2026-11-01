@@ -14,16 +14,23 @@
             <span style="font-size: 1.25em;">Ronde <b>{{ronde.rndId}}</b> - {{ronde.rndNaam}}</span>
         </div>
         <div style="padding-top: .5em;">
-            <app-button [button]="btnPlan" [disabled]="!prevRonde.status.gereed || ronde.status.gestart"
+            <app-button [button]="btnPlan" [disabled]="!prevRonde.status.gereed || ronde.status.gestart || ronde.rndNaam == 'Finale'"
                         (btnClicked)="plannenClicked()"></app-button>
         </div>
         <div style="padding-top: .5em;">
-            <app-button [button]="btnSpel" [disabled]="!ronde.status.gepland"
+            <app-button [button]="btnSpel" [disabled]="!ronde.status.gepland && ronde.rndNaam != 'Finale'"
                         (btnClicked)="spelenClicked()"></app-button>
         </div>
-        <div style="padding-left: 2em; padding-top: .5em;">
-            <app-button [button]="btnEdit" [disabled]="ronde.status.gepland"
-                        (btnClicked)="wijzigenClicked()"></app-button>
-        </div>
+        @if (rondes.length && rondes[rondes.length - 1].status.gereed) {
+            <div style="padding-left: 2em; padding-top: .5em;">
+                <app-button [button]="btnEind" (btnClicked)="eindstandClicked()"></app-button>
+            </div>
+        }
+        @else {
+            <div style="padding-left: 2em; padding-top: .5em;">
+                <app-button [button]="btnEdit" [disabled]="ronde.status.gepland"
+                            (btnClicked)="wijzigenClicked()"></app-button>
+            </div>
+        }
     </div>
 </div>

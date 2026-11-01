@@ -1,0 +1,38 @@
+.tabs-container {
+    padding-top: 2px;
+}
+/* .tab-container {
+    padding: 0 .5em;
+} */
+.tab-tab {
+    border-top: 2px solid gray;
+    border-left: 2px solid gray;
+    border-right: 2px solid gray;
+    border-bottom: 1px solid #93cf95;
+    border-top-left-radius: .5em;
+    border-top-right-radius: .5em;
+    background-color: transparent;
+    color: lightgray;
+    cursor: pointer;
+}
+.tab-tab.selected {
+    background-color: #93cf95;
+    color: #1e461f;
+    cursor: default;
+}
+.tab-tab:not(.selected):hover {
+    background-color: lightgrey;
+    color: gray;
+}
+
+.tabs-content {
+    font-size: .75em;
+    background-color: #b7dfb8;
+    color: #265728;
+}
+.tabs-content .scroll-sectie {
+    cursor: default;
+}
+.tabs-content .lijst-row:hover {
+    background-color: #f4faf4;
+}

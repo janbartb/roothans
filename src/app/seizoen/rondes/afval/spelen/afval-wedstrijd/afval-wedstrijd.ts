@@ -63,7 +63,9 @@ export class AfvalWedstrijd extends Base implements OnInit {
 
     enterPressed() {
         if (this.viewMode) {
-            this.buttonPressed(this.btnDel);
+            if (!this.ronde.status.gereed) {
+                this.buttonPressed(this.btnDel);
+            }
         }
         else {
             if (this.uitslagForm && this.uitslagForm.valid) {
@@ -432,20 +434,6 @@ export class AfvalWedstrijd extends Base implements OnInit {
         .catch(err => {
             this.alert.showError(err);
         });
-    }
-
-    private addUitslagToOtherUitslag(source: Uitslag, target: Uitslag) {
-        target.car += source.car;
-        target.brt += source.brt;
-        target.moy = (target.brt == 0) ? 0 : target.car / target.brt;
-        if (source.ser > target.ser) {
-            target.ser = source.ser;
-        }
-        target.pnt += source.pnt;
-        target.weds += source.weds;
-        target.winst += source.winst;
-        target.gelijk += source.gelijk;
-        target.verlies += source.verlies;
     }
 
     private setSpelerPunten(uitslag: Uitslag, carSpl: number, carTeg: number, gsMoy: number, tsMoy: number) {

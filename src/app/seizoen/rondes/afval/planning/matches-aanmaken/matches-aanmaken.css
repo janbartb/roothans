@@ -1,0 +1,76 @@
+.sectie-rangkoppels {
+    border-radius: .5em;
+    background-color: #b7dfb8;
+}
+.sectie-rangkoppels-title {
+    background-color: #2e6830;
+    color: #dbefdc;
+    min-height: 1.125em;
+    font-weight: bold;
+    text-align: center;
+}
+.sectie-rangkoppels-title > div {
+    padding: 0 1em;
+}
+
+.sectie-dagkoppels {
+    border-radius: .375em;
+    background-color: #93cf95;
+}
+.sectie-dagkoppels-title {
+    background-color: #1e461f;
+    color: #dbefdc;
+    min-height: 1em;
+    cursor: pointer;
+}
+.sectie-dagkoppels-title > div {
+    padding: 0 .25em;
+}
+.sectie-dagkoppels-title:hover {
+    color: gold;
+}
+.sectie-dagkoppels-content {
+    padding: .125em;
+}
+
+.koppel-container {
+    padding-top: .125em;
+}
+.dagkoppel {
+    padding: .125em 0;
+    line-height: 1.2;
+    background-color: #dbefdc;
+    color: #1e461f;
+    border: .125em solid #1e461f;
+    border-radius: .5em;
+    cursor: pointer;
+}
+.dagkoppel.gepland {
+    background-color: #357a38;
+    color: #f4faf4;
+}
+.dagkoppel.gepland:hover {
+    cursor: not-allowed;
+}
+.dagkoppel:not(.selected).gepland.hovered {
+    background-color: gray;
+}
+.dagkoppel.selected {
+    background-color: gold;
+    color: #102511;
+}
+.dagkoppel:not(.selected).hovered {
+    background-color: darkred;
+    color: #dbefdc;
+}
+.dagkoppel.selected.hovered {
+    background-color: orange;
+    color: #102511;
+}
+
+.voorkeur-header {
+    padding-left: 3em;
+    font-weight: bold;
+    background-color: #265728;
+    color: #dbefdc;
+}

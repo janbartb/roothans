@@ -125,10 +125,10 @@
                                             <div class="spl-pnt">
                                                 @if (viewMode) {
                                                     @if (splWed.winst) {
-                                                        <i class="fas fa-grin-beam"></i>
+                                                        <i class="fas fa-laugh"></i>
                                                     }
                                                     @else if (splWed.verlies) {
-                                                        <i class="fas fa-angry"></i>
+                                                        <i class="fas fa-frown"></i>
                                                     }
                                                     @else {
                                                         <i class="fas fa-meh"></i>
@@ -136,10 +136,10 @@
                                                 }
                                                 @else {
                                                     @if ((splCar?.value + splHcapCar) > (tegCar?.value + tegHcapCar)) {
-                                                        <i class="fas fa-grin-beam"></i>
+                                                        <i class="fas fa-laugh"></i>
                                                     }
                                                     @else if ((splCar?.value + splHcapCar) < (tegCar?.value + tegHcapCar)) {
-                                                        <i class="fas fa-angry"></i>
+                                                        <i class="fas fa-frown"></i>
                                                     }
                                                     @else {
                                                         <i class="fas fa-meh"></i>
@@ -241,10 +241,10 @@
                                             <div class="spl-pnt">
                                                 @if (viewMode) {
                                                     @if (tegWed.winst) {
-                                                        <i class="fas fa-grin-beam"></i>
+                                                        <i class="fas fa-laugh"></i>
                                                     }
                                                     @else if (tegWed.verlies) {
-                                                        <i class="fas fa-angry"></i>
+                                                        <i class="fas fa-frown"></i>
                                                     }
                                                     @else {
                                                         <i class="fas fa-meh"></i>
@@ -252,10 +252,10 @@
                                                 }
                                                 @else {
                                                     @if ((tegCar?.value + tegHcapCar) > (splCar?.value + splHcapCar)) {
-                                                        <i class="fas fa-grin-beam"></i>
+                                                        <i class="fas fa-laugh"></i>
                                                     }
                                                     @else if ((tegCar?.value + tegHcapCar) < (splCar?.value + splHcapCar)) {
-                                                        <i class="fas fa-angry"></i>
+                                                        <i class="fas fa-frown"></i>
                                                     }
                                                     @else {
                                                         <i class="fas fa-meh"></i>
@@ -295,7 +295,7 @@
         <div class="row-footer flexbox flexcenter flexmiddle">
             @if (viewMode) {
                 <div style="font-size: 1.25em;">
-                    <app-button [button]="btnDel" (btnClicked)="verwijderenClicked()"></app-button>
+                    <app-button [button]="btnDel" [disabled]="ronde.status.gereed" (btnClicked)="verwijderenClicked()"></app-button>
                 </div>
             }
             @else {

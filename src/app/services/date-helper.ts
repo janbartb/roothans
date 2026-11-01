@@ -48,7 +48,11 @@ export class DateHelper {
     }
 
     getDagenInPeriode(periode: Periode, dagenNiet: string[], ingepland: string, weekDagen: number[]): Dag[] {
-        //console.log(periode);
+        console.log(periode);
+        if (periode.van == periode.tot) {
+            const dag: Dag = this.getDagFromDate(periode.van);
+            return [dag];
+        }
         let result: Dag[] = [];
         let dat = periode.van;
         while (dat < periode.tot) {
@@ -182,10 +186,13 @@ export class DateHelper {
         // 4e
         periode = new Periode();
         periode.van = d.toISOString().substring(0, 10);
-        d.setDate(d.getDate() + 7);
+        d.setDate(d.getDate() + 6);
         periode.tot = d.toISOString().substring(0, 10);
         result.push(periode);
-        // finale
+        // halve finale en finale
+        periode = new Periode();
+        periode.van = d.toISOString().substring(0, 10);
+        periode.tot = d.toISOString().substring(0, 10);
         result.push(periode);
         return result;
     }

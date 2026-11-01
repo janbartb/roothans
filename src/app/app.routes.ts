@@ -28,6 +28,12 @@ import { DagenOverview } from './seizoen/rondes/afval/spelen/dagen-overview/dage
 import { AfvalMatch } from './seizoen/rondes/afval/spelen/afval-match/afval-match';
 import { AfvalWedstrijd } from './seizoen/rondes/afval/spelen/afval-wedstrijd/afval-wedstrijd';
 import { AfvalScorebord } from './seizoen/rondes/afval/spelen/afval-scorebord/afval-scorebord';
+import { AchtsteOverview } from './seizoen/rondes/afval/spelen/achtste-overview/achtste-overview';
+import { FinalesOverview } from './seizoen/rondes/afval/spelen/finales-overview/finales-overview';
+import { MatchesSpeeldagKwart } from './seizoen/rondes/afval/planning/matches-speeldag-kwart/matches-speeldag-kwart';
+import { KwartOverview } from './seizoen/rondes/afval/spelen/kwart-overview/kwart-overview';
+import { MatchesSpeeldagFinales } from './seizoen/rondes/afval/planning/matches-speeldag-finales/matches-speeldag-finales';
+import { EindResultaat } from './seizoen/eind-resultaat/eind-resultaat';
 
 export const routes: Routes = [
     { path: 'home', component: Home },
@@ -37,6 +43,7 @@ export const routes: Routes = [
     { path: 'koppels/toevoegen', component: KoppelsToevoegen },
     { path: 'koppels/:koppelId', component: KoppelPreferences },
     { path: 'koppels', component: Koppels },
+    { path: 'rondes/einde', component: EindResultaat },
     { path: 'rondes/poule/:rondeId/spel/:pouleIdx/match/:splKopId/:tegKopId/:wedIdx/score', component: PouleScorebord },
     { path: 'rondes/poule/:rondeId/spel/:pouleIdx/match/:splKopId/:tegKopId/:wedIdx', component: PouleWedstrijd },
     { path: 'rondes/poule/:rondeId/spel/:pouleIdx/match/:splKopId/:tegKopId', component: PouleMatch },
@@ -48,11 +55,16 @@ export const routes: Routes = [
     { path: 'rondes/afval/2/planner', component: MatchesAanmakenR2 },
     { path: 'rondes/afval/2/data', component: MatchesSpeeldagenR2 },
     { path: 'rondes/afval/:rondeId/planner', component: MatchesAanmaken },
+    { path: 'rondes/afval/:rondeId/data4', component: MatchesSpeeldagKwart },
+    { path: 'rondes/afval/:rondeId/data2', component: MatchesSpeeldagFinales },
     { path: 'rondes/afval/:rondeId/data', component: MatchesSpeeldagen },
     { path: 'rondes/afval/:rondeId/match/:dagId/:splKopId/:tegKopId/:wedIdx/score', component: AfvalScorebord },
     { path: 'rondes/afval/:rondeId/match/:dagId/:splKopId/:tegKopId/:wedIdx', component: AfvalWedstrijd },
     { path: 'rondes/afval/:rondeId/match/:dagId/:splKopId/:tegKopId', component: AfvalMatch },
     { path: 'rondes/afval/:rondeId/spel', component: DagenOverview },
+    { path: 'rondes/afval/:rondeId/acht', component: AchtsteOverview },
+    { path: 'rondes/afval/:rondeId/kwart', component: KwartOverview },
+    { path: 'rondes/afval/:rondeId/finales', component: FinalesOverview },
     { path: 'rondes/:rondeId/koppels/:koppelId', component: RondeKoppelDetail },
     { path: 'rondes/:rondeId/koppels', component: RondeKoppels },
     { path: 'rondes', component: Rondes },

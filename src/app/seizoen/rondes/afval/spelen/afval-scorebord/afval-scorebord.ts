@@ -276,20 +276,6 @@ export class AfvalScorebord extends Base implements OnInit {
         uitslag.pnt = punten;
     }
 
-    private addUitslagToOtherUitslag(source: Uitslag, target: Uitslag) {
-        target.car += source.car;
-        target.brt += source.brt;
-        target.moy = (target.brt == 0) ? 0 : target.car / target.brt;
-        if (source.ser > target.ser) {
-            target.ser = source.ser;
-        }
-        target.pnt += source.pnt;
-        target.weds += source.weds;
-        target.winst += source.winst;
-        target.gelijk += source.gelijk;
-        target.verlies += source.verlies;
-    }
-
     private createNieuweWedstrijd(): Wedstrijd {
         let wed = new Wedstrijd();
         wed.rondeId = this.ronde.rndId;

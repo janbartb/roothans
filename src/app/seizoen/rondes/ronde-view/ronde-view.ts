@@ -13,7 +13,6 @@ import { DateHelper } from '../../../services/date-helper';
 })
 export class RondeView {
     dater = inject(DateHelper);
-    btnPressed = input('');
     @Input() ronde: Ronde = new Ronde(0, '', '', 0, '');
     @Input() type: string = 'row';
     @Input() selected: boolean = false;

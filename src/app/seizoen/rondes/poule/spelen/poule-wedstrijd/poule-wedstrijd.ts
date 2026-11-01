@@ -476,21 +476,6 @@ export class PouleWedstrijd extends Base implements OnInit {
         });
     }
 
-    private addUitslagToOtherUitslag(source: Uitslag, target: Uitslag) {
-        target.car += source.car;
-        target.handicap += source.handicap;
-        target.brt += source.brt;
-        target.moy = (target.brt == 0) ? 0 : target.car / target.brt;
-        if (source.ser > target.ser) {
-            target.ser = source.ser;
-        }
-        target.pnt += source.pnt;
-        target.weds += source.weds;
-        target.winst += source.winst;
-        target.gelijk += source.gelijk;
-        target.verlies += source.verlies;
-    }
-
     private setSpelerPunten(uitslag: Uitslag, carSpl: number, carTeg: number, gsMoy: number, tsMoy: number) {
         let punten = 0;
         uitslag.weds = 1;

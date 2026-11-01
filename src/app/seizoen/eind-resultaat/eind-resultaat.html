@@ -1,0 +1,274 @@
+<div class="fullheight flexbox flexcolumn" style="overflow: hidden;">
+    <div class="tabs-container flexbox flexstretch" style="height: 1.125em; min-height: 1.125em;">
+        <div class="flex50perc tab-container" style="padding: 0 .5em 0 1em;">
+            <div class="fullheight tab-tab flexbox flexcenter flexmiddle" [ngClass]="{'selected': keuze == 0}"
+                        (click)="keuzeClicked(0)">
+                <div style="font-size: .75em; line-height: 1.1;">
+                    <span><b>Koppels</b></span>
+                </div>
+            </div>
+        </div>
+        <div class="flex50perc tab-container" style="padding: 0 1em 0 .5em;">
+            <div class="fullheight tab-tab flexbox flexcenter flexmiddle" [ngClass]="{'selected': keuze == 1}"
+                        (click)="keuzeClicked(1)">
+                <div style="font-size: .75em; line-height: 1.1;">
+                    <span><b>Spelers</b></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="flexgrow1 tabs-content flexbox flexcolumn" style="overflow: hidden;">
+        @if (keuze == 0) {
+            <div class="flexbox flexcenter flexmiddle lijst-header with-scroll" style="min-height: 2.5em;">
+                <div style="width: 1.5em;"></div>
+                <div style="width: 2em;"></div>
+                <div class="flexbox" style="width: 8em;">
+                    <div class="sortable" (click)="kopSortClicked('rang')">
+                        <span>Rang</span>
+                        @if (kopSortCol == 'rang') {
+                            <i class="fas" [ngClass]="kopSortDir == 1 ? 'fa-sort-up' : 'fa-sort-down'" style="padding-left: .25em;"></i>
+                        }
+                        @else {
+                            <i style="padding-left: .25em;" class="fas fa-sort"></i>
+                        }
+                    </div>
+                </div>
+                <div style="width: 4em;">ID</div>
+                <div class="flexbox" style="width: 10em;">
+                    <div class="sortable" (click)="kopSortClicked('spl1')">
+                        <span>Speler 1</span>
+                        @if (kopSortCol == 'spl1') {
+                            <i class="fas" [ngClass]="kopSortDir == 1 ? 'fa-sort-up' : 'fa-sort-down'" style="padding-left: .25em;"></i>
+                        }
+                        @else {
+                            <i style="padding-left: .25em;" class="fas fa-sort"></i>
+                        }
+                    </div>
+                </div>
+                <div style="width: 2em; background-color: yellow;"></div>
+                <div class="flexbox" style="width: 10em;">
+                    <div class="sortable" (click)="kopSortClicked('spl2')">
+                        <span>Speler 2</span>
+                        @if (kopSortCol == 'spl2') {
+                            <i class="fas" [ngClass]="kopSortDir == 1 ? 'fa-sort-up' : 'fa-sort-down'" style="padding-left: .25em;"></i>
+                        }
+                        @else {
+                            <i style="padding-left: .25em;" class="fas fa-sort"></i>
+                        }
+                    </div>
+                </div>
+                <div class="flexbox flexright" style="width: 4em;">
+                    <div class="sortable" (click)="kopSortClicked('kopmoy')">
+                        <span>Moy</span>
+                        @if (kopSortCol == 'kopmoy') {
+                            <i class="fas" [ngClass]="kopSortDir == 1 ? 'fa-sort-up' : 'fa-sort-down'" style="padding-left: .25em;"></i>
+                        }
+                        @else {
+                            <i style="padding-left: .25em;" class="fas fa-sort"></i>
+                        }
+                    </div>
+                </div>
+                <div class="num" style="width: 6em;">#Match</div>
+                <div class="num" style="width: 4em;">Car</div>
+                <div class="num" style="width: 4em;">Brt</div>
+                <div class="num" style="width: 3.5em;">Ser</div>
+                <div class="flexbox flexright" style="width: 5em;">
+                    <div class="sortable" (click)="kopSortClicked('totmoy')">
+                        <span>Moy</span>
+                        @if (kopSortCol == 'totmoy') {
+                            <i class="fas" [ngClass]="kopSortDir == 1 ? 'fa-sort-up' : 'fa-sort-down'" style="padding-left: .25em;"></i>
+                        }
+                        @else {
+                            <i style="padding-left: .25em;" class="fas fa-sort"></i>
+                        }
+                    </div>
+                </div>
+                <div class="flexbox flexright" style="width: 6em;">
+                    <div class="sortable" (click)="kopSortClicked('rend')">
+                        <span>Rend</span>
+                        @if (kopSortCol == 'rend') {
+                            <i class="fas" [ngClass]="kopSortDir == 1 ? 'fa-sort-up' : 'fa-sort-down'" style="padding-left: .25em;"></i>
+                        }
+                        @else {
+                            <i style="padding-left: .25em;" class="fas fa-sort"></i>
+                        }
+                    </div>
+                </div>
+                <div style="width: 1em;"></div>
+            </div>
+            <div class="flexgrow1 scroll-container">
+                <div class="flexbox flexcenter scroll-sectie">
+                    <div>
+                        @for (koppel of koppels; track $index) {
+                            <div class="flexbox lijst-row">
+                                <div class="num" style="width: 1.5em;">{{$index + 1}}.</div>
+                                <div style="width: 2em;"></div>
+                                <div style="width: 8em;">
+                                    <span>{{koppel.afvalOms}}</span>
+                                </div>
+                                <div style="width: 4em;">{{koppel.id}}</div>
+                                <div class="ellipsis" style="width: 10em;">
+                                    <span>{{koppel.spelers[0].naam}}</span>
+                                </div>
+                                <div style="width: 2em; text-align: center;">-</div>
+                                <div class="ellipsis" style="width: 10em;">
+                                    <span>{{koppel.spelers[1].naam}}</span>
+                                </div>
+                                <div class="num" style="width: 4em;">
+                                    <span>{{koppel.kopMoy | number:'1.3-3':'nl-NL'}}</span>
+                                </div>
+                                <div class="num" style="width: 6em;">
+                                    <span>{{koppel.aantMat}}</span>
+                                </div>
+                                <div class="num" style="width: 4em;">
+                                    <span>{{koppel.aantCar}}</span>
+                                </div>
+                                <div class="num" style="width: 4em;">
+                                    <span>{{koppel.aantBrt}}</span>
+                                </div>
+                                <div class="num" style="width: 3.5em;">
+                                    <span>{{koppel.serie}}</span>
+                                </div>
+                                <div class="num" style="width: 5em;">
+                                    <span>{{koppel.totMoy | number:'1.3-3':'nl-NL'}}</span>
+                                </div>
+                                <div class="num" style="width: 6em;">
+                                    <span>{{koppel.totPerc | number:'1.2-2':'nl-NL'}}</span>
+                                </div>
+                                <div style="width: 1em;">
+                                   <span style="font-size: .75em;">%</span>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>    
+        }
+        @else {
+            <div class="flexbox flexcenter flexmiddle lijst-header with-scroll" style="min-height: 2.5em;">
+                <div style="width: 1.5em;"></div>
+                <div style="width: 2em;"></div>
+                <div class="flexbox" style="width: 8em;">
+                    <div class="sortable" (click)="splSortClicked('rang')">
+                        <span>Rang</span>
+                        @if (splSortCol == 'rang') {
+                            <i class="fas" [ngClass]="splSortDir == 1 ? 'fa-sort-up' : 'fa-sort-down'" style="padding-left: .25em;"></i>
+                        }
+                        @else {
+                            <i style="padding-left: .25em;" class="fas fa-sort"></i>
+                        }
+                    </div>
+                </div>
+                <div style="width: 4em;">Kop</div>
+                <div class="flexbox" style="width: 10em;">
+                    <div class="sortable" (click)="splSortClicked('naam')">
+                        <span>Naam</span>
+                        @if (splSortCol == 'naam') {
+                            <i class="fas" [ngClass]="splSortDir == 1 ? 'fa-sort-up' : 'fa-sort-down'" style="padding-left: .25em;"></i>
+                        }
+                        @else {
+                            <i style="padding-left: .25em;" class="fas fa-sort"></i>
+                        }
+                    </div>
+                </div>
+                <div class="flexbox flexright" style="width: 4em;">
+                    <div class="sortable" (click)="splSortClicked('splmoy')">
+                        <span>Moy</span>
+                        @if (splSortCol == 'splmoy') {
+                            <i class="fas" [ngClass]="splSortDir == 1 ? 'fa-sort-up' : 'fa-sort-down'" style="padding-left: .25em;"></i>
+                        }
+                        @else {
+                            <i style="padding-left: .25em;" class="fas fa-sort"></i>
+                        }
+                    </div>
+                </div>
+                <div class="num" style="width: 6em;">#Wed</div>
+                <div style="width: 1.5em;"></div>
+                <div style="width: 1.5em; text-align: center;">W</div>
+                <div style="width: 1.5em; text-align: center;">G</div>
+                <div style="width: 1.5em; text-align: center;">V</div>
+                <div class="num" style="width: 4em;">Car</div>
+                <div class="num" style="width: 3.5em;">Brt</div>
+                <div class="num" style="width: 3em;">Ser</div>
+                <div class="flexbox flexright" style="width: 5em;">
+                    <div class="sortable" (click)="splSortClicked('totmoy')">
+                        <span>Moy</span>
+                        @if (splSortCol == 'totmoy') {
+                            <i class="fas" [ngClass]="splSortDir == 1 ? 'fa-sort-up' : 'fa-sort-down'" style="padding-left: .25em;"></i>
+                        }
+                        @else {
+                            <i style="padding-left: .25em;" class="fas fa-sort"></i>
+                        }
+                    </div>
+                </div>
+                <div class="flexbox flexright" style="width: 6em;">
+                    <div class="sortable" (click)="splSortClicked('rend')">
+                        <span>Rend</span>
+                        @if (splSortCol == 'rend') {
+                            <i class="fas" [ngClass]="splSortDir == 1 ? 'fa-sort-up' : 'fa-sort-down'" style="padding-left: .25em;"></i>
+                        }
+                        @else {
+                            <i style="padding-left: .25em;" class="fas fa-sort"></i>
+                        }
+                    </div>
+                </div>
+                <div style="width: 1em;"></div>
+            </div>
+            <div class="flexgrow1 scroll-container">
+                <div class="flexbox flexcenter scroll-sectie">
+                    <div>
+                        @for (speler of spelers; track $index) {
+                            <div class="flexbox lijst-row">
+                                <div class="num" style="width: 1.5em;">{{$index + 1}}.</div>
+                                <div style="width: 2em;"></div>
+                                <div style="width: 8em;">
+                                    <span>{{speler.afvalOms}}</span>
+                                </div>
+                                <div style="width: 4em;">
+                                    <span>{{speler.kopId}}</span>
+                                </div>
+                                <div class="ellipsis" style="width: 10em;">
+                                    <span>{{speler.naam}}</span>
+                                </div>
+                                <div class="num" style="width: 4em;">
+                                    <span>{{speler.splMoy | number:'1.3-3':'nl-NL'}}</span>
+                                </div>
+                                <div class="num" style="width: 6em;">
+                                    <span>{{speler.aantWed}}</span>
+                                </div>
+                                <div style="width: 1.5em;"></div>
+                                <div style="width: 1.5em; text-align: center;">
+                                    <span>{{speler.aantW}}</span>
+                                </div>
+                                <div style="width: 1.5em; text-align: center;">
+                                    <span>{{speler.aantG}}</span>
+                                </div>
+                                <div style="width: 1.5em; text-align: center;">
+                                    <span>{{speler.aantV}}</span>
+                                </div>
+                                <div class="num" style="width: 4em;">
+                                    <span>{{speler.aantCar}}</span>
+                                </div>
+                                <div class="num" style="width: 3.5em;">
+                                    <span>{{speler.aantBrt}}</span>
+                                </div>
+                                <div class="num" style="width: 3em;">
+                                    <span>{{speler.serie}}</span>
+                                </div>
+                                <div class="num" style="width: 5em;">
+                                    <span>{{speler.totMoy | number:'1.3-3':'nl-NL'}}</span>
+                                </div>
+                                <div class="num" style="width: 6em;">
+                                    <span>{{speler.totPerc | number:'1.2-2':'nl-NL'}}</span>
+                                </div>
+                                <div style="width: 1em;">
+                                   <span style="font-size: .75em;">%</span>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

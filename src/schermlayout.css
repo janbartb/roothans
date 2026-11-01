@@ -30,6 +30,9 @@
     color: #163317;
     overflow: hidden;
 }
+.sectie.dummy {
+    background: transparent;
+}
 .sectie.square {
     border-radius: 0;
 }
@@ -57,6 +60,9 @@
 }
 .sectie-title > div {
     padding: 0 .375em;
+}
+.sectie.dummy .sectie-title {
+    background: transparent;
 }
 
 .sectie-content.met-rand {

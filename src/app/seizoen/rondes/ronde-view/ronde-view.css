@@ -10,6 +10,13 @@
 .ronde-container:hover {
     border-color: #b80000;
 }
+.ronde-container.selected {
+    border-color: darkred;
+    background-color: darkred;
+}
+.ronde-container.selected:hover {
+    border-color: #1e461f;
+}
 
 .ronde-nummer {
     width: 2.5em;

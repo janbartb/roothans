@@ -14,7 +14,6 @@ import { Tester } from '../../../../../services/tester';
     selector: 'app-dagen-overview',
     imports: [
         Button,
-        DecimalPipe,
         NgClass
     ],
     templateUrl: './dagen-overview.html',
@@ -53,9 +52,11 @@ export class DagenOverview extends Base implements OnInit {
         this.tester.vulAlleAfvalRondeWedstrijden(this.afvalRonde, this.config);
         // opslaan
         const rondeToSave: SpeelRonde = JSON.parse(JSON.stringify(this.afvalRonde));
-        rondeToSave.poules.forEach(pl => {
-            pl.koppelIds = pl.koppels.map(k => k.kopId);
-            pl.koppels = [];
+        rondeToSave.speelDagen.forEach(sd => {
+            sd.matches.forEach(m => {
+                m.koppelIds = m.koppels.map(k => k.kopId);
+                m.koppels = [];
+            });
         });
         this.dao.saveSpeelRondeFile(this.header.seizoen, this.ronde.fileNaam, rondeToSave)
         .then(resp => {

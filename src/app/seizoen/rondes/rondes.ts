@@ -30,6 +30,7 @@ export class Rondes extends Base implements OnInit {
     btnPlan: Btn = new Btn('plan', 'Plannen', 'P', 1);
     btnSpel: Btn = new Btn('spel', 'Spelen', 'S', 1);
     btnEdit: Btn = new Btn('edit', 'Wijzigen', 'W', 1);
+    btnEind: Btn = new Btn('eind', 'Eindstand', 'E', 1);
 
     enterPressed() {
         if (this.btnEdit.default) {
@@ -40,6 +41,9 @@ export class Rondes extends Base implements OnInit {
         }
         else if (this.btnSpel.default) {
             this.buttonPressed(this.btnSpel);
+        }
+        else if (this.btnEind.default) {
+            this.buttonPressed(this.btnEind);
         }
     }
 
@@ -53,13 +57,44 @@ export class Rondes extends Base implements OnInit {
     plannenClicked() {
         const type = this.ronde.rndType;
         const id = this.ronde.rndId;
-        this.gotoPage(`rondes/${type}/${id}/planner`, 'rondes');
+        const kwartId = this.rondes.find(rnd => rnd.fileNaam == 'kwart-finales')?.rndId || -1;
+        if (kwartId < 0) {
+            this.alert.showError(`Ronde 'kwart-finales' niet gevonden.`);
+            return;
+        }
+        let lastSeg = 'planner';
+        if (id == kwartId) {
+            lastSeg = 'data4';
+        }
+        if (id > kwartId) {
+            lastSeg = 'data2';
+        }
+        this.gotoPage(`rondes/${type}/${id}/${lastSeg}`, 'rondes');
     }
 
     spelenClicked() {
         const type = this.ronde.rndType;
         const id = this.ronde.rndId;
-        this.gotoPage(`rondes/${type}/${id}/spel`, 'rondes');
+        const achtsteId = this.rondes.find(rnd => rnd.fileNaam == 'finales-8')?.rndId || -1;
+        if (achtsteId < 0) {
+            this.alert.showError(`Ronde 'finales-8' niet gevonden.`);
+            return;
+        }
+        let lastSeg = 'spel';
+        if (id == achtsteId) {
+            lastSeg = 'acht';
+        }
+        else if (id == (achtsteId + 1)) {
+            lastSeg = 'kwart';
+        }
+        else if (id > (achtsteId + 1)) {
+            lastSeg = 'finales';
+        }
+        this.gotoPage(`rondes/${type}/${id}/${lastSeg}`, 'rondes');
+    }
+
+    eindstandClicked() {
+        this.gotoPage('rondes/einde', this.router.url);
     }
 
     wijzigenClicked() {
@@ -88,7 +123,7 @@ export class Rondes extends Base implements OnInit {
             this.escapePressed();
             return false;
         }
-        if (event.code === 'KeyP' && this.prevRonde.status.gereed && !this.ronde.status.gestart) {
+        if (event.code === 'KeyP' && this.prevRonde.status.gereed && !this.ronde.status.gestart && this.ronde.rndNaam != 'Finale') {
             this.buttonPressed(this.btnPlan);
             return false;
         }
@@ -98,6 +133,10 @@ export class Rondes extends Base implements OnInit {
         }
         if (event.code === 'KeyB' && this.ronde.status.gereed) {
             this.buttonPressed(this.btnSpel);
+            return false;
+        }
+        if (event.code === 'KeyE' && this.rondes[this.rondes.length - 1].status.gereed) {
+            this.buttonPressed(this.btnEind);
             return false;
         }
         if (event.code === 'KeyW' && !this.ronde.status.gepland) {
@@ -141,6 +180,7 @@ export class Rondes extends Base implements OnInit {
             }
             const idxR = this.getInitieleRonde();
             this.selecteerRonde(idxR);
+            console.log(this.dater.getRondePeriodes(Number(this.header.seizoen)));
         })
         .catch(err => {
             this.alert.showError(err);
@@ -157,6 +197,9 @@ export class Rondes extends Base implements OnInit {
                 }
                 else if (btn.id == 'spel') {
                     this.spelenClicked();
+                }
+                else if (btn.id == 'eind') {
+                    this.eindstandClicked();
                 }
                 else if (btn.id == 'edit') {
                     this.wijzigenClicked();
@@ -176,8 +219,13 @@ export class Rondes extends Base implements OnInit {
         this.btnSpel = new Btn('spel', 'Spelen', 'S', 1);
         this.btnPlan.default = false;
         this.btnSpel.default = false;
+        this.btnEind.default = false;
         this.btnEdit.default = false;
-        if (this.ronde.status.gepland) {
+        if (this.rondes[this.rondes.length - 1].status.gereed) {
+            this.btnEind.default = true;
+            this.btnSpel = new Btn('spel', 'Bekijken', 'B', 1);
+        }
+        else if (this.ronde.status.gepland || this.ronde.rndNaam == 'Finale') {
             if (this.ronde.status.gereed) {
                 this.btnSpel = new Btn('spel', 'Bekijken', 'B', 1);
             }
@@ -230,8 +278,8 @@ export class Rondes extends Base implements OnInit {
             rnds[1].periode = periodes[1];
             rnds[2].periode = periodes[2];
             rnds[3].periode = periodes[3];
-            rnds[4].periode = periodes[3];
-            rnds[5].periode = periodes[3];
+            rnds[4].periode = periodes[4];
+            rnds[5].periode = periodes[4];
         }
         return rnds;
     }

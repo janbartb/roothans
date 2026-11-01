@@ -157,10 +157,10 @@ select:disabled, select.disabled {
 .warning { background-color: chocolate; }
 .error { background-color: red; }
 
-.fa-grin-beam {
+.fa-grin-beam, .fa-laugh {
     color: green;
 }
-.fa-angry, .fa-meh-rolling-eyes {
+.fa-angry, .fa-meh-rolling-eyes, .fa-frown {
     color: #bb0000;
 }
 .fa-meh {

@@ -178,7 +178,7 @@ export class MatchesAanmakenR2 extends Base implements OnInit {
             if (andNext) {
                 this.nextClicked();
             }
-})
+        })
         .catch(err => {
             this.alert.showError(err);
         });

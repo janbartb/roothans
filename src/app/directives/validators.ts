@@ -112,6 +112,27 @@ export function validDateNotFuture(): ValidatorFn {
     };
 }
 
+export function validDateNotInPast(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+        let isValid = true;
+        if (control.value.trim().length != 10) {
+            isValid = false;
+        }
+        else {
+            const iso = control.value.trim() + 'T12:00:00.000Z';
+            const d = new Date(iso);
+            isValid = !Number.isNaN(d.valueOf()) && d.toISOString() === iso;
+            if (isValid) {
+                const vandaag = new Date(Date.now()).toISOString().substring(0, 10);
+                if (control.value.trim() < vandaag) {
+                    isValid = false;
+                }
+            }
+        }
+        return !isValid ? {validDateNotFuture: {valid: false}} : null;
+    };
+}
+
 export const wedstrijdFormValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
     const splCar = control.get('splCar')?.value || 0;
     const splSer = control.get('splSer')?.value || 0;
