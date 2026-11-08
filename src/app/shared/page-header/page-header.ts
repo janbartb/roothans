@@ -1,5 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { Headers } from '../../services/headers';
+import { Component, OnInit } from '@angular/core';
 import { Base } from '../../base/base';
 
 @Component({

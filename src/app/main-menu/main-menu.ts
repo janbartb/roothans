@@ -1,12 +1,12 @@
 import { Component, HostListener, inject, OnInit } from '@angular/core';
 import { Base } from '../base/base';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { noDuplicateNumbers, validJaar } from '../directives/validators';
 import { Btn } from '../model/misc';
 import { Button } from '../shared/button/button';
 import { NgClass } from '@angular/common';
 import { ConfirmDialogType } from '../model/dialogs';
 import { ConfirmDialog } from '../shared/confirm-dialog/confirm-dialog';
+import { Seizoen } from '../model/seizoen';
 
 @Component({
     selector: 'app-main-menu',
@@ -26,6 +26,7 @@ export class MainMenu extends Base implements OnInit {
     newSeizoen: number = 0;
     minSeizoen: number = 0;
     maxSeizoen: number = 9999;
+    lastSeizoenAfgesloten: boolean = true;
     confirmNieuw: ConfirmDialogType = new ConfirmDialogType('Nieuw seizoen');
 
     btnNieuw: Btn = new Btn('new', 'Start nieuw seizoen :', 'n', 7);
@@ -48,6 +49,9 @@ export class MainMenu extends Base implements OnInit {
             return;
         }
         this.confirmNieuw.texts = [`Nieuw seizoen ${this.newSeiz?.value} aanmaken.`];
+        if (!this.lastSeizoenAfgesloten) {
+            this.confirmNieuw.texts.push(`Seizoen ${this.seizoenen[0]} is nog niet afgesloten.`);
+        }
         this.confirmNieuw.open = true;
     }
 
@@ -117,15 +121,25 @@ export class MainMenu extends Base implements OnInit {
         this.header.subtitle = 'Hoofdmenu';
         this.dao.getSeizoenen()
         .then(result => {
-            console.log(result);
             this.seizoenen = result.filter(x => Number(x)).map(x => Number(x));
             if (this.seizoenen.length) {
                 this.seizoenen.sort(this.compareSeizoenen);
                 this.selSeizoen = this.seizoenen[0];
-                this.createSelectForm();
+                this.dao.getSeizoenFile('' + this.selSeizoen)
+                .then(seiz => {
+                    this.lastSeizoenAfgesloten = seiz.afgesloten;
+                    this.createSelectForm();
+                    this.newSeizoen = this.getNieuwSeizoen();
+                    this.createNieuwForm();    
+                })
+                .catch(err => {
+                    this.alert.showError(err);
+                });
             }
-            this.newSeizoen = this.getNieuwSeizoen();
-            this.createNieuwForm();
+            else {
+                this.newSeizoen = this.getNieuwSeizoen();
+                this.createNieuwForm();    
+            }
         })
         .catch(err => {
             this.alert.showError(err);

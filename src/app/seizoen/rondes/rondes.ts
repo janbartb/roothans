@@ -242,7 +242,7 @@ export class Rondes extends Base implements OnInit {
     private getInitieleRonde(): number {
         let result = -1;
         this.rondes.some((rnd, idx) => {
-            if (!(rnd.status.gereed)) {
+            if (!rnd.status.gereed) {
                 result = idx;
                 return true;
             }
@@ -251,7 +251,10 @@ export class Rondes extends Base implements OnInit {
             }
         });
         if (result == -1) {
-            result = 0;
+            result = this.rondes.length - 1;
+            if (!this.config.afgesloten) {
+                this.btnEind.text += ' / ' + this.header.seizoen + ' afsluiten';
+            }
         }
         return result;
     }

@@ -1,0 +1,8 @@
+.ovz-poule-header {
+    background-color: lightgray;
+    padding: 1mm 4mm;
+    border-bottom: 2px solid black;
+}
+.ovz-poule-koppels {
+    padding: 2.5mm .5em 0 .5em;
+}

@@ -1,0 +1,47 @@
+<div class="flexbox">
+    <div class="ovz-pagina-container flexbox flexcolumn">
+        <div class="flexbox flexbetween ovz-header" style="font-size: .875em;">
+            <div>
+                <span><b>{{ovzType == 'pln' ? 'Planning ' : 'Resultaat '}}</b></span>
+                <span> halve finales en finale</span>
+            </div>
+            <div>{{finaleRonde.rndBeurten}} beurten</div>
+            <div>{{header.seizoen}}</div>
+        </div>
+        <div class="flexbox flexcolumn">
+            <div style="font-size: .875em; padding-top: 10mm; text-align: center;">
+                <span><b>Halve finales</b></span>
+            </div>
+            @for (dag of halveRonde.speelDagen; track $index) {
+                <div class="speeldag-container" style="height: 50mm;">
+                    <app-ovz-speeldag-wide [dag]="dag" [type]="ovzType"></app-ovz-speeldag-wide>
+                </div>    
+            }
+        </div>
+        <div class="flexbox flexcolumn" style="padding-top: 10mm;">
+            <div style="font-size: .875em; text-align: center;">
+                <span><b>Finale</b></span>
+            </div>
+            @for (dag of finaleRonde.speelDagen; track $index) {
+                <div class="speeldag-container" style="height: 32mm;">
+                    <app-ovz-speeldag-wide [dag]="dag" [type]="ovzType" [isFinale]="true"></app-ovz-speeldag-wide>
+                </div>    
+            }
+        </div>
+    </div>
+    <div class="flexgrow1 do-not-print" style="padding-top: 5cm;">
+        <div class="flexbox">
+            <div style="width: 5cm;"></div>
+            <div class="button-container">
+                <app-button [button]="btnPrint" (btnClicked)="printOvz()"></app-button>
+            </div>
+            <div class="flexgrow1"></div>    
+        </div>
+        <div class="flexbox" style="padding-top: 5mm;">
+            <div style="width: 5cm;"></div>
+            <div style="font-size: .875em; color: gray;">
+                <span>&nbsp;&nbsp;(Kies : Opslaan als pdf)</span>
+            </div>
+        </div>
+    </div>
+</div>

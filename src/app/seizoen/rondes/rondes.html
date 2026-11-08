@@ -13,10 +13,12 @@
         <div style="padding-right: 2.25em;">
             <span style="font-size: 1.25em;">Ronde <b>{{ronde.rndId}}</b> - {{ronde.rndNaam}}</span>
         </div>
-        <div style="padding-top: .5em;">
-            <app-button [button]="btnPlan" [disabled]="!prevRonde.status.gereed || ronde.status.gestart || ronde.rndNaam == 'Finale'"
-                        (btnClicked)="plannenClicked()"></app-button>
-        </div>
+        @if (ronde.rndNaam != 'Finale') {
+            <div style="padding-top: .5em;">
+                <app-button [button]="btnPlan" [disabled]="!prevRonde.status.gereed || ronde.status.gestart"
+                            (btnClicked)="plannenClicked()"></app-button>
+            </div>    
+        }
         <div style="padding-top: .5em;">
             <app-button [button]="btnSpel" [disabled]="!ronde.status.gepland && ronde.rndNaam != 'Finale'"
                         (btnClicked)="spelenClicked()"></app-button>

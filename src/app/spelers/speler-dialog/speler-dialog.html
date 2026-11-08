@@ -66,6 +66,19 @@
                                                 'valid': moyenne?.valid && (moyenne?.dirty)}">
                             </td>
                         </tr>
+                        @if (speler.moyHist && speler.moyHist.length) {
+                            <tr>
+                                <td><label>Moyenne historie</label></td>
+                                <td>
+                                    <select name="moyhists" id="">
+                                        @for (moy of speler.moyHist; track $index) {
+                                            <option value="">{{moy | number:'1.3-3':'nl-NL'}}</option>
+                                        }
+                                    </select>
+                                    <span style="padding-left: .5em;"><label for="">(ter info)</label></span>
+                                </td>
+                            </tr>
+                        }
                         <tr>
                             <td><label>E-mail</label></td>
                             <td>

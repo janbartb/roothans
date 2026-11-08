@@ -1,0 +1,8 @@
+.ronde-container {
+    padding: .375em 0;
+    cursor: default;
+}
+.ronde-container.selected .ronde-id, .ronde-container:hover .ronde-id {
+    color: darkred;
+    font-weight: bold;
+}

@@ -1,9 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { KoppelResultaat, KoppelResultaatSpeler, SpelerResultaat } from '../../model/speler';
 import { Base } from '../../base/base';
 import { Ronde, SpeelRonde } from '../../model/ronde';
 import { RondeKoppel } from '../../model/koppel';
 import { DecimalPipe, NgClass } from '@angular/common';
+import { Seizoen } from '../../model/seizoen';
+import { Button } from '../../shared/button/button';
+import { Btn } from '../../model/misc';
 
 class Moyenne {
     id: string = '';
@@ -18,6 +21,7 @@ class Moyenne {
 @Component({
     selector: 'app-eind-resultaat',
     imports: [
+        Button,
         DecimalPipe,
         NgClass
     ],
@@ -25,6 +29,7 @@ class Moyenne {
     styleUrl: './eind-resultaat.css',
 })
 export class EindResultaat extends Base implements OnInit {
+    seizoen: Seizoen = new Seizoen();
     spelers: SpelerResultaat[] = [];
     koppels: KoppelResultaat[] = [];
     origKopMoys: Moyenne[] = [];
@@ -34,6 +39,8 @@ export class EindResultaat extends Base implements OnInit {
     kopSortCol: string = 'rang';
     splSortDir: number = 1;
     splSortCol: string = 'rang';
+
+    btnSluit: Btn = new Btn('sluit', 'afsluiten', 'enter');
 
     kopSortClicked(colNaam: string) {
         if (colNaam == this.kopSortCol) {
@@ -67,14 +74,44 @@ export class EindResultaat extends Base implements OnInit {
         this.keuze = kz;
     }
 
+    afsluitenClicked() {
+        this.gotoPage('afsluiten', this.router.url);
+    }
+
+    @HostListener('document:keyup', ['$event'])
+    handleKeyboardEvent(event: KeyboardEvent): boolean {
+        console.log(event.code + ' : ' + event.key);
+        if (event.key === 'Enter') {
+            if (!this.seizoen.afgesloten) {
+                this.buttonPressed(this.btnSluit);
+                return false;    
+            }
+            return true;
+        }
+        if (event.key === 'Escape') {
+            this.escapePressed();
+            return false;
+        }
+        if (event.key === 'Home') {
+            this.gotoHome();
+            return false;
+        }
+        return true;
+    }
+
     override ngOnInit(): void {
         super.ngOnInit();
         this.header.subtitle = `Seizoen ${this.header.seizoen} - Eindresultaat`;
+        this.btnSluit.text = this.header.seizoen + ' afsluiten';
 
         let rondes: Ronde[] = [];
-        this.dao.getRondes(this.header.seizoen)
+        Promise.all([
+            this.dao.getSeizoenFile(this.header.seizoen),
+            this.dao.getRondes(this.header.seizoen)
+        ])
         .then(data => {
-            rondes = data;
+            this.seizoen = data[0];
+            rondes = data[1];
             if (!rondes[rondes.length - 1].status.gereed) {
                 this.alert.showWarning('Eindresultaat nog niet beschikbaar. Tournooi niet afgewerkt.');
                 return;
@@ -107,6 +144,18 @@ export class EindResultaat extends Base implements OnInit {
         .catch(err => {
             this.alert.showError(err);
         });
+    }
+
+    private buttonPressed(btn: Btn) {
+        btn.clicked = true;
+        setTimeout(() => {
+            btn.clicked = false;
+            setTimeout(() => {
+                if (btn.id == 'sluit') {
+                    this.afsluitenClicked();
+                }
+            }, 250);
+        }, 250);
     }
 
     private fillRondeResultaten(rnd: SpeelRonde, aantRnds: number) {

@@ -271,4 +271,11 @@
             </div>
         }
     </div>
+    @if (!seizoen.afgesloten) {
+        <div class="flexbox flexmiddle flexcenter page-footer" style="height: 3em; min-height: 3em;">
+            <div>
+                <app-button [button]="btnSluit" (btnClicked)="afsluitenClicked()"></app-button>
+            </div>
+        </div>
+    }
 </div>

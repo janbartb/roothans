@@ -76,6 +76,9 @@
 .flex05perc {
     flex: 0 0 5%;
 }
+.flex06perc {
+    flex: 0 0 6%;
+}
 .flex08perc {
     flex: 0 0 8%;
 }
@@ -108,6 +111,12 @@
 }
 .flex46perc {
     flex: 0 0 46%;
+}
+.flex47perc {
+    flex: 0 0 47%;
+}
+.flex47-5perc {
+    flex: 0 0 47.5%;
 }
 .flex50perc {
     flex: 0 0 50%;

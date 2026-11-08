@@ -1,0 +1,30 @@
+.ovz-pagina-container {
+    width: 190mm;
+    height: 277mm;
+    margin: 2mm 0 0 2mm;
+    border: 1px solid lightgray;
+    overflow: hidden;
+}
+
+.ovz-header {
+    border: 2px solid black;
+    background-color: lightgray;
+    padding: 1mm 3mm;
+}
+
+.speeldag-container {
+    padding-top: 2mm;
+}
+
+@media print {
+    .do-not-print { display: none; }
+    .ovz-pagina-container {
+        /* border: none; */
+        margin: 0;
+        border-color: white;
+    }
+}
+
+@page {
+    size: A4 portrait;
+}

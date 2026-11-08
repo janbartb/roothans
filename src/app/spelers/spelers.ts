@@ -10,6 +10,7 @@ import { Helper } from '../services/helper';
 import { ConfirmDialog } from '../shared/confirm-dialog/confirm-dialog';
 import { Speech } from '../services/speech';
 import { ConfirmDialogType } from '../model/dialogs';
+import { Koppel } from '../model/koppel';
 
 @Component({
     selector: 'app-spelers',
@@ -29,6 +30,7 @@ export class Spelers extends Base implements OnInit {
     helper = inject(Helper);
     speech = inject(Speech);
     spelers: Speler[] = [];
+    koppelsLaatsteSeizoen: Koppel[] = [];
     idxSpeler: number = -1;
     idxToDelete: number = -1;
     sortCol: string = '';
@@ -37,6 +39,7 @@ export class Spelers extends Base implements OnInit {
     speler: Speler = new Speler();
     mode: string = 'edit';
     confirmDeleteDialog: ConfirmDialogType = new ConfirmDialogType('Speler verwijderen');
+    dataReady: boolean = false;
 
     btnAdd: Btn = new Btn('add', 'Toevoegen speler', 'T', 1);
 
@@ -162,18 +165,39 @@ export class Spelers extends Base implements OnInit {
     override ngOnInit(): void {
         super.ngOnInit();
         this.header.subtitle = 'Onderhoud spelers';
-        this.dao.getSpelers()
-        .then(result => {
-            this.spelers = result;
+        
+        Promise.all([
+            this.dao.getSeizoenen(),
+            this.dao.getSpelers()
+        ])
+        .then(results => {
+            this.spelers = results[1];
             this.existingIds = this.spelers.map(spl => spl.id);
             this.sortCol = 'moy';
             this.sortDir = -1;
             this.sortSpelers('moy');
             this.header.subtitle += ` (${this.spelers.length})`
+            if (results[0].length) {
+                results[0].sort(this.compareSeizoenen);
+                this.dao.getKoppels(results[0][0])
+                .then(koppels => {
+                    console.log(koppels);
+                    this.spelers.forEach(spl => {
+                        spl.deleteAllowed = koppels.every(kpl => kpl.spelers[0].splId != spl.id && kpl.spelers[1].splId != spl.id);
+                    });
+                    this.dataReady = true;
+                })
+                .catch(err => {
+                    this.alert.showError(err);
+                });
+            }
+            else {
+                this.dataReady = true;
+            }
         })
         .catch(err => {
             this.alert.showError(err);
-        })
+        });
     }
 
     private buttonPressed(btn: Btn) {
@@ -215,4 +239,8 @@ export class Spelers extends Base implements OnInit {
         return this.sortDir * (a.moyenne - b.moyenne);
     }
     
+    private compareSeizoenen(a: string, b: string): number {
+        return Number(b) - Number(a);
+    }
+
 }

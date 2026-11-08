@@ -1,0 +1,11 @@
+.ovz-speeldag {
+    border: 2px solid black;
+}
+.ovz-speeldag-header {
+    border-bottom: 2px solid black;
+    background-color: lightgray;
+    padding: 1mm 3mm;
+}
+.ovz-match-container.met-border {
+    border-bottom: 2px solid black;
+}

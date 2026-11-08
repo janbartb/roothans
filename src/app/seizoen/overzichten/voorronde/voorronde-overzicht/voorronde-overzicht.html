@@ -1,0 +1,40 @@
+<div class="flexbox">
+    <div class="ovz-pagina-container flexbox flexcolumn">
+        <div class="flexbox flexbetween ovz-header" style="font-size: .75em;">
+            <div>
+                <span><b>{{ovzType == 'pln' ? 'Planning ' : 'Resultaat '}}</b></span>
+                <span> voorronde (poules)</span>
+            </div>
+            <div>{{pouleRonde.rndBeurten}} beurten</div>
+            <div>{{header.seizoen}}</div>
+        </div>
+        <div class="flexgrow1 flexbox flexcolumn">
+            @for (idxRow of [0, 1, 2, 3]; track $index) {
+                <div class="flex25perc flexbox flexstretch">
+                    @for (idxCol of [0, 1]; track $index) {
+                        <div class="flex50perc ovz-poule-container" [ngClass]="idxCol == 0 ? 'links' : 'rechts'">
+                            <div class="fullheight ovz-poule" style="font-size: .625em;">
+                                <app-ovz-poule [type]="ovzType" [poule]="pouleRonde.poules[(2 * idxRow) + idxCol]"></app-ovz-poule>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+    <div class="flexgrow1 do-not-print" style="padding-top: 5cm;">
+        <div class="flexbox">
+            <div style="width: 5cm;"></div>
+            <div class="button-container">
+                <app-button [button]="btnPrint" (btnClicked)="printOvz()"></app-button>
+            </div>
+            <div class="flexgrow1"></div>    
+        </div>
+        <div class="flexbox" style="padding-top: 5mm;">
+            <div style="width: 5cm;"></div>
+            <div style="font-size: .875em; color: gray;">
+                <span>&nbsp;&nbsp;(Kies : Opslaan als pdf)</span>
+            </div>
+        </div>
+    </div>
+</div>

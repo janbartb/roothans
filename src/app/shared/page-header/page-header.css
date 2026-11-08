@@ -27,3 +27,9 @@
     color: #f4faf4;
     transform: scale(1.25);
 }
+
+@media print {
+    .page-header {
+        display: none;
+    }
+}

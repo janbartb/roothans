@@ -34,11 +34,19 @@ import { MatchesSpeeldagKwart } from './seizoen/rondes/afval/planning/matches-sp
 import { KwartOverview } from './seizoen/rondes/afval/spelen/kwart-overview/kwart-overview';
 import { MatchesSpeeldagFinales } from './seizoen/rondes/afval/planning/matches-speeldag-finales/matches-speeldag-finales';
 import { EindResultaat } from './seizoen/eind-resultaat/eind-resultaat';
+import { Overzichten } from './seizoen/overzichten/overzichten';
+import { VoorrondeOverzicht } from './seizoen/overzichten/voorronde/voorronde-overzicht/voorronde-overzicht';
+import { Finales16Overzicht } from './seizoen/overzichten/finales/finales16-overzicht/finales16-overzicht';
+import { Finales48Overzicht } from './seizoen/overzichten/finales/finales48-overzicht/finales48-overzicht';
+import { FinalesOverzicht } from './seizoen/overzichten/finales/finales-overzicht/finales-overzicht';
+import { MoyennesOverzicht } from './seizoen/overzichten/overig/moyennes-overzicht/moyennes-overzicht';
+import { AfsluitenSeizoen } from './seizoen/afsluiten-seizoen/afsluiten-seizoen';
 
 export const routes: Routes = [
     { path: 'home', component: Home },
     { path: 'main', component: MainMenu },
     { path: 'seizoen', component: SeizoenMenu },
+    { path: 'afsluiten', component: AfsluitenSeizoen },
     { path: 'settings', component: Settings },
     { path: 'koppels/toevoegen', component: KoppelsToevoegen },
     { path: 'koppels/:koppelId', component: KoppelPreferences },
@@ -68,6 +76,12 @@ export const routes: Routes = [
     { path: 'rondes/:rondeId/koppels/:koppelId', component: RondeKoppelDetail },
     { path: 'rondes/:rondeId/koppels', component: RondeKoppels },
     { path: 'rondes', component: Rondes },
+    { path: 'overz/moyennes', component: MoyennesOverzicht },
+    { path: 'overz/poule/:type', component: VoorrondeOverzicht },
+    { path: 'overz/afval/fins/:type', component: FinalesOverzicht },
+    { path: 'overz/afval/fin16/:type', component: Finales16Overzicht },
+    { path: 'overz/afval/:rondeId/:type', component: Finales48Overzicht },
+    { path: 'overz', component: Overzichten },
     { path: 'init', component: InitSpelers },
     { path: 'spelers', component: Spelers },
     { path: 'probeer', component: Probeer },

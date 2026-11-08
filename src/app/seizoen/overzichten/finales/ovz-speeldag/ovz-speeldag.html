@@ -1,0 +1,14 @@
+@if (dag && type) {
+    <div class="fullheight ovz-speeldag flexbox flexcolumn">
+        <div class="ovz-speeldag-header" style="font-size: .625em;">
+            <span>Speeldatum : <b>{{dag.dagNaam}} {{dater.dateReverse(dag.datum)}}</b></span>
+        </div>
+        <div class="flexgrow1 flexbox flexcolumn">
+            @for (match of dag.matches; track $index) {
+                <div class="flex25perc ovz-match-container" [ngClass]="{'met-border': !$last}">
+                    <app-ovz-match [match]="match" [type]="type" [matchNr]="$index + 1"></app-ovz-match>
+                </div>
+            }
+        </div>
+    </div>    
+}

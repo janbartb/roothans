@@ -23,6 +23,7 @@ export class SeizoenMenu extends Base implements OnInit {
     btnSettings: Btn = new Btn('set', 'Instellingen', 'I', 1);
     btnKoppels: Btn = new Btn('kop', 'Koppels', 'K', 1);
     btnRondes: Btn = new Btn('ron', 'Rondes', 'R', 1);
+    btnOverz: Btn = new Btn('ovz', 'Overzichten', 'O', 1);
     btnSpelers: Btn = new Btn('spl', 'Spelers', 'S', 1);
 
     enterPressed() {
@@ -53,6 +54,10 @@ export class SeizoenMenu extends Base implements OnInit {
         this.gotoPage('rondes', 'seizoen');
     }
 
+    overzichtenClicked() {
+        this.gotoPage('overz', 'seizoen');
+    }
+
     @HostListener('document:keyup', ['$event'])
     handleKeyboardEvent(event: KeyboardEvent): boolean {
         console.log(event.code + ' : ' + event.key);
@@ -75,6 +80,13 @@ export class SeizoenMenu extends Base implements OnInit {
         if (event.code === 'KeyR') {
             this.buttonPressed(this.btnRondes);
             return false;
+        }
+        if (event.code === 'KeyO') {
+            if (this.rondes.length) {
+                this.buttonPressed(this.btnOverz);
+                return false;    
+            }
+            return true;
         }
         if (event.code === 'KeyS') {
             this.buttonPressed(this.btnSpelers);
@@ -128,6 +140,9 @@ export class SeizoenMenu extends Base implements OnInit {
                 }
                 else if (btn.id == 'ron') {
                     this.rondesClicked();
+                }
+                else if (btn.id == 'ovz') {
+                    this.overzichtenClicked();
                 }
                 else if (btn.id == 'spl') {
                     this.spelersClicked();

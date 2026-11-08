@@ -1,0 +1,55 @@
+@if (match && matchNr && type) {
+    <div class="fullheight flexbox flexstretch">
+        <div class="ovz-tijdstip flexbox flexcenter flexmiddle">
+            <div style="font-size: .625em;">{{18 + matchNr}}:00u</div>
+        </div>
+        <div class="flexgrow1 flexbox flexcolumn">
+            @for (koppel of match.koppels; track $index) {
+                <div class="flex50perc ovz-koppel flexbox flexstretch" [ngClass]="{'met-border': $index == 0}">
+                    <div class="ovz-koppel-id" style="width: 13mm; line-height: 1.1; font-size: .5em;">
+                        <span>{{koppel.kopId}}</span>
+                    </div>
+                    <div class="flexgrow1 ovz-spelers flexbox">
+                        <div class="flex47perc" style="white-space: nowrap; overflow-x: hidden; line-height: 1.1; font-size: .5em;">
+                            <span>{{koppel.spelers[0].splNaam}} </span>
+                            @if (koppel.spelers[0].splHand < 0) {
+                                <span> ({{koppel.spelers[0].splHand}})</span>
+                            }
+                        </div>
+                        <div class="flex06perc" style="text-align: center; line-height: 1.1; font-size: .5em;">-</div>
+                        <div class="flex47perc" style="white-space: nowrap; overflow-x: hidden; line-height: 1.1; font-size: .5em;">
+                            <span>{{koppel.spelers[1].splNaam}} </span>
+                            @if (koppel.spelers[1].splHand < 0) {
+                                <span> ({{koppel.spelers[1].splHand}})</span>
+                            }
+                        </div>
+                    </div>
+                    <div class="ovz-uitslag flexbox" style="width: 43mm;">
+                        @if (type == 'res') {
+                            <div style="width: 9mm; text-align: right; line-height: 1.1; font-size: .5em;">
+                                <span>{{koppel.splUitslagen[0].uitslag.car + koppel.splUitslagen[0].uitslag.handicap}}</span>
+                            </div>
+                            <div style="width: 6mm; text-align: right; line-height: 1.1; font-size: .5em;">
+                                <span>+</span>
+                            </div>
+                            <div style="width: 9mm; text-align: right; line-height: 1.1; font-size: .5em;">
+                                <span>{{koppel.splUitslagen[1].uitslag.car + koppel.splUitslagen[1].uitslag.handicap}}</span>
+                            </div>
+                            <div style="width: 6mm; text-align: right; line-height: 1.1; font-size: .5em;">
+                                <span>=</span>
+                            </div>
+                            <div style="width: 10mm; text-align: right; line-height: 1.1; font-size: .5em; padding-right: 1mm;">
+                                <span>{{koppel.uitslag.car + koppel.uitslag.handicap}}</span>
+                            </div>
+                        }
+                    </div>
+                    <div class="ovz-winst" style="width: 8mm; text-align: center; line-height: 1.1; font-size: .5em;">
+                        @if (type == 'res' && !koppel.afgevallen) {
+                            <i class="fas" [ngClass]="koppel.uitslag.barrage == 0 ? 'fa-check' : 'fa-check-double'"></i>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}

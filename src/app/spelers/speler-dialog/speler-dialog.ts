@@ -2,7 +2,7 @@ import { Component, EventEmitter, HostListener, inject, Input, OnInit, Output } 
 import { Speler } from '../../model/speler';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { greaterZero, notEmpty } from '../../directives/validators';
-import { NgClass } from '@angular/common';
+import { DecimalPipe, NgClass } from '@angular/common';
 import { Btn } from '../../model/misc';
 import { Button } from "../../shared/button/button";
 import { Speech } from '../../services/speech';
@@ -11,6 +11,7 @@ import { Speech } from '../../services/speech';
     selector: 'app-speler-dialog',
     imports: [
         ReactiveFormsModule,
+        DecimalPipe,
         NgClass,
         Button
     ],

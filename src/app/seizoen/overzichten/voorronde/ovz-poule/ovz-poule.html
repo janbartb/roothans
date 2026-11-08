@@ -1,0 +1,70 @@
+@if (poule && type) {
+    @if (type == 'pln') {
+        <div class="ovz-poule-header flexbox flexbetween">
+            <div>
+                <span style="font-weight: bold;">Poule {{poule.id}}</span>
+            </div>
+            <div>
+                <span>Speeldatum : <b>{{poule.dagNaam}} {{dater.dateReverse(poule.datum)}}</b></span>
+            </div>
+        </div>
+        <div class="ovz-poule-koppels">
+            @for (koppel of poule.koppels; track $index) {
+                <div class="flexbox">
+                    <div style="width: 3em;">
+                        <span>{{koppel.kopId}}</span>
+                    </div>
+                    <div class="flexgrow1 flexbox">
+                        <div class="flex47perc" style="white-space: nowrap; overflow-x: hidden;">
+                            <span>{{koppel.spelers[0].splNaam}}</span>
+                        </div>
+                        <div class="flex06perc" style="text-align: center;">
+                            <span>-</span>
+                        </div>
+                        <div class="flex47perc" style="white-space: nowrap; overflow-x: hidden;">
+                            <span>{{koppel.spelers[1].splNaam}}</span>
+                        </div>
+                    </div>
+                </div>
+            }    
+        </div>
+    }
+    @else {
+        <div class="ovz-poule-header flexbox flexbetween">
+            <div>
+                <span style="font-weight: bold;">Poule {{poule.id}}</span>
+            </div>
+            <div>
+                <span>Speeldatum : <b>{{poule.dagNaam}} {{dater.dateReverse(poule.datum)}}</b></span>
+            </div>
+        </div>
+        <div class="ovz-poule-koppels">
+            @for (koppel of poule.koppels; track $index) {
+                <div class="flexbox">
+                    <div style="width: 2.5em;">
+                        <span>{{koppel.kopId}}</span>
+                    </div>
+                    <div class="flexgrow1 flexbox" style="overflow: hidden; max-width: 93mm;">
+                        <div class="flex47perc" style="white-space: nowrap; overflow-x: hidden;">
+                            <span>{{koppel.spelers[0].splNaam}}</span>
+                        </div>
+                        <div class="flex06perc" style="text-align: center;">
+                            <span>-</span>
+                        </div>
+                        <div class="flex47perc" style="white-space: nowrap; overflow-x: hidden;">
+                            <span>{{koppel.spelers[1].splNaam}}</span>
+                        </div>
+                    </div>
+                    <div class="arial flexbox flexright" style="width: 24mm; padding-left: 2mm;">
+                        <div>
+                            <span>{{koppel.splUitslagen[0].uitslag.pnt}} + {{koppel.splUitslagen[1].uitslag.pnt}} =</span>
+                        </div>
+                        <div style="width: 7mm; text-align: right;">
+                            <span>{{koppel.uitslag.pnt}}</span>
+                        </div>
+                    </div>
+                </div>
+            }    
+        </div>
+    }
+}

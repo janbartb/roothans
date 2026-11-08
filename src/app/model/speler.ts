@@ -6,7 +6,9 @@ export class Speler {
     snaam: string = '';
     extra: string = '';
     moyenne: number = 0;
+    moyHist: number[] = [];
     email: string = '';
+    deleteAllowed: boolean = true;
 }
 
 export class KoppelSpeler {

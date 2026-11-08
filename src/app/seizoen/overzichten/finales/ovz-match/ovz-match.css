@@ -1,0 +1,30 @@
+.ovz-tijdstip {
+    width: 24mm;
+    border-right: 1px solid gray;
+}
+.ovz-koppels {
+    border-right: 1px solid gray;
+}
+.ovz-koppel {
+    border-bottom: 1px solid white;
+    overflow-y: hidden;
+}
+.ovz-koppel.met-border {
+    border-color: gray;
+}
+.ovz-koppel-id {
+    border-right: 1px solid gray;
+    padding-top: 1mm;
+    padding-left: 2mm;
+}
+.ovz-spelers {
+    border-right: 1px solid gray;
+    padding: 1mm 3mm 0 3mm;
+}
+.ovz-uitslag {
+    border-right: 1px solid gray;
+    padding-top: 1mm;
+}
+.ovz-winst {
+    padding-top: 1mm;
+}

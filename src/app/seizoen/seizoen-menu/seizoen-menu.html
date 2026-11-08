@@ -33,6 +33,17 @@
         <div style="min-height: .5em;"></div>
         <div class="flexbox">
             <div style="width: 10em;">
+                <app-button [button]="btnOverz" [disabled]="!rondes.length" (btnClicked)="overzichtenClicked()"></app-button>
+            </div>
+            <div style="padding-left: .5em;">
+                <span>op te slaan als PDF</span>
+            </div>
+        </div>
+        <div style="min-height: .5em;"></div>
+        <hr>
+        <div style="min-height: .5em;"></div>
+        <div class="flexbox">
+            <div style="width: 10em;">
                 <app-button [button]="btnSpelers" (btnClicked)="spelersClicked()"></app-button>
             </div>
             <div style="padding-left: .5em;">
