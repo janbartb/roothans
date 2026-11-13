@@ -1,13 +1,26 @@
 <div class="fullheight flexbox flexcolumn" style="font-size: .75em; overflow: hidden;">
     <div class="flexgrow1 flexbox flexcolumn" style="overflow: hidden; background-color: #b7dfb8;">
         @if (koppels.length == 0) {
-            <div style="padding-top: 5em; text-align: center; color: #1e461f;">Er zijn nog geen koppels aanwezig voor dit seizoen.</div>
-            @if (prevSeizoen != '') {
+            <div style="padding-top: 5em; text-align: center; color: #1e461f;"><b>Er zijn nog geen koppels aanwezig voor dit seizoen.</b></div>
+            @if (prevSeizoen.afgesloten) {
                 <div class="flexbox flexcenter" style="padding-top: 3em;">
                     <div>
                         <app-button [button]="btnCopy" (btnClicked)="ophalenClicked()"></app-button>
                     </div>
                 </div>
+            }
+            @else {
+                @if (prevSeizoen.id > 0) {
+                    <div style="padding-top: 3em; text-align: center; color: darkred;">
+                        <span><b>LET OP !!</b></span><br>
+                        <span>Het vorige seizoen is nog niet afgesloten.</span><br>
+                        <span>De moyennes van de spelers zijn dus nog niet bijgewerkt o.b.v. dat seizoen.</span><br><br>
+                        <span>Sluit dat seizoen eerst af om de moyennes bij te werken.</span><br>
+                        <span>Je krijgt daarna tevens de mogelijkheid om de koppels van het vorige seizoen</span><br>
+                        <span>automatisch over te nemen naar dit seizoen.</span><br><br>
+                        <span>Of voeg handmatig koppels toe (met oude moyennes) via onderstaande button.</span>
+                    </div>
+                }
             }
         }
         @else {
@@ -74,12 +87,15 @@
             </div>
         }
     </div>
-    <div class="flexbox flexcenter flexmiddle" style="min-height: 3em;">
-        <div class="flexbox">
-            <app-button [button]="btnAdd" [disabled]="koppels.length == config.maxKoppels" (btnClicked)="toevoegenClicked()"></app-button>
-            @if (markedForDelete.length) {
-                <app-button [button]="btnDel" (btnClicked)="deleteClicked()"></app-button>
-            }
+    @if (!header.afgesloten) {
+        <div class="flexbox flexcenter flexmiddle" style="min-height: 3em;">
+            <div class="flexbox">
+                <app-button [button]="btnAdd" [disabled]="koppels.length == config.maxKoppels" (btnClicked)="toevoegenClicked()"></app-button>
+                @if (markedForDelete.length) {
+                    <app-button [button]="btnDel" (btnClicked)="deleteClicked()"></app-button>
+                }
+                <app-button [button]="btnDays" (btnClicked)="randomVoorkeurdagenClicked()"></app-button>
+            </div>
         </div>
-    </div>
+    }
 </div>

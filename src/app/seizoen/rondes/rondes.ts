@@ -26,6 +26,7 @@ export class Rondes extends Base implements OnInit {
     idxRonde: number = -1;
     dummy: Ronde = new Ronde(0, '', '', 0, '');
     koppels: Koppel[] = [];
+    dataReady: boolean = false;
 
     btnPlan: Btn = new Btn('plan', 'Plannen', 'P', 1);
     btnSpel: Btn = new Btn('spel', 'Spelen', 'S', 1);
@@ -170,17 +171,23 @@ export class Rondes extends Base implements OnInit {
             if (!this.rondes.length) {
                 const allRondes = this.createRondes();
                 this.dao.createRondes(this.header.seizoen, allRondes)
-                    .then(resp => {
-                        this.alert.showSuccess(resp.message);
-                        this.rondes = allRondes;
-                    })
-                    .catch(err => {
-                        this.alert.showError(err);
-                    });
+                .then(resp => {
+                    this.alert.showSuccess('Rondes automatisch gegenereerd en opgeslagen.');
+                    this.rondes = allRondes;
+                    const idxR = this.getInitieleRonde();
+                    this.selecteerRonde(idxR);
+                    this.dataReady = true;
+                })
+                .catch(err => {
+                    this.alert.showError(err);
+                });
             }
-            const idxR = this.getInitieleRonde();
-            this.selecteerRonde(idxR);
-            console.log(this.dater.getRondePeriodes(Number(this.header.seizoen)));
+            else {
+                const idxR = this.getInitieleRonde();
+                this.selecteerRonde(idxR);
+                this.dataReady = true;
+                this.dataReady = true;
+            }
         })
         .catch(err => {
             this.alert.showError(err);

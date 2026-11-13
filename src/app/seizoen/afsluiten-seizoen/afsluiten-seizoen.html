@@ -1,1 +1,70 @@
-<p>afsluiten-seizoen works!</p>
+@if (dataReady) {
+    <div class="fullheight flexbox flexcolumn">
+        <div class="flexgrow1 flexbox flexstretch">
+            <div class="flexgrow1 container">
+                <div class="fullheight sectie flexbox flexcenter flexmiddle">
+                    <div>
+                        @if (seizoen.afgesloten) {
+                            <div style="font-size: 1em; text-align: center;">
+                                <span>Seizoen {{seizoen.id}} is succesvol afgesloten.</span>
+                            </div>
+                        }
+                        @else {
+                            <div style="font-size: .875em; text-align: center;">
+                                <span>Afsluiten seizoen {{seizoen.id}}</span><br><br>
+                            </div>
+                            <div style="font-size: .75em; text-align: center;">
+                                <span>De moyennes van de spelers worden aangepast aan het resultaat van dit seizoen.</span>
+                            </div>
+                            <div style="font-size: .75em; text-align: center;">
+                                <br><br><span>&nbsp;</span>
+                                @if (busy) {
+                                    @if (spelersNietGevonden.length) {
+                                        <span style="color: darkred;">! ! ! Afsluiten is onderbroken ! ! !</span><br>
+                                        <span>(zie rechter panel)</span>
+                                    }
+                                    @else {
+                                        <span>De spelers worden bijgewerkt...</span>
+                                    }
+                                }
+                                <span>&nbsp;</span>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            @if (spelersNietGevonden.length) {
+                <div class="flex40perc container">
+                    <div class="fullheight sectie flexbox flexcolumn">
+                        <div style="font-size: .75em; text-align: center; padding-top: 1em;">
+                            <span>Sommige spelers in seizoen {{seizoen.id}} zijn niet gevonden in het</span><br>
+                            <span>algemene spelers bestand (spelers.json) dus de moyennes</span><br>
+                            <span>van deze spelers kunnen niet worden bijgewerkt :</span>
+                        </div>
+                        <div class="flexgrow1" style="padding: 1em;">
+                            <div class="fullheight" style="overflow-y: auto; color: black;">
+                                @for (spl of spelersNietGevonden; track $index) {
+                                    <div style="font-size: .75em; text-align: center;">
+                                        <span>{{spl.splId}}&nbsp;&nbsp;-&nbsp;&nbsp;{{spl.splNaam}}</span>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="flexbox flexmiddle flexcenter page-footer" style="height: 3em; min-height: 3em;">
+            @if (seizoen.afgesloten) {
+                <div>
+                    <app-button [button]="btnTerug" (btnClicked)="terugClicked()"></app-button>
+                </div>
+            }
+            @else {
+                <div>
+                    <app-button [button]="btnSluit" (btnClicked)="afsluitenClicked()"></app-button>
+                </div>
+            }
+        </div>
+    </div>
+}

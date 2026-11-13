@@ -39,6 +39,9 @@ export class Settings extends Base implements OnInit {
     }
 
     opslaanClicked() {
+        if (this.header.afgesloten) {
+            return;
+        }
         Object.assign(this.settings, this.settingsForm.value);
         this.settings.speelDagen = this.alleDagen.filter(dg => dg.selected);
         this.settings.huidigeRonde = this.huidigeRonde?.value;
@@ -53,6 +56,9 @@ export class Settings extends Base implements OnInit {
     }
 
     dagClicked(idx: number) {
+        if (this.header.afgesloten) {
+            return;
+        }
         this.alleDagen[idx].selected = !this.alleDagen[idx].selected;
     }
 
@@ -96,6 +102,9 @@ export class Settings extends Base implements OnInit {
     }
 
     private buttonPressed(btn: Btn) {
+        if (this.header.afgesloten) {
+            return;
+        }
         btn.clicked = true;
         setTimeout(() => {
             btn.clicked = false;
@@ -136,6 +145,9 @@ export class Settings extends Base implements OnInit {
         });
         this.settingsForm.get('maxKoppels')?.disable();
         this.settingsForm.get('maxKoppelsPerPoule')?.disable();
+        if (this.header.afgesloten) {
+            this.settingsForm.disable();
+        }
     }
 
     private createStatusForm() {
@@ -147,6 +159,9 @@ export class Settings extends Base implements OnInit {
                 this.setRondeNaam(val);
             }
         });
+        if (this.header.afgesloten) {
+            this.statusForm.disable();
+        }
     }
 
     get maxKoppels() {

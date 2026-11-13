@@ -198,6 +198,19 @@ export class Dao {
         return json;
     }
 
+    async saveAllSpelers(spelers: Speler[]): Promise<ApiResponse> {
+        const response: Response = await fetch(this.apiUrl + `/allspelers`, {
+            method: 'POST',
+            body: JSON.stringify(spelers),
+            headers: this.myHeaders
+        });
+        const json: ApiResponse = await response.json();
+        if (!response.ok) {
+            throw new Error(json.message);
+        }
+        return json;
+    }
+
     // SEIZOENEN
 
     async getSeizoenen(): Promise<string[]> {

@@ -1,38 +1,40 @@
-<div class="fullheight flexbox flexcolumn">
-    <div class="flexgrow1 flexbox flexcenter flexmiddle" style="background-color: #dbefdc;">
-        <div>
-            @for (ronde of rondes; track $index) {
-                <div>
-                    <app-ronde-view [ronde]="ronde" [selected]="$index == idxRonde"
-                                    (clicked)="rondeClicked($event)"></app-ronde-view>
+@if (dataReady) {
+    <div class="fullheight flexbox flexcolumn">
+        <div class="flexgrow1 flexbox flexcenter flexmiddle" style="background-color: #dbefdc;">
+            <div>
+                @for (ronde of rondes; track $index) {
+                    <div>
+                        <app-ronde-view [ronde]="ronde" [selected]="$index == idxRonde"
+                                        (clicked)="rondeClicked($event)"></app-ronde-view>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="flexbox flexmiddle flexcenter page-footer" style="height: 3.5em; min-height: 3.5em;">
+            <div style="padding-right: 2.25em;">
+                <span style="font-size: 1.25em;">Ronde <b>{{ronde.rndId}}</b> - {{ronde.rndNaam}}</span>
+            </div>
+            @if (ronde.rndNaam != 'Finale') {
+                <div style="padding-top: .5em;">
+                    <app-button [button]="btnPlan" [disabled]="!prevRonde.status.gereed || ronde.status.gestart"
+                                (btnClicked)="plannenClicked()"></app-button>
+                </div>    
+            }
+            <div style="padding-top: .5em;">
+                <app-button [button]="btnSpel" [disabled]="!ronde.status.gepland && ronde.rndNaam != 'Finale'"
+                            (btnClicked)="spelenClicked()"></app-button>
+            </div>
+            @if (rondes.length && rondes[rondes.length - 1].status.gereed) {
+                <div style="padding-left: 2em; padding-top: .5em;">
+                    <app-button [button]="btnEind" (btnClicked)="eindstandClicked()"></app-button>
+                </div>
+            }
+            @else {
+                <div style="padding-left: 2em; padding-top: .5em;">
+                    <app-button [button]="btnEdit" [disabled]="ronde.status.gepland"
+                                (btnClicked)="wijzigenClicked()"></app-button>
                 </div>
             }
         </div>
-    </div>
-    <div class="flexbox flexmiddle flexcenter page-footer" style="height: 3.5em; min-height: 3.5em;">
-        <div style="padding-right: 2.25em;">
-            <span style="font-size: 1.25em;">Ronde <b>{{ronde.rndId}}</b> - {{ronde.rndNaam}}</span>
-        </div>
-        @if (ronde.rndNaam != 'Finale') {
-            <div style="padding-top: .5em;">
-                <app-button [button]="btnPlan" [disabled]="!prevRonde.status.gereed || ronde.status.gestart"
-                            (btnClicked)="plannenClicked()"></app-button>
-            </div>    
-        }
-        <div style="padding-top: .5em;">
-            <app-button [button]="btnSpel" [disabled]="!ronde.status.gepland && ronde.rndNaam != 'Finale'"
-                        (btnClicked)="spelenClicked()"></app-button>
-        </div>
-        @if (rondes.length && rondes[rondes.length - 1].status.gereed) {
-            <div style="padding-left: 2em; padding-top: .5em;">
-                <app-button [button]="btnEind" (btnClicked)="eindstandClicked()"></app-button>
-            </div>
-        }
-        @else {
-            <div style="padding-left: 2em; padding-top: .5em;">
-                <app-button [button]="btnEdit" [disabled]="ronde.status.gepland"
-                            (btnClicked)="wijzigenClicked()"></app-button>
-            </div>
-        }
-    </div>
-</div>
+    </div>    
+}

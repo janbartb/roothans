@@ -66,6 +66,9 @@ export class Base implements OnInit {
         this.header.urlHistory = JSON.parse(urls);
         const seiz = sessionStorage.getItem('seizoen');
         this.header.seizoen = seiz ? seiz : '';
+        const done = sessionStorage.getItem('afgesloten');
+        this.header.afgesloten = done ? true : false;
+        console.log(this.header.afgesloten);
     }
 
     addUitslagToOtherUitslag(source: Uitslag, target: Uitslag) {

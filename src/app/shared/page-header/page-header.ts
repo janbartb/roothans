@@ -13,6 +13,13 @@ export class PageHeader extends Base implements OnInit {
         this.gotoHome();
     }
 
+    seizoenClicked() {
+        if (this.router.url == 'seizoen') {
+            return;
+        }
+        this.goBackToPage('seizoen');
+    }
+
     prevPageClicked() {
         this.gotoPrevPage();
     }

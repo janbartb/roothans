@@ -8,6 +8,7 @@ export class Headers {
     title: string = 'Driebanden -koppel- tournooi';
     subtitle: string = '';
     seizoen: string = '';
+    afgesloten: boolean = false;
     datum: string = '';
 
     setTitles(t: string, subt: string) {

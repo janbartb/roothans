@@ -1,5 +1,25 @@
-<div class="fullheight" style="font-size: 1.5em;">
-    <div style="padding: 10em 10em;">
-        <input type="date">
+<div class="fullheight flexbox flexcolumn">
+    <div class="flexgrow1">
+        <div style="height: 2em; min-height: 2em; text-align: center;">
+            <span>{{message}}</span>
+        </div>
+        <div class="flexbox flexcenter" style="padding-top: 1em;">
+            <div>
+                @for (pl of poules; track $index) {
+                    <div class="flexbox">
+                        <div style="width: 3em;">{{pl.dagNr}}</div>
+                        <div style="width: 10em;">{{pl.dagNaam}}</div>
+                        @for (id of pl.koppelIds; track $index) {
+                            <div style="width: 3em;">{{id}}</div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="flexbox flexmiddle flexcenter page-footer" style="height: 3em; min-height: 3em;">
+        <div>
+            <app-button [button]="btnPlan" (btnClicked)="poulesAanmakenClicked()"></app-button>
+        </div>
     </div>
 </div>

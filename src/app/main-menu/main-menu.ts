@@ -30,7 +30,7 @@ export class MainMenu extends Base implements OnInit {
     confirmNieuw: ConfirmDialogType = new ConfirmDialogType('Nieuw seizoen');
 
     btnNieuw: Btn = new Btn('new', 'Start nieuw seizoen :', 'n', 7);
-    btnSelect: Btn = new Btn('sel', 'Ga naar seizoen :', 'enter');
+    btnSelect: Btn = new Btn('sel', 'Ga naar seizoen :', 'G', 1);
     btnSpelers: Btn = new Btn('spl', 'Onderhoud spelers', 's', 11);
     btnProbeer: Btn = new Btn('try', 'Probeer');
 
@@ -65,6 +65,7 @@ export class MainMenu extends Base implements OnInit {
             .then(resp => {
                 this.alert.showSuccess(resp.message);
                 this.confirmNieuw.open = false;
+                sessionStorage.removeItem('afgesloten');
                 this.gotoSeizoenInstellingen(this.newSeiz?.value);
             })
             .catch(err => {
@@ -87,8 +88,12 @@ export class MainMenu extends Base implements OnInit {
             return false;
         }
         if (event.key === 'Enter') {
-            if (this.selectForm && this.selectForm.valid) {
+            if (!this.lastSeizoenAfgesloten && this.selectForm && this.selectForm.valid) {
                 this.buttonPressed(this.btnSelect);
+                return false;
+            }
+            if (this.lastSeizoenAfgesloten && this.nieuwForm && this.nieuwForm.valid) {
+                this.buttonPressed(this.btnNieuw);
                 return false;
             }
             return true;
@@ -96,6 +101,13 @@ export class MainMenu extends Base implements OnInit {
         if (event.key === 'Escape') {
             this.escapePressed();
             return false;
+        }
+        if (event.code === 'KeyG') {
+            if (this.selSeiz && this.selSeiz.valid) {
+                this.buttonPressed(this.btnSelect);
+                return false;
+            }
+            return true;
         }
         if (event.code === 'KeyN') {
             if (this.newSeiz && this.newSeiz.valid) {
@@ -128,6 +140,12 @@ export class MainMenu extends Base implements OnInit {
                 this.dao.getSeizoenFile('' + this.selSeizoen)
                 .then(seiz => {
                     this.lastSeizoenAfgesloten = seiz.afgesloten;
+                    if (this.lastSeizoenAfgesloten) {
+                        this.btnNieuw.default = true;
+                    }
+                    else {
+                        this.btnSelect.default = true;
+                    }
                     this.createSelectForm();
                     this.newSeizoen = this.getNieuwSeizoen();
                     this.createNieuwForm();    

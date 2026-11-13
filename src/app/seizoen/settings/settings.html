@@ -105,7 +105,7 @@
     <div class="flexbox flexcenter" style="min-height: 3.25em; height: 3.25em; padding-top: .125em;">
         <div style="font-size: 1.25em;">
             <app-button [button]="btnSave" 
-                    [disabled]="!(settingsForm && settingsForm.valid && statusForm && statusForm.valid && alleDagen.filter(dg => dg.selected).length > 0)"
+                    [disabled]="header.afgesloten || !(settingsForm && settingsForm.valid && statusForm && statusForm.valid && alleDagen.filter(dg => dg.selected).length > 0)"
                     (btnClicked)="opslaanClicked()"></app-button>
         </div>
     </div>

@@ -108,6 +108,11 @@
             <div>
                 <app-button [button]="btnSaveDef" [disabled]="!touched" (btnClicked)="opslaanClicked()"></app-button>
             </div>
+            @if (pouleRonde.poules.length == 0) {
+                <div>
+                    <app-button [button]="btnAuto" (btnClicked)="automatischClicked()"></app-button>
+                </div>
+            }
         }
         <div>
             <app-button [button]="btnKpls" [disabled]="!pouleRonde.koppels.length" (btnClicked)="naarKoppelsClicked()"></app-button>

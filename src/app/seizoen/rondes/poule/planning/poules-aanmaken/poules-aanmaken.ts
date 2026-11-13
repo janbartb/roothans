@@ -12,6 +12,7 @@ import { RondeKoppelView } from '../../../../koppels/ronde-koppel-view/ronde-kop
 import { ConfirmKoppelsDialogType } from '../../../../../model/dialogs';
 import { ConfirmDialog } from '../../../../../shared/confirm-dialog/confirm-dialog';
 import { Helper } from '../../../../../services/helper';
+import { DateHelper } from '../../../../../services/date-helper';
 
 class KoppelsPerDag {
     dagNr: number = 0;
@@ -43,6 +44,7 @@ interface IData {
 export class PoulesAanmaken extends Base implements OnInit {
     route = inject(ActivatedRoute);
     helper = inject(Helper);
+    dater = inject(DateHelper);
     config: Seizoen = new Seizoen();
     rondes: Ronde[] = [];
     ronde: Ronde = new Ronde(0, '', '', 0, '');
@@ -55,6 +57,8 @@ export class PoulesAanmaken extends Base implements OnInit {
     touched: boolean = false;
     poulesOk: boolean = false;
     confirmKoppels: ConfirmKoppelsDialogType = new ConfirmKoppelsDialogType();
+    loopCnt: number = 0;
+    loopLimitReached: boolean = false;
     matchToNrs: IData = {
         m01 : 1,
         m10 : 1,
@@ -75,6 +79,7 @@ export class PoulesAanmaken extends Base implements OnInit {
     btnSaveNext: Btn = new Btn('savenext', 'Opslaan en naar speeldata');
     btnNext: Btn = new Btn('next', 'Naar speeldata', 'enter');
     btnKpls: Btn = new Btn('kpls', 'Koppels', 'K', 1);
+    btnAuto: Btn = new Btn('auto', 'Automatisch', 'A', 1);
 
     opslaanClicked(andNext?: boolean) {
         this.pouleRonde.status.gepland = this.poulesOk && this.pouleRonde.poules.every(pl => pl.datum != '');
@@ -113,6 +118,44 @@ export class PoulesAanmaken extends Base implements OnInit {
 
     nextClicked() {
         this.gotoPage(`rondes/poule/${this.ronde.rndId}/data`, this.router.url);
+    }
+
+    automatischClicked() {
+        this.loopLimitReached = false;
+        this.loopCnt = 0;
+        let idxStart = -1;
+        let done = false;
+        while(!done) {
+            const createdPoules = this.poulesAanmaken(8, idxStart, this.pouleRonde.koppels);
+            if (this.loopLimitReached) {
+                this.alert.showWarning('Fout bij aanmaken poules. Automatisch aanmaken werkt helaas niet!', 8);
+                done = true;
+            }
+            else {
+                if (createdPoules.length < 8) {
+                    idxStart++;
+                    if (idxStart >= (this.koppels.length - 4)) {
+                        this.alert.showWarning('Automatisch aanmaken poules lukt helaas niet!', 8);
+                        done = true;
+                    }
+                }
+                else {
+                    const dagFout = this.checkAangemaaktePoules(createdPoules);
+                    if (dagFout != '') {
+                        this.alert.showWarning(`Aanmaken poules niet gelukt! De ${dagFout} komt te vaak voor.`, 8);
+                    }
+                    else {
+                        this.alert.showSuccess('Poules succesvol automatisch aangemaakt.', 4);
+                        createdPoules.sort(this.comparePoules);
+                        this.pouleRonde.poules = createdPoules;
+                        this.expandPoules();
+                        this.poulesOk = true;
+                        this.touched = true;
+                    }
+                    done = true;
+                }
+            }
+        }
     }
 
     naarKoppelsClicked() {
@@ -221,6 +264,10 @@ export class PoulesAanmaken extends Base implements OnInit {
             this.escapePressed();
             return false;
         }
+        if (event.code === 'KeyA' && this.pouleRonde.poules.length == 0) {
+            this.buttonPressed(this.btnAuto);
+            return false;
+        }
         if (event.code === 'KeyS') {
             this.buttonPressed(this.btnSave);
             return false;
@@ -269,22 +316,7 @@ export class PoulesAanmaken extends Base implements OnInit {
                 }
                 this.fillKoppelsPerDagen();
                 console.log(this.koppelsPerDagen);
-                this.pouleRonde.poules.forEach(poule => {
-                    poule.volgNr = 0;
-                    poule.id = '';
-                    poule.koppels = [];
-                    let maxKoppels = poule.koppelIds.length;
-                    while (maxKoppels--) poule.koppels.push(new RondeKoppel()); 
-                    poule.koppelIds.forEach((kplId, idx) => {
-                        if (kplId != '') {
-                            const foundKoppel = this.pouleRonde.koppels.find(kpl => kpl.kopId == kplId);
-                            if (foundKoppel) {
-                                poule.koppels[idx] = foundKoppel;
-                                this.removeKoppelFromKoppelsPerDagen(foundKoppel);
-                            }
-                        }
-                    });
-                });
+                this.expandPoules();
                 this.maxPoules = this.config.maxKoppels / this.config.maxKoppelsPerPoule;
                 this.poulesOk = this.allPoulesFilled();
             })
@@ -311,8 +343,91 @@ export class PoulesAanmaken extends Base implements OnInit {
                 else if (btn.id == 'next') {
                     this.nextClicked();
                 }
+                else if (btn.id == 'auto') {
+                    this.automatischClicked();
+                }
             }, 250);
         }, 250);
+    }
+
+    private expandPoules() {
+        this.pouleRonde.poules.forEach(poule => {
+            poule.volgNr = 0;
+            poule.id = '';
+            poule.koppels = [];
+            let maxKoppels = poule.koppelIds.length;
+            while (maxKoppels--) poule.koppels.push(new RondeKoppel()); 
+            poule.koppelIds.forEach((kplId, idx) => {
+                if (kplId != '') {
+                    const foundKoppel = this.pouleRonde.koppels.find(kpl => kpl.kopId == kplId);
+                    if (foundKoppel) {
+                        poule.koppels[idx] = foundKoppel;
+                        this.removeKoppelFromKoppelsPerDagen(foundKoppel);
+                    }
+                }
+            });
+        });
+    }
+
+    private poulesAanmaken(aantal: number, idxStartKoppel: number, metKoppels: RondeKoppel[]): Poule[] {
+        const result: Poule[] = [];
+        this.loopCnt++;
+        if (this.loopCnt > 1000) {
+            this.loopLimitReached = true;
+            return result;
+        }
+        if (aantal == 0) {
+            return result; // done
+        }
+        idxStartKoppel++;
+        const startKoppel = metKoppels[idxStartKoppel];
+        const dagNr = startKoppel.voorkeurDagen[0];
+        const metDagKoppels = metKoppels.filter(kpl => kpl.voorkeurDagen.includes(dagNr));
+        if (metDagKoppels.length < 4) {
+            return result;
+        }
+        const poule = new Poule(0);
+        poule.dagNr = dagNr;
+        poule.dagNaam = this.dater.getDagNaam(dagNr);
+        poule.koppelIds.push(metDagKoppels[0].kopId);
+        poule.koppelIds.push(metDagKoppels[1].kopId);
+        poule.koppelIds.push(metDagKoppels[2].kopId);
+        poule.koppelIds.push(metDagKoppels[3].kopId);
+        result.push(poule);
+        const remainingKoppels = metKoppels.filter(kpl => !poule.koppelIds.includes(kpl.kopId));
+        let idxStart = -1;
+        let done = false;
+        const aant = aantal - 1;
+        while(!done) {
+            const createdPoules = this.poulesAanmaken(aant, idxStart, remainingKoppels);
+            if (this.loopLimitReached) {
+                done = true;
+            }
+            else {
+                if (createdPoules.length < aant) {
+                    idxStart++;
+                    if (idxStart >= (remainingKoppels.length - 4)) {
+                        done = true;
+                    }
+                }
+                else {
+                    result.push(...createdPoules);
+                    done = true;
+                }
+            }
+        }
+        return result;
+    }
+
+    private checkAangemaaktePoules(poules: Poule[]): string {
+        let dagNaam = '';
+        this.config.speelDagen.forEach(sd => {
+            const aant = poules.filter(p => p.dagNr == sd.dagNr).length;
+            if (aant > this.maxWeekdagen) {
+                dagNaam = sd.dagNaam;
+            }
+        });
+        return dagNaam;
     }
 
     private aanvullenRondeKoppels() {
@@ -448,6 +563,10 @@ export class PoulesAanmaken extends Base implements OnInit {
 
     private compareRondeKoppels(a: RondeKoppel, b: RondeKoppel): number {
         return b.kopMoyenne - a.kopMoyenne;
+    }
+
+    private comparePoules(a: Poule, b: Poule): number {
+        return a.dagNr - b.dagNr;
     }
 
 }

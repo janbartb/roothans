@@ -111,6 +111,14 @@ export class SeizoenMenu extends Base implements OnInit {
         ])
         .then(results => {
             this.config = results[0];
+            if (this.config.afgesloten) {
+                this.header.afgesloten = true;
+                sessionStorage.setItem('afgesloten', 'ja');
+            }
+            else {
+                this.header.afgesloten = false;
+                sessionStorage.removeItem('afgesloten');
+            }
             this.koppels = results[1];
             this.rondes = results[2];
             this.aantSpelers = results[3].length;

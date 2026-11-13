@@ -26,8 +26,16 @@
         <div class="flex25perc flexbox flexright flexmiddle">
             <div style="color: #dbefdc; padding-right: 1em;">
                 @if (header.seizoen != '') {
-                    <span style="font-size: 1.5em;">{{header.seizoen}}</span>
-                }
+                    <span style="font-size: 1.5em; cursor: pointer;" (click)="seizoenClicked()">{{header.seizoen}}</span>
+                    @if (header.afgesloten) {
+                        <span style="font-size: 1.5em; padding-left: .5em;">
+                            <!-- <i class="fas fa-check" title="Seizoen is afgesloten"></i> -->
+                            <i class="fas fa-flag-checkered" title="Seizoen is afgesloten"></i>
+                            <!-- <i class="fas fa-skull-crossbones" title="Seizoen is afgesloten"></i> -->
+                            <!-- <i class="fas fa-check-double" title="Seizoen is afgesloten"></i> -->
+                        </span>    
+                    }
+               }
             </div>
         </div>
     </div>

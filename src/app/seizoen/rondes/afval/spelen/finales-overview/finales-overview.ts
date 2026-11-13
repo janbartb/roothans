@@ -173,8 +173,8 @@ export class FinalesOverview extends Base implements OnInit {
                 }
                 else {
                     this.btnSel.default = true;
-                    this.selectTeSpelenMatch();
                 }
+                this.selectTeSpelenMatch();
             })
             .catch(err => {
                 this.alert.showError(err);
